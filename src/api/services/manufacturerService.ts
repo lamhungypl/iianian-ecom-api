@@ -1,26 +1,16 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
-import {Manufacturer} from '../models/manufacturerModel';
-import {ManufacturerRepository} from '../repositories/manufacturerRepository';
-import {Like} from 'typeorm/index';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Manufacturer } from "../models/manufacturerModel";
+import { ManufacturerRepository } from "../repositories/manufacturerRepository";
+import { Like } from "typeorm/index";
 
 @Service()
 export class ManufacturerService {
-
-    constructor(@OrmRepository() private manufacturerRepository: ManufacturerRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private manufacturerRepository: ManufacturerRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
     // create Manufacturer
     public async create(manufacturer: any): Promise<Manufacturer> {
         return this.manufacturerRepository.save(manufacturer);
@@ -33,12 +23,19 @@ export class ManufacturerService {
 
     // delete Manufacturer
     public async delete(id: number): Promise<any> {
-        this.log.info('Delete a manufacturer');
+        this.log.info("Delete a manufacturer");
         await this.manufacturerRepository.delete(id);
         return;
     }
     // Manufacturer List
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [],  count: number|boolean): Promise<any> {
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -55,10 +52,10 @@ export class ManufacturerService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }

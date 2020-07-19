@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     Put,
@@ -21,18 +11,16 @@ import {
     Req,
     QueryParam,
     Param
-} from 'routing-controllers';
-import {ZoneService} from '../services/zoneService';
-import {CountryService} from '../services/countryService';
-import {Zone} from '../models/zone';
-import {CreateZone} from './requests/createZoneRequest';
-import {classToPlain} from 'class-transformer';
+} from "routing-controllers";
+import { ZoneService } from "../services/zoneService";
+import { CountryService } from "../services/countryService";
+import { Zone } from "../models/zone";
+import { CreateZone } from "./requests/createZoneRequest";
+import { classToPlain } from "class-transformer";
 
-@JsonController('/zone')
+@JsonController("/zone")
 export class ZoneController {
-    constructor(private zoneService: ZoneService,
-                private countryService: CountryService) {
-    }
+    constructor(private zoneService: ZoneService, private countryService: CountryService) {}
 
     // create zone API
     /**
@@ -60,18 +48,21 @@ export class ZoneController {
      * @apiErrorExample {json} Zone error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-zone')
+    @Post("/add-zone")
     @Authorized()
-    public async addZone(@Body({validate: true}) zoneParam: CreateZone, @Res() response: any): Promise<any> {
+    public async addZone(
+        @Body({ validate: true }) zoneParam: CreateZone,
+        @Res() response: any
+    ): Promise<any> {
         const country = await this.countryService.findOne({
             where: {
-                countryId: zoneParam.countryId,
-            },
+                countryId: zoneParam.countryId
+            }
         });
         if (!country) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid countryId',
+                message: "Invalid countryId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -84,14 +75,14 @@ export class ZoneController {
         if (zoneSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully created new zone',
-                data: zoneSave,
+                message: "Successfully created new zone",
+                data: zoneSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create zone',
+                message: "unable to create zone"
             };
             return response.status(400).send(errorResponse);
         }
@@ -124,32 +115,35 @@ export class ZoneController {
      * @apiErrorExample {json} Zone error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-zone/:id')
+    @Put("/update-zone/:id")
     @Authorized()
-    public async updateZone(@Param('id') id: number, @Body({validate: true}) zoneParam: CreateZone, @Res() response: any): Promise<any> {
-
+    public async updateZone(
+        @Param("id") id: number,
+        @Body({ validate: true }) zoneParam: CreateZone,
+        @Res() response: any
+    ): Promise<any> {
         const zone = await this.zoneService.findOne({
             where: {
-                zoneId: id,
-            },
+                zoneId: id
+            }
         });
         if (zone) {
             const country = await this.countryService.findOne({
                 where: {
-                    countryId: zoneParam.countryId,
-                },
+                    countryId: zoneParam.countryId
+                }
             });
             if (!country) {
                 const errorResponse: any = {
                     status: 0,
-                    message: 'Invalid countryId',
+                    message: "Invalid countryId"
                 };
                 return response.status(400).send(errorResponse);
             }
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid zoneId',
+                message: "Invalid zoneId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -161,14 +155,14 @@ export class ZoneController {
         if (zoneSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated zone',
-                data: zoneSave,
+                message: "Successfully updated zone",
+                data: zoneSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update zone',
+                message: "unable to update zone"
             };
             return response.status(400).send(errorResponse);
         }
@@ -198,33 +192,47 @@ export class ZoneController {
      * @apiErrorExample {json} Zone error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/zone-list')
+    @Get("/zone-list")
     @Authorized()
-    public async zonelist(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
-        const select = ['zoneId', 'countryId', 'code', 'name', 'isActive'];
+    public async zonelist(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["zoneId", "countryId", "code", "name", "isActive"];
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            },
+                name: "name",
+                op: "like",
+                value: keyword
+            }
         ];
 
         const WhereConditions = [];
-        const relation = ['country'];
+        const relation = ["country"];
 
-        const zoneList = await this.zoneService.list(limit, offset, select, search, WhereConditions, relation, count);
+        const zoneList = await this.zoneService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            relation,
+            count
+        );
         if (zoneList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get all zone List',
-                data: classToPlain(zoneList),
+                message: "Successfully get all zone List",
+                data: classToPlain(zoneList)
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'unable to get zone List',
+                message: "unable to get zone List"
             };
             return response.status(400).send(errorResponse);
         }
@@ -249,35 +257,38 @@ export class ZoneController {
      * @apiErrorExample {json} Zone error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-zone/:id')
+    @Delete("/delete-zone/:id")
     @Authorized()
-    public async deleteZone(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteZone(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const zone = await this.zoneService.findOne({
             where: {
-                zoneId: id,
-            },
+                zoneId: id
+            }
         });
         if (!zone) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid zoneId',
+                message: "Invalid zoneId"
             };
             return response.status(400).send(errorResponse);
         }
 
         const deleteZone = await this.zoneService.delete(zone);
-        console.log('zone' + deleteZone);
+        console.log("zone" + deleteZone);
         if (deleteZone) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted Zone',
+                message: "Successfully deleted Zone"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete zone',
+                message: "unable to delete zone"
             };
             return response.status(400).send(errorResponse);
         }

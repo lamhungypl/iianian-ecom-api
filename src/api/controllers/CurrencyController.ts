@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Put,
     Delete,
@@ -21,16 +11,15 @@ import {
     Req,
     QueryParam,
     Param
-} from 'routing-controllers';
-import {Currency} from '../models/currency';
-import {CreateCurrency} from './requests/createCurrencyRequest';
-import {CurrencyService} from '../services/currencyService';
-import {UpdateCurrency} from './requests/updateCurrenyRequest';
+} from "routing-controllers";
+import { Currency } from "../models/currency";
+import { CreateCurrency } from "./requests/createCurrencyRequest";
+import { CurrencyService } from "../services/currencyService";
+import { UpdateCurrency } from "./requests/updateCurrenyRequest";
 
-@JsonController('/currency')
+@JsonController("/currency")
 export class CurrencyController {
-    constructor(private currencyService: CurrencyService) {
-    }
+    constructor(private currencyService: CurrencyService) {}
 
     // Create Currency API
     /**
@@ -62,9 +51,12 @@ export class CurrencyController {
      * @apiErrorExample {json} Currency error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-currency')
+    @Post("/add-currency")
     @Authorized()
-    public async addCurrency(@Body({validate: true}) currencyParam: CreateCurrency, @Res() response: any): Promise<any> {
+    public async addCurrency(
+        @Body({ validate: true }) currencyParam: CreateCurrency,
+        @Res() response: any
+    ): Promise<any> {
         const newCurrency = new Currency();
         newCurrency.title = currencyParam.title;
         newCurrency.code = currencyParam.code;
@@ -76,14 +68,14 @@ export class CurrencyController {
         if (currencySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully added new currency.',
-                data: currencySave,
+                message: "Successfully added new currency.",
+                data: currencySave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create currency',
+                message: "unable to create currency"
             };
             return response.status(400).send(errorResponse);
         }
@@ -115,30 +107,52 @@ export class CurrencyController {
      * @apiErrorExample {json} Currency error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/currencylist')
+    @Get("/currencylist")
     @Authorized()
-    public async currencyList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
-        const select = ['currencyId', 'title', 'code', 'symbolLeft', 'symbolRight', 'value', 'modifiedDate', 'isActive'];
+    public async currencyList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "currencyId",
+            "title",
+            "code",
+            "symbolLeft",
+            "symbolRight",
+            "value",
+            "modifiedDate",
+            "isActive"
+        ];
         const search = [
             {
-                name: 'title',
-                op: 'like',
-                value: keyword,
-            },
+                name: "title",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const currencyList = await this.currencyService.list(limit, offset, select, search, WhereConditions, count);
+        const currencyList = await this.currencyService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (currencyList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got the complete currency list.',
-                data: currencyList,
+                message: "Successfully got the complete currency list.",
+                data: currencyList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to list currency',
+                message: "unable to list currency"
             };
             return response.status(400).send(errorResponse);
         }
@@ -176,19 +190,21 @@ export class CurrencyController {
      * @apiErrorExample {json} Currency error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-currency/:id')
+    @Put("/update-currency/:id")
     @Authorized()
-    public async updateCurrency(@Body({validate: true}) currencyParam: UpdateCurrency, @Res() response: any): Promise<any> {
-
+    public async updateCurrency(
+        @Body({ validate: true }) currencyParam: UpdateCurrency,
+        @Res() response: any
+    ): Promise<any> {
         const currency = await this.currencyService.findOne({
             where: {
-                currencyId: currencyParam.currencyId,
-            },
+                currencyId: currencyParam.currencyId
+            }
         });
         if (!currency) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid currencyId',
+                message: "Invalid currencyId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -202,14 +218,14 @@ export class CurrencyController {
         if (currencySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated the currency.',
-                data: currencySave,
+                message: "Successfully updated the currency.",
+                data: currencySave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update currency',
+                message: "unable to update currency"
             };
             return response.status(400).send(errorResponse);
         }
@@ -234,19 +250,22 @@ export class CurrencyController {
      * @apiErrorExample {json} Currency error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-currency/:id')
+    @Delete("/delete-currency/:id")
     @Authorized()
-    public async deleteCurrency(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteCurrency(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const currency = await this.currencyService.findOne({
             where: {
-                currencyId: id,
-            },
+                currencyId: id
+            }
         });
         if (!currency) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid currencyId',
+                message: "Invalid currencyId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -255,13 +274,13 @@ export class CurrencyController {
         if (deleteCurrency === undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfullly deleted the currency.',
+                message: "Successfullly deleted the currency."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete currency',
+                message: "unable to delete currency"
             };
             return response.status(400).send(errorResponse);
         }

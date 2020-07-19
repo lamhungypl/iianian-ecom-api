@@ -1,30 +1,20 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
-import {Like} from 'typeorm/index';
-import {ProductViewLogRepository} from '../repositories/productViewLogRepository';
-import {ProductViewLog} from '../models/productViewLog';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Like } from "typeorm/index";
+import { ProductViewLogRepository } from "../repositories/productViewLogRepository";
+import { ProductViewLog } from "../models/productViewLog";
 
 @Service()
 export class ProductViewLogService {
-
-    constructor(@OrmRepository() private productViewLogRepository: ProductViewLogRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private productViewLogRepository: ProductViewLogRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create view log
-    public async create(productViewLog: any): Promise <ProductViewLog> {
-        this.log.info('Create a new view log ');
+    public async create(productViewLog: any): Promise<ProductViewLog> {
+        this.log.info("Create a new view log ");
         return this.productViewLogRepository.save(productViewLog);
     }
 
@@ -40,7 +30,15 @@ export class ProductViewLogService {
     }
 
     // view log List
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [], relation: any= [], count: number|boolean): Promise<any> {
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        relation: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -61,10 +59,10 @@ export class ProductViewLogService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -74,8 +72,9 @@ export class ProductViewLogService {
             condition.skip = offset;
         }
         condition.order = {
-            id: 'DESC',
-        };        if (count) {
+            id: "DESC"
+        };
+        if (count) {
             return this.productViewLogRepository.count(condition);
         } else {
             return this.productViewLogRepository.find(condition);

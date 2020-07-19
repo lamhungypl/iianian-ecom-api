@@ -1,36 +1,33 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
-import { User } from '../models/User';
-import { UserRepository } from '../repositories/UserRepository';
-import {Like} from 'typeorm';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { User } from "../models/User";
+import { UserRepository } from "../repositories/UserRepository";
+import { Like } from "typeorm";
 
 @Service()
 export class UserService {
-
     constructor(
         @OrmRepository() private userLoginRepository: UserRepository,
         @Logger(__filename) private log: LoggerInterface
-    ) { }
+    ) {}
 
     // find user
     public findOne(findCondition: any): Promise<any> {
-        this.log.info('Find all users');
+        this.log.info("Find all users");
         return this.userLoginRepository.findOne(findCondition);
     }
 
     // user list
-    public list(limit: number = 0, offset: number = 0, select: any = [], relation: any = [], whereConditions: any = [], keyword: string, count: number | boolean): Promise<any> {
+    public list(
+        limit: number = 0,
+        offset: number = 0,
+        select: any = [],
+        relation: any = [],
+        whereConditions: any = [],
+        keyword: string,
+        count: number | boolean
+    ): Promise<any> {
         console.log(keyword);
         const condition: any = {};
 
@@ -51,7 +48,7 @@ export class UserService {
         }
         if (keyword) {
             condition.where = {
-                firstName: Like('%' + keyword + '%'),
+                firstName: Like("%" + keyword + "%")
             };
         }
 
@@ -71,21 +68,21 @@ export class UserService {
 
     // create user
     public async create(user: User): Promise<User> {
-        this.log.info('Create a new user => ', user.toString());
+        this.log.info("Create a new user => ", user.toString());
         const newUser = await this.userLoginRepository.save(user);
         return newUser;
     }
 
     // update user
     public update(id: any, user: User): Promise<User> {
-        this.log.info('Update a user');
+        this.log.info("Update a user");
         user.userId = id;
         return this.userLoginRepository.save(user);
     }
 
     // delete user
     public async delete(id: number): Promise<any> {
-        this.log.info('Delete a user');
+        this.log.info("Delete a user");
         const newUser = await this.userLoginRepository.delete(id);
         return newUser;
     }

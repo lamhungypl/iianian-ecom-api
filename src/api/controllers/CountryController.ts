@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     Put,
@@ -21,16 +11,15 @@ import {
     Req,
     Param,
     QueryParam
-} from 'routing-controllers';
-import {CreateCountry} from './requests/createCountryRequest';
-import {Country} from '../models/country';
-import {CountryService} from '../services/countryService';
-import {UpdateCountry} from './requests/updateCountryRequest';
+} from "routing-controllers";
+import { CreateCountry } from "./requests/createCountryRequest";
+import { Country } from "../models/country";
+import { CountryService } from "../services/countryService";
+import { UpdateCountry } from "./requests/updateCountryRequest";
 
-@JsonController('/country')
+@JsonController("/country")
 export class CountryController {
-    constructor(private countryService: CountryService) {
-    }
+    constructor(private countryService: CountryService) {}
 
     // Create Country API
     /**
@@ -61,20 +50,23 @@ export class CountryController {
      * @apiErrorExample {json} Country error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-country')
+    @Post("/add-country")
     @Authorized()
-    public async addCountry(@Body({validate: true}) countryParam: CreateCountry, @Res() response: any): Promise<any> {
+    public async addCountry(
+        @Body({ validate: true }) countryParam: CreateCountry,
+        @Res() response: any
+    ): Promise<any> {
         const existCountry = await this.countryService.findOne({
             where: {
                 name: countryParam.name,
                 isoCode2: countryParam.isoCode2,
-                isoCode3: countryParam.isoCode3,
-            },
+                isoCode3: countryParam.isoCode3
+            }
         });
         if (existCountry) {
             const errorResponse: any = {
                 status: 0,
-                message: 'you already added this country.',
+                message: "you already added this country."
             };
             return response.status(200).send(errorResponse);
         }
@@ -88,14 +80,14 @@ export class CountryController {
         if (countrySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully added new country.',
-                data: countrySave,
+                message: "Successfully added new country.",
+                data: countrySave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to add the country. ',
+                message: "Unable to add the country. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -132,18 +124,21 @@ export class CountryController {
      * @apiErrorExample {json} Country error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-country/:id')
+    @Put("/update-country/:id")
     @Authorized()
-    public async updateCountry(@Body({validate: true}) countryParam: UpdateCountry, @Res() response: any): Promise<any> {
+    public async updateCountry(
+        @Body({ validate: true }) countryParam: UpdateCountry,
+        @Res() response: any
+    ): Promise<any> {
         const country = await this.countryService.findOne({
             where: {
-                countryId: countryParam.countryId,
-            },
+                countryId: countryParam.countryId
+            }
         });
         if (!country) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid countryId',
+                message: "Invalid countryId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -156,14 +151,14 @@ export class CountryController {
         if (countrySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated country',
-                data: countrySave,
+                message: "Successfully updated country",
+                data: countrySave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update country',
+                message: "unable to update country"
             };
             return response.status(400).send(errorResponse);
         }
@@ -197,31 +192,50 @@ export class CountryController {
      * @apiErrorExample {json} Country error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/countrylist')
+    @Get("/countrylist")
     @Authorized()
-    public async countryList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
-        const select = ['countryId', 'name', 'isoCode2', 'isoCode3', 'postcodeRequired', 'isActive'];
+    public async countryList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "countryId",
+            "name",
+            "isoCode2",
+            "isoCode3",
+            "postcodeRequired",
+            "isActive"
+        ];
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            },
-
+                name: "name",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const countryList = await this.countryService.list(limit, offset, select, search, WhereConditions, count);
+        const countryList = await this.countryService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (countryList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got country List',
-                data: countryList,
+                message: "Successfully got country List",
+                data: countryList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to get countryList',
+                message: "unable to get countryList"
             };
             return response.status(400).send(errorResponse);
         }
@@ -246,19 +260,22 @@ export class CountryController {
      * @apiErrorExample {json} Country error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-country/:id')
+    @Delete("/delete-country/:id")
     @Authorized()
-    public async deleteCountry(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteCountry(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const country = await this.countryService.findOne({
             where: {
-                countryId: id,
-            },
+                countryId: id
+            }
         });
         if (!country) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid CountryId',
+                message: "Invalid CountryId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -266,13 +283,13 @@ export class CountryController {
         if (deleteCountry) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted country.',
+                message: "Successfully deleted country."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete country',
+                message: "unable to delete country"
             };
             return response.status(400).send(errorResponse);
         }

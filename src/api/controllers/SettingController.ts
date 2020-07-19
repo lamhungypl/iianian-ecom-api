@@ -1,26 +1,19 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import { Get, JsonController, Res, Body, Post } from "routing-controllers";
+import { SettingService } from "../services/SettingService";
+import { Settings } from "../models/setting";
+import { CreateSettingRequest } from "./requests/createSettingRequest";
+import { env } from "../../env";
+import { S3Service } from "../services/S3Service";
+import { ImageService } from "../services/ImageService";
 
-import 'reflect-metadata';
-import {Get, JsonController, Res, Body, Post} from 'routing-controllers';
-import {SettingService} from '../services/SettingService';
-import {Settings} from '../models/setting';
-import {CreateSettingRequest} from './requests/createSettingRequest';
-import {env} from '../../env';
-import {S3Service} from '../services/S3Service';
-import {ImageService} from '../services/ImageService';
-
-@JsonController('/settings')
+@JsonController("/settings")
 export class SettingController {
-    constructor(private settingService: SettingService, private s3Service: S3Service,  private imageService: ImageService ) {
-    }
+    constructor(
+        private settingService: SettingService,
+        private s3Service: S3Service,
+        private imageService: ImageService
+    ) {}
 
     // Get Settings list API
     /**
@@ -38,20 +31,24 @@ export class SettingController {
      * @apiErrorExample {json} getSettings error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/get-settings')
+    @Get("/get-settings")
     public async settingsList(@Res() response: any): Promise<any> {
-
-        const select = '';
+        const select = "";
         const relation = [];
         const WhereConditions = [];
         const limit = 1;
 
-        const settings: any = await this.settingService.list(limit, select, relation, WhereConditions);
-        console.log('settings' + settings);
+        const settings: any = await this.settingService.list(
+            limit,
+            select,
+            relation,
+            WhereConditions
+        );
+        console.log("settings" + settings);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get settings',
-            data: settings,
+            message: "Successfully get settings",
+            data: settings
         };
         return response.status(200).send(successResponse);
     }
@@ -125,8 +122,11 @@ export class SettingController {
      * @apiErrorExample {json} addSettings error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/create-settings')
-    public async createSettings(@Body({validate: true}) settings: CreateSettingRequest, @Res() response: any): Promise<any> {
+    @Post("/create-settings")
+    public async createSettings(
+        @Body({ validate: true }) settings: CreateSettingRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(settings.metaTagKeywords);
         const settingValue: any = await this.settingService.findOne();
         console.log(settingValue);
@@ -146,14 +146,17 @@ export class SettingController {
             newSettings.storeFax = settings.storeFax;
             if (settings.storeLogo) {
                 const logo = settings.storeLogo;
-                const type = logo.split(';')[0].split('/')[1];
-                const name = 'Img_' + Date.now() + '.' + type;
-                const path = 'storeLogo/';
-                const base64Data = new Buffer(logo.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-                if (env.imageserver === 's3') {
-                    await this.s3Service.imageUpload((path + name), base64Data, type);
+                const type = logo.split(";")[0].split("/")[1];
+                const name = "Img_" + Date.now() + "." + type;
+                const path = "storeLogo/";
+                const base64Data = new Buffer(
+                    logo.replace(/^data:image\/\w+;base64,/, ""),
+                    "base64"
+                );
+                if (env.imageserver === "s3") {
+                    await this.s3Service.imageUpload(path + name, base64Data, type);
                 } else {
-                    await this.imageService.imageUpload((path + name), base64Data);
+                    await this.imageService.imageUpload(path + name, base64Data);
                 }
 
                 newSettings.storeLogo = name;
@@ -173,12 +176,11 @@ export class SettingController {
             newSettings.twitter = settings.twitter;
             newSettings.instagram = settings.instagram;
             newSettings.isActive = settings.status;
-            const createdData: any =  await this.settingService.create(newSettings);
+            const createdData: any = await this.settingService.create(newSettings);
             const successResponse: any = {
                 status: 1,
-                message: 'Settings created Successfully',
-                data: createdData,
-
+                message: "Settings created Successfully",
+                data: createdData
             };
             return response.status(200).send(successResponse);
         } else {
@@ -197,14 +199,17 @@ export class SettingController {
             settingValue.storeLogo = settings.storeLogo;
             if (settings.storeLogo) {
                 const logo = settings.storeLogo;
-                const type = logo.split(';')[0].split('/')[1];
-                const name = 'Img_' + Date.now() + '.' + type;
-                const path = 'storeLogo/';
-                const base64Data = new Buffer(logo.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-                if (env.imageserver === 's3') {
-                    await this.s3Service.imageUpload((path + name), base64Data, type);
+                const type = logo.split(";")[0].split("/")[1];
+                const name = "Img_" + Date.now() + "." + type;
+                const path = "storeLogo/";
+                const base64Data = new Buffer(
+                    logo.replace(/^data:image\/\w+;base64,/, ""),
+                    "base64"
+                );
+                if (env.imageserver === "s3") {
+                    await this.s3Service.imageUpload(path + name, base64Data, type);
                 } else {
-                    await this.imageService.imageUpload((path + name), base64Data);
+                    await this.imageService.imageUpload(path + name, base64Data);
                 }
 
                 settingValue.storeLogo = name;
@@ -224,12 +229,11 @@ export class SettingController {
             settingValue.twitter = settings.twitter;
             settingValue.instagram = settings.instagram;
             settingValue.isActive = settings.status;
-            const updatedData: any  = await this.settingService.create(settingValue);
+            const updatedData: any = await this.settingService.create(settingValue);
             const successResponse: any = {
                 status: 1,
-                message: 'Settings Updated Successfully',
-                data: updatedData,
-
+                message: "Settings Updated Successfully",
+                data: updatedData
             };
             return response.status(200).send(successResponse);
         }

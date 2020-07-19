@@ -1,25 +1,12 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { CategoryPath } from '../models/CategoryPath';
-import { CategoryPathRepository } from '../repositories/CategoryPathRepository';
-import {Like} from 'typeorm/index';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { CategoryPath } from "../models/CategoryPath";
+import { CategoryPathRepository } from "../repositories/CategoryPathRepository";
+import { Like } from "typeorm/index";
 
 @Service()
 export class CategoryPathService {
-
-    constructor(@OrmRepository() private categoryPathRepository: CategoryPathRepository
-                ) {
-    }
+    constructor(@OrmRepository() private categoryPathRepository: CategoryPathRepository) {}
     // create CategoryPath
     public async create(categoryPath: any): Promise<CategoryPath> {
         return this.categoryPathRepository.save(categoryPath);
@@ -34,7 +21,15 @@ export class CategoryPathService {
         return;
     }
     // categoryList
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [], sortOrder: number , count: number | boolean): Promise<any> {
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        sortOrder: number,
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -51,10 +46,10 @@ export class CategoryPathService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -66,12 +61,12 @@ export class CategoryPathService {
 
         if (sortOrder && sortOrder === 1) {
             condition.order = {
-                sortOrder: 'ASC',
+                sortOrder: "ASC"
             };
         }
         if (sortOrder && sortOrder === 2) {
             condition.order = {
-                sortOrder: 'DESC',
+                sortOrder: "DESC"
             };
         }
 

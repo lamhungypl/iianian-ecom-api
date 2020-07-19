@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     Post,
@@ -21,17 +11,15 @@ import {
     Req,
     QueryParam,
     Param
-} from 'routing-controllers';
-import {AddressService} from '../services/AddressService';
-import {Address} from '../models/Address';
-import {CreateAddress} from './requests/CreateAddressRequest';
-import {CustomerService} from '../services/CustomerService';
+} from "routing-controllers";
+import { AddressService } from "../services/AddressService";
+import { Address } from "../models/Address";
+import { CreateAddress } from "./requests/CreateAddressRequest";
+import { CustomerService } from "../services/CustomerService";
 
-@JsonController('/address')
+@JsonController("/address")
 export class AddressController {
-    constructor(private addressService: AddressService,
-                private customerService: CustomerService) {
-    }
+    constructor(private addressService: AddressService, private customerService: CustomerService) {}
 
     // Create Address
     /**
@@ -65,18 +53,21 @@ export class AddressController {
      * @apiErrorExample {json} addAddress error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-address')
+    @Post("/add-address")
     @Authorized()
-    public async createAddress(@Body({validate: true}) addressParam: CreateAddress, @Res() response: any): Promise<any> {
+    public async createAddress(
+        @Body({ validate: true }) addressParam: CreateAddress,
+        @Res() response: any
+    ): Promise<any> {
         const customer = await this.customerService.findOne({
             where: {
-                id: addressParam.customerId,
-            },
+                id: addressParam.customerId
+            }
         });
         if (!customer) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid customerId',
+                message: "Invalid customerId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -95,14 +86,14 @@ export class AddressController {
         if (addressSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully created address',
-                data: addressSave,
+                message: "Successfully created address",
+                data: addressSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to create address. ',
+                message: "Unable to create address. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -141,19 +132,23 @@ export class AddressController {
      * @apiErrorExample {json} Address error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-address/:id')
+    @Put("/update-address/:id")
     @Authorized()
-    public async updateAddress(@Body({validate: true}) addressParam: CreateAddress, @Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async updateAddress(
+        @Body({ validate: true }) addressParam: CreateAddress,
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const address: any = await this.addressService.findOne({
             where: {
-                addressId: id,
-            },
+                addressId: id
+            }
         });
         if (!address) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid addressId',
+                message: "Invalid addressId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -166,18 +161,18 @@ export class AddressController {
         address.addressType = addressParam.addressType;
 
         const addressSave = await this.addressService.create(address);
-        console.log('addressSave' + addressSave);
+        console.log("addressSave" + addressSave);
         if (addressSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated address',
-                data: addressSave,
+                message: "Successfully updated address",
+                data: addressSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'Unable to update the address. ',
+                message: "Unable to update the address. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -202,23 +197,27 @@ export class AddressController {
      * @apiErrorExample {json} Address error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/addresslist')
+    @Get("/addresslist")
     @Authorized()
-    public async addressList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<any> {
-
+    public async addressList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
         const WhereConditions = [];
         const addressList = await this.addressService.list(limit, offset, WhereConditions, count);
         if (addressList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got complete address list.',
-                data: addressList,
+                message: "Successfully got complete address list.",
+                data: addressList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'Unable to get the address list. ',
+                message: "Unable to get the address list. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -243,19 +242,22 @@ export class AddressController {
      * @apiErrorExample {json} address error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-address/:id')
+    @Delete("/delete-address/:id")
     @Authorized()
-    public async deleteAddress(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteAddress(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const address = await this.addressService.findOne({
             where: {
-                addressId: id,
-            },
+                addressId: id
+            }
         });
         if (!address) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid addressId',
+                message: "Invalid addressId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -264,13 +266,13 @@ export class AddressController {
         if (deleteAddress === 1) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted address',
+                message: "Successfully deleted address"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to delete the  address. ',
+                message: "Unable to delete the  address. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -299,30 +301,42 @@ export class AddressController {
      * @apiErrorExample {json} Address error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/get-address-list/:id')
+    @Get("/get-address-list/:id")
     @Authorized()
-    public async getAddress(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Param('id') id: number, @Req() request: any, @Res() response: any): Promise<any> {
+    public async getAddress(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Param("id") id: number,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         console.log(id);
-        const customer = await this.customerService.findOne({where: {id}});
+        const customer = await this.customerService.findOne({ where: { id } });
         console.log(customer);
         if (customer.length === 0) {
             const errorResponse: any = {
                 status: 0,
-                message: ' invalid customer Id',
+                message: " invalid customer Id"
             };
             return response.status(400).send(errorResponse);
         }
         const WhereConditions = [
             {
-                name: 'customerId',
-                value: id,
-            },
+                name: "customerId",
+                value: id
+            }
         ];
-        const customerAddress = await this.addressService.list(limit, offset, WhereConditions, count);
+        const customerAddress = await this.addressService.list(
+            limit,
+            offset,
+            WhereConditions,
+            count
+        );
         const successResponse: any = {
             status: 1,
-            message: 'Successfully Get the customer Address',
-            data: customerAddress,
+            message: "Successfully Get the customer Address",
+            data: customerAddress
         };
         return response.status(200).send(successResponse);
     }

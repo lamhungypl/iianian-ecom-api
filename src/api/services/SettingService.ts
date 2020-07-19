@@ -1,26 +1,16 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {Settings} from '../models/setting';
-import {SettingsRepository} from '../repositories/SettingsRepository';
-import {Like} from 'typeorm';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Settings } from "../models/setting";
+import { SettingsRepository } from "../repositories/SettingsRepository";
+import { Like } from "typeorm";
 
 @Service()
 export class SettingService {
-
-    constructor(@OrmRepository() private settingsRepository: SettingsRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private settingsRepository: SettingsRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // find one condition
     public findOne(): Promise<any> {
@@ -29,12 +19,17 @@ export class SettingService {
 
     // find all setting
     public findAll(): Promise<any> {
-        this.log.info('Find all setting');
+        this.log.info("Find all setting");
         return this.settingsRepository.find();
     }
 
     // setting list
-    public list(limit: number, select: any = [], relation: any = [], whereConditions: any = []): Promise<any> {
+    public list(
+        limit: number,
+        select: any = [],
+        relation: any = [],
+        whereConditions: any = []
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -50,17 +45,16 @@ export class SettingService {
         if (whereConditions && whereConditions.length > 0) {
             whereConditions.forEach((item: any) => {
                 const operator: string = item.op;
-                if (operator === 'where' && item.value !== '') {
+                if (operator === "where" && item.value !== "") {
                     condition.where[item.name] = item.value;
-                } else if (operator === 'like' && item.value !== '') {
-                    condition.where[item.name] = Like('%' + item.value + '%');
+                } else if (operator === "like" && item.value !== "") {
+                    condition.where[item.name] = Like("%" + item.value + "%");
                 }
             });
         }
 
         if (limit && limit > 0) {
             condition.take = limit;
-
         }
         console.log(condition);
         return this.settingsRepository.find(condition);
@@ -74,14 +68,14 @@ export class SettingService {
 
     // update setting
     public update(id: any, settings: Settings): Promise<Settings> {
-        this.log.info('Update a product');
+        this.log.info("Update a product");
         settings.settingsId = id;
         return this.settingsRepository.save(settings);
     }
 
     // delete setting
     public async delete(id: any): Promise<any> {
-        this.log.info('Delete a product');
+        this.log.info("Delete a product");
         const newSettings = await this.settingsRepository.delete(id);
         return newSettings;
     }

@@ -1,34 +1,26 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import { Application } from "express";
+import express from "express";
+import * as bodyParser from "body-parser";
+import { MicroframeworkLoader, MicroframeworkSettings } from "microframework-w3tec";
+import { useExpressServer } from "routing-controllers";
 
-import { Application } from 'express';
-import express from 'express';
-import * as bodyParser from 'body-parser';
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
-import { useExpressServer } from 'routing-controllers';
+import { authorizationChecker } from "../auth/authorizationChecker";
+import { currentUserChecker } from "../auth/currentUserChecker";
+import { env } from "../env";
 
-import { authorizationChecker } from '../auth/authorizationChecker';
-import { currentUserChecker } from '../auth/currentUserChecker';
-import { env } from '../env';
-
-export const expressLoader: MicroframeworkLoader = (settings: MicroframeworkSettings | undefined) => {
+export const expressLoader: MicroframeworkLoader = (
+    settings: MicroframeworkSettings | undefined
+) => {
     if (settings) {
-        const connection = settings.getData('connection');
+        const connection = settings.getData("connection");
 
         /**
          * We create a new express server instance.
          * We could have also use useExpressServer here to attach controllers to an existing express instance.
          */
         const app = express();
-        app.use(bodyParser.urlencoded({extended: true}));
-        app.use(bodyParser.json({limit: '50mb'}));
+        app.use(bodyParser.urlencoded({ extended: true }));
+        app.use(bodyParser.json({ limit: "50mb" }));
         const expressApp: Application = useExpressServer(app, {
             cors: true,
             classTransformer: true,
@@ -46,7 +38,7 @@ export const expressLoader: MicroframeworkLoader = (settings: MicroframeworkSett
              * Authorization features
              */
             authorizationChecker: authorizationChecker(connection),
-            currentUserChecker: currentUserChecker(connection),
+            currentUserChecker: currentUserChecker(connection)
         });
 
         // // parse application/x-www-form-urlencoded
@@ -56,10 +48,10 @@ export const expressLoader: MicroframeworkLoader = (settings: MicroframeworkSett
         // Run application to listen on given port
         if (!env.isTest) {
             const server = expressApp.listen(env.app.port);
-            settings.setData('express_server', server);
+            settings.setData("express_server", server);
         }
 
         // Here we can set the data for other loaders
-        settings.setData('express_app', expressApp);
+        settings.setData("express_app", expressApp);
     }
 };

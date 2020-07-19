@@ -1,28 +1,17 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
-import {IsNotEmpty} from 'class-validator';
+import "reflect-metadata";
+import { IsNotEmpty } from "class-validator";
 
 export class UpdatePage {
-
     @IsNotEmpty()
     public pageId: number;
 
     @IsNotEmpty({
-        message: 'title is required',
+        message: "title is required"
     })
     public title: string;
 
     @IsNotEmpty({
-        message: 'content is required',
+        message: "content is required"
     })
     public content: string;
 

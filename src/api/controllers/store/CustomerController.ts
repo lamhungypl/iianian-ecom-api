@@ -1,37 +1,40 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import {
+    Post,
+    Body,
+    JsonController,
+    Res,
+    Authorized,
+    Req,
+    Get,
+    QueryParam
+} from "routing-controllers";
+import { classToPlain } from "class-transformer";
+import jwt from "jsonwebtoken";
+import { MAILService } from "../../../auth/mail.services";
+import { CustomerRegisterRequest } from "./requests/customerRegisterRequest";
+import { CustomerLogin } from "./requests/customerLoginRequest";
+import { CustomerOauthLogin } from "./requests/customerOauthLoginRequest";
+import { ChangePassword } from "./requests/changePasswordRequest";
+import { Customer } from "../../models/Customer";
+import { CustomerService } from "../../services/CustomerService";
+import { LoginLogService } from "../../services/loginLogService";
+import { CustomerEditProfileRequest } from "./requests/customerEditProfileRequest";
+import { env } from "../../../env";
+import { LoginLog } from "../../models/loginLog";
+import { EmailTemplateService } from "../../services/emailTemplateService";
+import { ImageService } from "../../services/ImageService";
+import { S3Service } from "../../services/S3Service";
 
-import 'reflect-metadata';
-import {Post, Body, JsonController, Res, Authorized, Req, Get, QueryParam} from 'routing-controllers';
-import {classToPlain} from 'class-transformer';
-import jwt from 'jsonwebtoken';
-import {MAILService} from '../../../auth/mail.services';
-import {CustomerRegisterRequest} from './requests/customerRegisterRequest';
-import {CustomerLogin} from './requests/customerLoginRequest';
-import {CustomerOauthLogin} from './requests/customerOauthLoginRequest';
-import {ChangePassword} from './requests/changePasswordRequest';
-import {Customer} from '../../models/Customer';
-import {CustomerService} from '../../services/CustomerService';
-import {LoginLogService} from '../../services/loginLogService';
-import {CustomerEditProfileRequest} from './requests/customerEditProfileRequest';
-import {env} from '../../../env';
-import {LoginLog} from '../../models/loginLog';
-import {EmailTemplateService} from '../../services/emailTemplateService';
-import {ImageService} from '../../services/ImageService';
-import {S3Service} from '../../services/S3Service';
-
-@JsonController('/customer')
+@JsonController("/customer")
 export class CustomerController {
-    constructor(private customerService: CustomerService, private s3Service: S3Service,
-                private imageService: ImageService, private loginLogService: LoginLogService, private emailTemplateService: EmailTemplateService) {
-    }
+    constructor(
+        private customerService: CustomerService,
+        private s3Service: S3Service,
+        private imageService: ImageService,
+        private loginLogService: LoginLogService,
+        private emailTemplateService: EmailTemplateService
+    ) {}
 
     // Customer Register API
     /**
@@ -61,8 +64,12 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Customer Register Function
-    @Post('/register')
-    public async register(@Body({validate: true})registerParam: CustomerRegisterRequest, @Req() request: any, @Res() response: any): Promise<any> {
+    @Post("/register")
+    public async register(
+        @Body({ validate: true }) registerParam: CustomerRegisterRequest,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         const newUser = new Customer();
         newUser.firstName = registerParam.name;
         newUser.password = await Customer.hashPassword(registerParam.password);
@@ -70,41 +77,50 @@ export class CustomerController {
         newUser.username = registerParam.emailId;
         newUser.mobileNumber = registerParam.phoneNumber;
         newUser.isActive = 1;
-        newUser.ip = (request.headers['x-forwarded-for'] ||
+        newUser.ip = (
+            request.headers["x-forwarded-for"] ||
             request.connection.remoteAddress ||
             request.socket.remoteAddress ||
-            request.connection.socket.remoteAddress).split(',')[0];
-        const resultUser = await this.customerService.findOne({where: {email: registerParam.emailId, deleteFlag: 0}});
+            request.connection.socket.remoteAddress
+        ).split(",")[0];
+        const resultUser = await this.customerService.findOne({
+            where: { email: registerParam.emailId, deleteFlag: 0 }
+        });
         if (resultUser) {
             const successResponse: any = {
                 status: 1,
-                message: 'You already registered please login.',
+                message: "You already registered please login."
             };
             return response.status(400).send(successResponse);
         }
         if (registerParam.password === registerParam.confirmPassword) {
             const resultData = await this.customerService.create(newUser);
             const emailContent = await this.emailTemplateService.findOne(1);
-            const message = emailContent.content.replace('{name}', resultData.firstName);
-            const sendMailRes = MAILService.registerMail(message, resultData.email, emailContent.subject);
+            const message = emailContent.content.replace("{name}", resultData.firstName);
+            const sendMailRes = MAILService.registerMail(
+                message,
+                resultData.email,
+                emailContent.subject
+            );
             if (sendMailRes) {
                 const successResponse: any = {
                     status: 1,
-                    message: 'Thank you for registering with us. Kindly check your email inbox for further details. ',
-                    data: classToPlain(resultData),
+                    message:
+                        "Thank you for registering with us. Kindly check your email inbox for further details. ",
+                    data: classToPlain(resultData)
                 };
                 return response.status(200).send(successResponse);
             } else {
                 const errorResponse: any = {
                     status: 0,
-                    message: 'Registration successful, but unable to send email. ',
+                    message: "Registration successful, but unable to send email. "
                 };
                 return response.status(400).send(errorResponse);
             }
         }
         const errorPasswordResponse: any = {
             status: 0,
-            message: 'A mismatch between password and confirm password. ',
+            message: "A mismatch between password and confirm password. "
         };
         return response.status(400).send(errorPasswordResponse);
     }
@@ -129,13 +145,18 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Forgot Password Function
-    @Post('/forgot-password')
-    public async forgotPassword(@Body({validate: true}) forgotparam: any, @Res() response: any): Promise<any> {
-        const resultData = await this.customerService.findOne({where: {email: forgotparam.emailId}});
+    @Post("/forgot-password")
+    public async forgotPassword(
+        @Body({ validate: true }) forgotparam: any,
+        @Res() response: any
+    ): Promise<any> {
+        const resultData = await this.customerService.findOne({
+            where: { email: forgotparam.emailId }
+        });
         if (!resultData) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid Email Id',
+                message: "Invalid Email Id"
             };
             return response.status(400).send(errorResponse);
         }
@@ -143,19 +164,25 @@ export class CustomerController {
         resultData.password = await Customer.hashPassword(tempPassword);
         const updateUserData = await this.customerService.update(resultData.id, resultData);
         const emailContent = await this.emailTemplateService.findOne(2);
-        const message = emailContent.content.replace('{name}', updateUserData.firstName).replace('{xxxxxx}', tempPassword);
+        const message = emailContent.content
+            .replace("{name}", updateUserData.firstName)
+            .replace("{xxxxxx}", tempPassword);
         emailContent.content = message;
-        const sendMailRes = MAILService.passwordForgotMail(message, updateUserData.email, emailContent.subject);
+        const sendMailRes = MAILService.passwordForgotMail(
+            message,
+            updateUserData.email,
+            emailContent.subject
+        );
         if (sendMailRes) {
             const successResponse: any = {
                 status: 1,
-                message: 'Your password has been sent to your email inbox.',
+                message: "Your password has been sent to your email inbox."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Error in sending email, Invalid email.',
+                message: "Error in sending email, Invalid email."
             };
             return response.status(400).send(errorResponse);
         }
@@ -186,58 +213,75 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Login Function
-    @Post('/login')
-    public async login(@Body({validate: true}) loginParam: CustomerLogin, @Req() request: any, @Res() response: any): Promise<any> {
+    @Post("/login")
+    public async login(
+        @Body({ validate: true }) loginParam: CustomerLogin,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         const resultData = await this.customerService.findOne({
-            select: ['id', 'firstName', 'email', 'mobileNumber', 'password', 'avatar', 'avatarPath', 'isActive'],
-            where: {email: loginParam.emailId},
+            select: [
+                "id",
+                "firstName",
+                "email",
+                "mobileNumber",
+                "password",
+                "avatar",
+                "avatarPath",
+                "isActive"
+            ],
+            where: { email: loginParam.emailId }
         });
         if (!resultData) {
             const errorUserNameResponse: any = {
                 status: 0,
-                message: 'Invalid EmailId',
+                message: "Invalid EmailId"
             };
             return response.status(400).send(errorUserNameResponse);
         }
         if (resultData.isActive === 0) {
             const errorUserInActiveResponse: any = {
                 status: 0,
-                message: 'InActive Customer.',
+                message: "InActive Customer."
             };
             return response.status(400).send(errorUserInActiveResponse);
         }
         if (await Customer.comparePassword(resultData, loginParam.password)) {
             // create a token
-            const token = jwt.sign({id: resultData.id}, '123##$$)(***&', {
-                expiresIn: 86400, // expires in 24 hours
+            const token = jwt.sign({ id: resultData.id }, "123##$$)(***&", {
+                expiresIn: 86400 // expires in 24 hours
             });
 
             const loginLog = new LoginLog();
             loginLog.customerId = resultData.id;
             loginLog.emailId = resultData.email;
             loginLog.firstName = resultData.firstName;
-            loginLog.ipAddress = (request.headers['x-forwarded-for'] ||
+            loginLog.ipAddress = (
+                request.headers["x-forwarded-for"] ||
                 request.connection.remoteAddress ||
                 request.socket.remoteAddress ||
-                request.connection.socket.remoteAddress).split(',')[0];
+                request.connection.socket.remoteAddress
+            ).split(",")[0];
             const savedloginLog = await this.loginLogService.create(loginLog);
 
-            const customer = await this.customerService.findOne({where: {email: loginParam.emailId}});
+            const customer = await this.customerService.findOne({
+                where: { email: loginParam.emailId }
+            });
             customer.lastLogin = savedloginLog.createdDate;
             await this.customerService.create(customer);
             const successResponse: any = {
                 status: 1,
-                message: 'Loggedin successfully.',
+                message: "Loggedin successfully.",
                 data: {
                     token,
-                    user: classToPlain(resultData),
-                },
+                    user: classToPlain(resultData)
+                }
             };
             return response.status(200).send(successResponse);
         }
         const errorResponse: any = {
             status: 0,
-            message: 'Invalid password',
+            message: "Invalid password"
         };
         return response.status(400).send(errorResponse);
     }
@@ -264,17 +308,20 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Change Password Function
-    @Post('/change-password')
-    @Authorized('customer')
-    public async changePassword(@Body({validate: true}) changePasswordParam: ChangePassword, @Req() request: any, @Res() response: any): Promise<any> {
-
-        const resultData = await this.customerService.findOne({where: {id: request.user.id}});
+    @Post("/change-password")
+    @Authorized("customer")
+    public async changePassword(
+        @Body({ validate: true }) changePasswordParam: ChangePassword,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        const resultData = await this.customerService.findOne({ where: { id: request.user.id } });
         if (await Customer.comparePassword(resultData, changePasswordParam.oldPassword)) {
             const val = await Customer.comparePassword(resultData, changePasswordParam.newPassword);
             if (val) {
                 const errResponse: any = {
                     status: 0,
-                    message: 'you are given a same password, please try different one',
+                    message: "you are given a same password, please try different one"
                 };
                 return response.status(400).send(errResponse);
             }
@@ -283,14 +330,14 @@ export class CustomerController {
             if (updateUserData) {
                 const successResponse: any = {
                     status: 1,
-                    message: 'Your password changed successfully',
+                    message: "Your password changed successfully"
                 };
                 return response.status(200).send(successResponse);
             }
         }
         const errorResponse: any = {
             status: 0,
-            message: 'Your old password is wrong',
+            message: "Your old password is wrong"
         };
         return response.status(400).send(errorResponse);
     }
@@ -312,14 +359,14 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Get Profile Function
-    @Get('/get-profile')
-    @Authorized('customer')
+    @Get("/get-profile")
+    @Authorized("customer")
     public async getProfile(@Req() request: any, @Res() response: any): Promise<any> {
-        const resultData = await this.customerService.findOne({where: {id: request.user.id}});
+        const resultData = await this.customerService.findOne({ where: { id: request.user.id } });
         const successResponse: any = {
             status: 1,
-            message: 'Successfully Get the Profile.',
-            data: resultData,
+            message: "Successfully Get the Profile.",
+            data: resultData
         };
         return response.status(200).send(successResponse);
     }
@@ -363,26 +410,43 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Customer Profile Edit Function
-    @Post('/edit-profile')
-    @Authorized('customer')
-    public async editProfile(@Body({validate: true}) customerEditProfileRequest: CustomerEditProfileRequest, @Req() request: any, @Res() response: any): Promise<any> {
+    @Post("/edit-profile")
+    @Authorized("customer")
+    public async editProfile(
+        @Body({ validate: true }) customerEditProfileRequest: CustomerEditProfileRequest,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         const image = customerEditProfileRequest.image;
         let name;
 
         const resultData = await this.customerService.findOne({
-            select: ['id', 'firstName', 'lastName', 'email', 'mobileNumber', 'address', 'zoneId', 'countryId', 'pincode', 'avatar', 'avatarPath', 'password'],
-            where: {id: request.user.id},
+            select: [
+                "id",
+                "firstName",
+                "lastName",
+                "email",
+                "mobileNumber",
+                "address",
+                "zoneId",
+                "countryId",
+                "pincode",
+                "avatar",
+                "avatarPath",
+                "password"
+            ],
+            where: { id: request.user.id }
         });
         if (image) {
-            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-            const type = image.split(';')[0].split('/')[1];
-            name = 'Img_' + Date.now() + '.' + type; // path.extname(file.originalname);
-            const path = 'customer/';
+            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), "base64");
+            const type = image.split(";")[0].split("/")[1];
+            name = "Img_" + Date.now() + "." + type; // path.extname(file.originalname);
+            const path = "customer/";
             let val: any;
-            if (env.imageserver === 's3') {
-                val = await this.s3Service.imageUpload((path + name), base64Data, type);
+            if (env.imageserver === "s3") {
+                val = await this.s3Service.imageUpload(path + name, base64Data, type);
             } else {
-                val = await this.imageService.imageUpload((path + name), base64Data);
+                val = await this.imageService.imageUpload(path + name, base64Data);
             }
             console.log(val);
             resultData.avatar = name;
@@ -404,18 +468,17 @@ export class CustomerController {
             if (updateUserData) {
                 const successResponseResult: any = {
                     status: 1,
-                    message: 'Your profile Update Successfully.',
-                    data: classToPlain(updateUserData),
+                    message: "Your profile Update Successfully.",
+                    data: classToPlain(updateUserData)
                 };
                 return response.status(200).send(successResponseResult);
             }
-
         }
         const updateuserData = await this.customerService.update(resultData.id, resultData);
         const successResponse: any = {
             status: 1,
-            message: 'Your profile Update Successfully.',
-            data: classToPlain(updateuserData),
+            message: "Your profile Update Successfully.",
+            data: classToPlain(updateuserData)
         };
         return response.status(200).send(successResponse);
     }
@@ -442,12 +505,12 @@ export class CustomerController {
      * @apiErrorExample {json} Front error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/login-log-list')
-    public async LogList(@QueryParam('limit') limit: number, @Res() response: any): Promise<any> {
+    @Get("/login-log-list")
+    public async LogList(@QueryParam("limit") limit: number, @Res() response: any): Promise<any> {
         const loginLogList = await this.loginLogService.logList(limit);
         const promise = loginLogList.map(async (result: any) => {
-            const moment = require('moment');
-            const createdDate = moment.utc(result.createdDate).local().format('YYYY-MM-DD');
+            const moment = require("moment");
+            const createdDate = moment.utc(result.createdDate).local().format("YYYY-MM-DD");
             const temp: any = result;
             temp.createdDate = createdDate;
             return temp;
@@ -455,11 +518,10 @@ export class CustomerController {
         const finalResult = await Promise.all(promise);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get login Log list',
-            data: finalResult,
+            message: "Successfully get login Log list",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
-
     }
 
     // Oauth Login API
@@ -490,11 +552,15 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Login Function
-    @Post('/Oauth-login')
-    public async OauthLogin(@Body({validate: true}) loginParam: CustomerOauthLogin, @Req() request: any, @Res() response: any): Promise<any> {
+    @Post("/Oauth-login")
+    public async OauthLogin(
+        @Body({ validate: true }) loginParam: CustomerOauthLogin,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         console.log(loginParam.emailId);
         const resultData = await this.customerService.findOne({
-            where: {email: loginParam.emailId},
+            where: { email: loginParam.emailId }
         });
         if (!resultData) {
             const newUser = new Customer();
@@ -503,43 +569,50 @@ export class CustomerController {
             newUser.email = loginParam.emailId;
             newUser.username = loginParam.emailId;
             newUser.isActive = 1;
-            newUser.ip = (request.headers['x-forwarded-for'] ||
+            newUser.ip = (
+                request.headers["x-forwarded-for"] ||
                 request.connection.remoteAddress ||
                 request.socket.remoteAddress ||
-                request.connection.socket.remoteAddress).split(',')[0];
+                request.connection.socket.remoteAddress
+            ).split(",")[0];
             const newCustomer = await this.customerService.create(newUser);
             // create a token
-            const token = jwt.sign({id: newCustomer.id}, '123##$$)(***&', {
-                expiresIn: 86400, // expires in 24 hours
+            const token = jwt.sign({ id: newCustomer.id }, "123##$$)(***&", {
+                expiresIn: 86400 // expires in 24 hours
             });
             const emailContent = await this.emailTemplateService.findOne(1);
-            const message = emailContent.content.replace('{name}', newCustomer.username);
-            const sendMailRes = MAILService.registerMail(message, newCustomer.email, emailContent.subject);
+            const message = emailContent.content.replace("{name}", newCustomer.username);
+            const sendMailRes = MAILService.registerMail(
+                message,
+                newCustomer.email,
+                emailContent.subject
+            );
             if (sendMailRes) {
                 const successResponse: any = {
                     status: 1,
-                    message: 'Thank you for registering with us. Kindly check your email inbox for further details. ',
+                    message:
+                        "Thank you for registering with us. Kindly check your email inbox for further details. ",
                     data: {
                         token,
                         user: classToPlain(resultData),
-                        password: tempPassword,
-                    },
+                        password: tempPassword
+                    }
                 };
                 return response.status(200).send(successResponse);
             }
         } else {
             // create a token
-            const token = jwt.sign({id: resultData.id}, '123##$$)(***&', {
-                expiresIn: 86400, // expires in 24 hours
+            const token = jwt.sign({ id: resultData.id }, "123##$$)(***&", {
+                expiresIn: 86400 // expires in 24 hours
             });
 
             const successResponse: any = {
                 status: 1,
-                message: 'Loggedin successfully.',
+                message: "Loggedin successfully.",
                 data: {
                     token,
-                    user: classToPlain(resultData),
-                },
+                    user: classToPlain(resultData)
+                }
             };
             return response.status(200).send(successResponse);
         }

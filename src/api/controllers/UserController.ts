@@ -1,45 +1,46 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
-    Post, Body, JsonController, Res, Get, Authorized, QueryParam, Put, Param, Delete, Req
-} from 'routing-controllers';
-import { classToPlain } from 'class-transformer';
-import jwt from 'jsonwebtoken';
+    Post,
+    Body,
+    JsonController,
+    Res,
+    Get,
+    Authorized,
+    QueryParam,
+    Put,
+    Param,
+    Delete,
+    Req
+} from "routing-controllers";
+import { classToPlain } from "class-transformer";
+import jwt from "jsonwebtoken";
 
-import {env} from '../../env';
-import { ForgotPassword as ForgotPassword } from './requests/forgotPasswordRequest';
-import { UserLogin as LoginRequest } from './requests/userLoginRequest';
-import { CreateUser as CreateRequest } from './requests/createUserRequest';
-import { UpdateUserRequest as updateUserRequest } from './requests/UpdateUserRequest';
-import { User } from '../models/User';
-import { AccessToken } from '../models/accessTokenModel';
-import { UserService } from '../services/UserService';
-import { UserGroupService } from '../services/UserGroupService';
-import {ChangePassword} from './requests/ChangePasswordRequest';
-import {EditProfileRequest} from './requests/editProfileRequest';
-import {AccessTokenService} from '../services/accessTokenService';
-import {EmailTemplateService} from '../services/emailTemplateService';
-import {MAILService} from '../../auth/mail.services';
-import {ImageService} from '../services/ImageService';
-import {S3Service} from '../services/S3Service';
-@JsonController('/auth')
+import { env } from "../../env";
+import { ForgotPassword } from "./requests/forgotPasswordRequest";
+import { UserLogin as LoginRequest } from "./requests/userLoginRequest";
+import { CreateUser as CreateRequest } from "./requests/createUserRequest";
+import { UpdateUserRequest as updateUserRequest } from "./requests/UpdateUserRequest";
+import { User } from "../models/User";
+import { AccessToken } from "../models/accessTokenModel";
+import { UserService } from "../services/UserService";
+import { UserGroupService } from "../services/UserGroupService";
+import { ChangePassword } from "./requests/ChangePasswordRequest";
+import { EditProfileRequest } from "./requests/editProfileRequest";
+import { AccessTokenService } from "../services/accessTokenService";
+import { EmailTemplateService } from "../services/emailTemplateService";
+import { MAILService } from "../../auth/mail.services";
+import { ImageService } from "../services/ImageService";
+import { S3Service } from "../services/S3Service";
+@JsonController("/auth")
 export class UserController {
-
-    constructor(private userService: UserService,
-                private userGroupService: UserGroupService,
-                private accessTokenService: AccessTokenService,
-                private emailTemplateService: EmailTemplateService, private s3Service: S3Service,
-                private imageService: ImageService) {
-    }
+    constructor(
+        private userService: UserService,
+        private userGroupService: UserGroupService,
+        private accessTokenService: AccessTokenService,
+        private emailTemplateService: EmailTemplateService,
+        private s3Service: S3Service,
+        private imageService: ImageService
+    ) {}
     // Login API
     /**
      * @api {post} /api/auth/login Login
@@ -64,52 +65,54 @@ export class UserController {
      * @apiErrorExample {json} Login error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/login')
-    public async login(@Body({ validate: true }) loginParam: LoginRequest, @Res() response: any): Promise<any> {
+    @Post("/login")
+    public async login(
+        @Body({ validate: true }) loginParam: LoginRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(loginParam.username);
         console.log(loginParam.password);
         const user = await this.userService.findOne({
             where: {
-                username: loginParam.username,
-            },
+                username: loginParam.username
+            }
         });
-    if (user) {
-      if (await User.comparePassword(user, loginParam.password)) {
-          // create a token
-          const token = jwt.sign({id: user.userId}, '123##$$)(***&', {
-            expiresIn: 86400, // expires in 24 hours
-          });
-          if (token) {
-              const newToken = new AccessToken();
-              newToken.userId = user.userId;
-              newToken.token = token;
-              const tokenSave = await this.accessTokenService.create(newToken);
-              console.log(tokenSave);
-          }
-        const successResponse: any = {
-            status: 1,
-            message: 'Login successful',
-            data: {
-                token,
-                user: classToPlain(user),
-            },
-        };
-        return response.status(200).send(successResponse);
-      } else {
-          const errorResponse: any = {
-          status: 0,
-          message: 'Invalid password',
-          };
-          return response.status(400).send(errorResponse);
-      }
-    } else {
-
-          const errorResponse: any = {
+        if (user) {
+            if (await User.comparePassword(user, loginParam.password)) {
+                // create a token
+                const token = jwt.sign({ id: user.userId }, "123##$$)(***&", {
+                    expiresIn: 86400 // expires in 24 hours
+                });
+                if (token) {
+                    const newToken = new AccessToken();
+                    newToken.userId = user.userId;
+                    newToken.token = token;
+                    const tokenSave = await this.accessTokenService.create(newToken);
+                    console.log(tokenSave);
+                }
+                const successResponse: any = {
+                    status: 1,
+                    message: "Login successful",
+                    data: {
+                        token,
+                        user: classToPlain(user)
+                    }
+                };
+                return response.status(200).send(successResponse);
+            } else {
+                const errorResponse: any = {
+                    status: 0,
+                    message: "Invalid password"
+                };
+                return response.status(400).send(errorResponse);
+            }
+        } else {
+            const errorResponse: any = {
                 status: 0,
-                message: 'Invalid username',
-          };
-          return response.status(400).send(errorResponse);
-    }
+                message: "Invalid username"
+            };
+            return response.status(400).send(errorResponse);
+        }
     }
 
     // User List API
@@ -132,17 +135,42 @@ export class UserController {
      * @apiErrorExample {json} User Profile error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/userlist')
+    @Get("/userlist")
     @Authorized()
-    public async findAll(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<any> {
-       console.log(keyword);
-        const relation = ['usergroup'];
+    public async findAll(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        console.log(keyword);
+        const relation = ["usergroup"];
         const WhereConditions = [];
-        const user = await this.userService.list(limit, offset, ['userId', 'username', 'firstName', 'lastName', 'email', 'address', 'phoneNumber', 'avatar', 'avatarPath', 'password'], relation,  WhereConditions, keyword, count);
+        const user = await this.userService.list(
+            limit,
+            offset,
+            [
+                "userId",
+                "username",
+                "firstName",
+                "lastName",
+                "email",
+                "address",
+                "phoneNumber",
+                "avatar",
+                "avatarPath",
+                "password"
+            ],
+            relation,
+            WhereConditions,
+            keyword,
+            count
+        );
         const successResponse: any = {
             status: 1,
             data: classToPlain(user),
-            message: 'Successfully get All user List',
+            message: "Successfully get All user List"
         };
         return response.status(200).send(successResponse);
     }
@@ -177,34 +205,43 @@ export class UserController {
      * @apiErrorExample {json} createUser error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/create-user')
+    @Post("/create-user")
     @Authorized()
-    public async createUser(@Body({ validate: true }) createParam: CreateRequest, @Res() response: any): Promise<any> {
+    public async createUser(
+        @Body({ validate: true }) createParam: CreateRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(createParam);
         const userGroupExistWhereCondition = [
             {
-                name: 'id',
-                value: createParam.userGroupId,
-            },
+                name: "id",
+                value: createParam.userGroupId
+            }
         ];
-        const userGroupExistRecord = await this.userGroupService.list(0, 0, [], userGroupExistWhereCondition, 0);
+        const userGroupExistRecord = await this.userGroupService.list(
+            0,
+            0,
+            [],
+            userGroupExistWhereCondition,
+            0
+        );
         if (userGroupExistRecord.length === 0) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid userGroupId',
+                message: "Invalid userGroupId"
             };
             return response.status(400).send(errorResponse);
         }
         const user = await this.userService.findOne({
             where: {
-                username: createParam.username,
-            },
+                username: createParam.username
+            }
         });
         console.log(user);
         if (user) {
             const errorResponse: any = {
                 status: 0,
-                message: 'this user already saved',
+                message: "this user already saved"
             };
             return response.status(400).send(errorResponse);
         }
@@ -223,8 +260,8 @@ export class UserController {
         if (userSaveResponse) {
             const successResponse: any = {
                 status: 1,
-                message: 'User saved successfully',
-                data: userSaveResponse,
+                message: "User saved successfully",
+                data: userSaveResponse
             };
             return response.status(200).send(successResponse);
         }
@@ -260,21 +297,31 @@ export class UserController {
      * @apiErrorExample {json} updateUser error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-user/:id')
+    @Put("/update-user/:id")
     @Authorized()
-    public async updateUser(@Param('id') id: number, @Body({ validate: true }) createParam: updateUserRequest, @Res() response: any): Promise<any> {
+    public async updateUser(
+        @Param("id") id: number,
+        @Body({ validate: true }) createParam: updateUserRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(createParam);
         const userGroupExistWhereCondition = [
             {
-                name: 'id',
-                value: createParam.userGroupId,
-            },
+                name: "id",
+                value: createParam.userGroupId
+            }
         ];
-        const userGroupExistRecord = await this.userGroupService.list(0, 0, [], userGroupExistWhereCondition, 0);
+        const userGroupExistRecord = await this.userGroupService.list(
+            0,
+            0,
+            [],
+            userGroupExistWhereCondition,
+            0
+        );
         if (userGroupExistRecord.length === 0) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid userGroupId',
+                message: "Invalid userGroupId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -295,17 +342,16 @@ export class UserController {
         if (userSaveResponse) {
             const successResponse: any = {
                 status: 1,
-                message: 'User updated successfully',
+                message: "User updated successfully"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to update user',
+                message: "Unable to update user"
             };
             return response.status(400).send(errorResponse);
         }
-
     }
     // Delete User API
     /**
@@ -323,21 +369,21 @@ export class UserController {
      * @apiErrorExample {json} updateUser error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-user/:id')
-    public async remove(@Param('id') id: number, @Res() response: any): Promise<any> {
+    @Delete("/delete-user/:id")
+    public async remove(@Param("id") id: number, @Res() response: any): Promise<any> {
         console.log(id);
         const userDelete = await this.userService.delete(id);
         console.log(userDelete);
         if (userDelete) {
             const successResponse: any = {
                 status: 1,
-                message: 'User Deleted successfully',
+                message: "User Deleted successfully"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to delete user',
+                message: "Unable to delete user"
             };
             return response.status(400).send(errorResponse);
         }
@@ -361,19 +407,22 @@ export class UserController {
      * @apiErrorExample {json} User error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/forgot-password')
-    public async forgotPassword(@Body({ validate: true }) forgotPassword: ForgotPassword, @Res() response: any): Promise<any> {
-        console.log('emailId' + forgotPassword.email);
+    @Post("/forgot-password")
+    public async forgotPassword(
+        @Body({ validate: true }) forgotPassword: ForgotPassword,
+        @Res() response: any
+    ): Promise<any> {
+        console.log("emailId" + forgotPassword.email);
 
         const user = await this.userService.findOne({
             where: {
-                email: forgotPassword.email,
-            },
+                email: forgotPassword.email
+            }
         });
         if (!user) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid email Id',
+                message: "Invalid email Id"
             };
             return response.status(400).send(errorResponse);
         }
@@ -386,18 +435,24 @@ export class UserController {
         await this.userService.create(user);
 
         const emailContent = await this.emailTemplateService.findOne(2);
-        const message = emailContent.content.replace('{name}', user.firstName).replace('{xxxxxx}', tempPassword);
-        const sendMailRes = MAILService.passwordForgotMail(message , user.email , emailContent.subject);
+        const message = emailContent.content
+            .replace("{name}", user.firstName)
+            .replace("{xxxxxx}", tempPassword);
+        const sendMailRes = MAILService.passwordForgotMail(
+            message,
+            user.email,
+            emailContent.subject
+        );
         if (sendMailRes) {
             const successResponse: any = {
                 status: 1,
-                message: 'Thank you, your password is sent to your registered mailId',
+                message: "Thank you, your password is sent to your registered mailId"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'error in sending email',
+                message: "error in sending email"
             };
             return response.status(400).send(errorResponse);
         }
@@ -425,44 +480,48 @@ export class UserController {
      * @apiErrorExample {json} User error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/change-password')
+    @Put("/change-password")
     @Authorized()
-    public async changePassword(@Body({ validate: true }) changePasswordParam: ChangePassword, @Req() request: any, @Res() response: any): Promise<any> {
-       console.log(request.user.userId);
+    public async changePassword(
+        @Body({ validate: true }) changePasswordParam: ChangePassword,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        console.log(request.user.userId);
         const user = await this.userService.findOne({
             where: {
-                userId: request.user.userId,
-            },
+                userId: request.user.userId
+            }
         });
         if (!user) {
             const errResponse: any = {
                 status: 0,
-                message: 'Invalid userId',
+                message: "Invalid userId"
             };
             return response.status(400).send(errResponse);
         }
         if (await User.comparePassword(user, changePasswordParam.oldPassword)) {
-           const val = await User.comparePassword(user, changePasswordParam.newPassword);
-           if (val) {
-               const errResponse: any = {
-                   status: 0,
-                   message: 'you are given a same password, please try different one',
-               };
-               return response.status(400).send(errResponse);
-           }
+            const val = await User.comparePassword(user, changePasswordParam.newPassword);
+            if (val) {
+                const errResponse: any = {
+                    status: 0,
+                    message: "you are given a same password, please try different one"
+                };
+                return response.status(400).send(errResponse);
+            }
             user.password = await User.hashPassword(changePasswordParam.newPassword);
             const updateUser = await this.userService.update(user.userId, user);
             if (updateUser) {
                 const successResponse: any = {
                     status: 1,
-                    message: 'Your password changed successfully',
+                    message: "Your password changed successfully"
                 };
                 return response.status(200).send(successResponse);
             }
         }
         const errorResponse: any = {
             status: 0,
-            message: 'Your old password is wrong',
+            message: "Your old password is wrong"
         };
         return response.status(400).send(errorResponse);
     }
@@ -482,29 +541,29 @@ export class UserController {
      * @apiErrorExample {json} Logout error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/logout')
+    @Get("/logout")
     @Authorized()
     public async logout(@Req() request: any, @Res() response: any): Promise<any> {
-        console.log('logout');
+        console.log("logout");
         console.log(request.user.userId);
         const user = await this.accessTokenService.findOne({
             where: {
-                userId: request.user.userId,
-            },
+                userId: request.user.userId
+            }
         });
         if (!user) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid token',
+                message: "Invalid token"
             };
             return response.status(400).send(errorResponse);
         }
         const deleteToken = await this.accessTokenService.delete(user);
-        console.log('token' + deleteToken);
+        console.log("token" + deleteToken);
         if (!deleteToken) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully Logout',
+                message: "Successfully Logout"
             };
             return response.status(200).send(successResponse);
         }
@@ -538,25 +597,28 @@ export class UserController {
      * @apiErrorExample {json} User error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/edit-profile')
+    @Post("/edit-profile")
     @Authorized()
-    public async editProfile(@Body({validate: true}) editProfileParam: EditProfileRequest, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async editProfile(
+        @Body({ validate: true }) editProfileParam: EditProfileRequest,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const user = await this.userService.findOne({
             where: {
-                userId: request.user.userId,
-            },
+                userId: request.user.userId
+            }
         });
         const avatar = editProfileParam.avatar;
         if (avatar) {
-            const type = avatar.split(';')[0].split('/')[1];
-            const name = 'Img_' + Date.now() + '.' + type;
-            const path = 'user/';
-            const base64Data = new Buffer(avatar.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-            if (env.imageserver === 's3') {
-                await this.s3Service.imageUpload((path + name), base64Data, type);
+            const type = avatar.split(";")[0].split("/")[1];
+            const name = "Img_" + Date.now() + "." + type;
+            const path = "user/";
+            const base64Data = new Buffer(avatar.replace(/^data:image\/\w+;base64,/, ""), "base64");
+            if (env.imageserver === "s3") {
+                await this.s3Service.imageUpload(path + name, base64Data, type);
             } else {
-                await this.imageService.imageUpload((path + name), base64Data);
+                await this.imageService.imageUpload(path + name, base64Data);
             }
             user.avatar = name;
             user.avatarPath = path;
@@ -570,14 +632,14 @@ export class UserController {
         if (userSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated profile',
-                data: userSave,
+                message: "Successfully updated profile",
+                data: userSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to edit profile',
+                message: "unable to edit profile"
             };
             return response.status(400).send(errorResponse);
         }

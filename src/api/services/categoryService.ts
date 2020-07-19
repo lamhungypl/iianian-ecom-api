@@ -1,43 +1,41 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
-import { Category } from '../models/categoryModel';
-import { CategoryRepository } from '../repositories/categoryRepository';
-import {Like} from 'typeorm/index';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Category } from "../models/categoryModel";
+import { CategoryRepository } from "../repositories/categoryRepository";
+import { Like } from "typeorm/index";
 
 @Service()
 export class CategoryService {
-
-    constructor(@OrmRepository() private categoryRepository: CategoryRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
-  // create Category
+    constructor(
+        @OrmRepository() private categoryRepository: CategoryRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
+    // create Category
     public async create(category: any): Promise<Category> {
-        this.log.info('Create a new category => ', category.toString());
+        this.log.info("Create a new category => ", category.toString());
         return this.categoryRepository.save(category);
     }
     // findone category
     public findOne(category: any): Promise<any> {
         return this.categoryRepository.findOne(category);
     }
-  // delete Category
+    // delete Category
     public async delete(id: number): Promise<any> {
-        this.log.info('Delete a user');
+        this.log.info("Delete a user");
         await this.categoryRepository.delete(id);
         return;
     }
-  // categoryList
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [], sortOrder: number , count: number | boolean): Promise<any> {
+    // categoryList
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        sortOrder: number,
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -54,10 +52,10 @@ export class CategoryService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -67,7 +65,7 @@ export class CategoryService {
             condition.skip = offset;
         }
 
-        condition.order = { sortOrder: (sortOrder === 2) ? 'DESC' : 'ASC'};
+        condition.order = { sortOrder: sortOrder === 2 ? "DESC" : "ASC" };
 
         if (count) {
             return this.categoryRepository.count(condition);

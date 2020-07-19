@@ -1,28 +1,31 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import {
+    Post,
+    JsonController,
+    Res,
+    Req,
+    Authorized,
+    Delete,
+    Param,
+    Get,
+    QueryParam
+} from "routing-controllers";
+import { CustomerWishlist } from "../../models/customerWishlist";
+import { ProductService } from "../../services/ProductService";
+import { CustomerWishlistService } from "../../services/CustomerWishlistService";
+import { ProductImageService } from "../../services/ProductImageService";
+import { ProductSpecialService } from "../../services/ProductSpecialService";
+import { ProductDiscountService } from "../../services/ProductDiscountService";
 
-import 'reflect-metadata';
-import {Post, JsonController, Res, Req, Authorized, Delete, Param, Get, QueryParam} from 'routing-controllers';
-import {CustomerWishlist} from '../../models/customerWishlist';
-import {ProductService} from '../../services/ProductService';
-import {CustomerWishlistService} from '../../services/CustomerWishlistService';
-import {ProductImageService} from '../../services/ProductImageService';
-import {ProductSpecialService} from '../../services/ProductSpecialService';
-import {ProductDiscountService} from '../../services/ProductDiscountService';
-
-@JsonController('/customer')
+@JsonController("/customer")
 export class CustomerController {
-    constructor(private customerWishlistService: CustomerWishlistService,
-                private productImageService: ProductImageService, private productService: ProductService, private productDiscountService: ProductDiscountService,
-                private productSpecialService: ProductSpecialService) {
-    }
+    constructor(
+        private customerWishlistService: CustomerWishlistService,
+        private productImageService: ProductImageService,
+        private productService: ProductService,
+        private productDiscountService: ProductDiscountService,
+        private productSpecialService: ProductSpecialService
+    ) {}
 
     // Add Product To Wishlist API
     /**
@@ -45,19 +48,19 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Add Product To Wishlist Function
-    @Post('/add-product-to-wishlist')
-    @Authorized('customer')
+    @Post("/add-product-to-wishlist")
+    @Authorized("customer")
     public async addProductToWishlist(@Req() request: any, @Res() response: any): Promise<any> {
         const data = await this.customerWishlistService.findOne({
             where: {
                 productId: request.body.productId,
-                customerId: request.user.id,
-            },
+                customerId: request.user.id
+            }
         });
         if (data) {
             const errorResponse: any = {
                 status: 1,
-                message: 'Already added this product to wishlist.',
+                message: "Already added this product to wishlist."
             };
             return response.status(400).send(errorResponse);
         }
@@ -67,21 +70,23 @@ export class CustomerController {
         newProduct.isActive = 1;
         const resultData = await this.customerWishlistService.create(newProduct);
         const Id = resultData.wishlistProductId;
-        const Product = await this.productService.findOne({where: {productId: resultData.productId}});
+        const Product = await this.productService.findOne({
+            where: { productId: resultData.productId }
+        });
         const Image = await this.productImageService.findOne({
             where: {
                 productId: resultData.productId,
-                defaultImage: 1,
-            },
+                defaultImage: 1
+            }
         });
         const successResponse: any = {
             status: 1,
-            message: 'Thank you product added to the wishlist successfully.',
+            message: "Thank you product added to the wishlist successfully.",
             data: {
                 wishlistProductId: Id,
                 product: Product,
-                productImage: Image,
-            },
+                productImage: Image
+            }
         };
         return response.status(200).send(successResponse);
     }
@@ -106,13 +111,17 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Add Product Wishlist Function
-    @Delete('/wishlist-product-delete/:id')
-    @Authorized('customer')
-    public async wishlistProductDelete(@Param('id') wishlistId: number, @Req() request: any, @Res() response: any): Promise<any> {
+    @Delete("/wishlist-product-delete/:id")
+    @Authorized("customer")
+    public async wishlistProductDelete(
+        @Param("id") wishlistId: number,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         await this.customerWishlistService.delete(wishlistId);
         const successResponse: any = {
             status: 1,
-            message: 'Thank you, deleted the product from wishlist successfully.',
+            message: "Thank you, deleted the product from wishlist successfully."
         };
         return response.status(200).send(successResponse);
     }
@@ -137,37 +146,58 @@ export class CustomerController {
      * HTTP/1.1 500 Internal Server Error
      */
     // View Product Wishlist Function
-    @Get('/wishlist-product-list')
-    @Authorized('customer')
-    public async wishlistProductlist(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Req() request: any, @Res() response: any): Promise<CustomerWishlist> {
-        const select = ['wishlistProductId', 'productId'];
+    @Get("/wishlist-product-list")
+    @Authorized("customer")
+    public async wishlistProductlist(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<CustomerWishlist> {
+        const select = ["wishlistProductId", "productId"];
         const whereConditions = [
             {
-                customerId: request.user.id,
-            },
+                customerId: request.user.id
+            }
         ];
-        const wishlistData = await this.customerWishlistService.list(limit, offset, select, whereConditions, count);
+        const wishlistData = await this.customerWishlistService.list(
+            limit,
+            offset,
+            select,
+            whereConditions,
+            count
+        );
         if (count) {
             const Response: any = {
                 status: 1,
-                message: 'Successfully get count',
-                data: wishlistData,
+                message: "Successfully get count",
+                data: wishlistData
             };
             return response.status(200).send(Response);
         }
         const promises = wishlistData.map(async (results: any) => {
-            const productData = await this.productService.findOne({where: {productId: results.productId}});
+            const productData = await this.productService.findOne({
+                where: { productId: results.productId }
+            });
             const Image = await this.productImageService.findOne({
                 where: {
                     productId: results.productId,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             const temp: any = productData;
             const nowDate = new Date();
-            const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-            const productSpecial = await this.productSpecialService.findSpecialPrice(results.productId, todaydate);
-            const productDiscount = await this.productDiscountService.findDiscountPrice(results.productId, todaydate);
+            const todaydate =
+                nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            const productSpecial = await this.productSpecialService.findSpecialPrice(
+                results.productId,
+                todaydate
+            );
+            const productDiscount = await this.productDiscountService.findDiscountPrice(
+                results.productId,
+                todaydate
+            );
             if (productSpecial !== undefined) {
                 temp.pricerefer = productSpecial.price;
                 temp.flag = 1;
@@ -175,8 +205,8 @@ export class CustomerController {
                 temp.pricerefer = productDiscount.price;
                 temp.flag = 0;
             } else {
-                temp.pricerefer = '';
-                temp.flag = '';
+                temp.pricerefer = "";
+                temp.flag = "";
             }
             results.product = temp;
             results.productImage = Image;
@@ -185,8 +215,8 @@ export class CustomerController {
         const result = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully show the wishlist Product List',
-            data: result,
+            message: "Successfully show the wishlist Product List",
+            data: result
         };
         return response.status(200).send(successResponse);
     }

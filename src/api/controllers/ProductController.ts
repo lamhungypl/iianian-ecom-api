@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     JsonController,
@@ -21,43 +11,44 @@ import {
     Post,
     Param,
     Put
-} from 'routing-controllers';
-import {ProductService} from '../services/ProductService';
-import {ProductToCategoryService} from '../services/ProductToCategoryService';
-import {ProductImageService} from '../services/ProductImageService';
-import {Product} from '../models/ProductModel';
-import {ProductDiscount} from '../models/ProductDiscount';
-import {ProductSpecial} from '../models/ProductSpecial';
-import {classToPlain} from 'class-transformer';
-import {DeleteProductRequest} from './requests/deleteProductRequest';
-import {AddProductRequest} from './requests/createProductRequest';
-import {UpdateProductRequest} from './requests/updateProductRequest';
-import {ProductToCategory} from '../models/ProductToCategory';
-import {ProductImage} from '../models/ProductImage';
-import {CategoryService} from '../services/categoryService';
-import {OrderProductService} from '../services/OrderProductService';
-import {OrderService} from '../services/OrderService';
-import {ProductRelated} from '../models/ProductRelated';
-import {ProductRelatedService} from '../services/ProductRelatedService';
-import {UpdateTodayDealsParam} from './requests/UpdateTodayDealsParam';
-import {ProductViewLogService} from '../services/ProductViewLogService';
-import {ProductDiscountService} from '../services/ProductDiscountService';
-import {ProductSpecialService} from '../services/ProductSpecialService';
-import moment = require('moment');
+} from "routing-controllers";
+import { ProductService } from "../services/ProductService";
+import { ProductToCategoryService } from "../services/ProductToCategoryService";
+import { ProductImageService } from "../services/ProductImageService";
+import { Product } from "../models/ProductModel";
+import { ProductDiscount } from "../models/ProductDiscount";
+import { ProductSpecial } from "../models/ProductSpecial";
+import { classToPlain } from "class-transformer";
+import { DeleteProductRequest } from "./requests/deleteProductRequest";
+import { AddProductRequest } from "./requests/createProductRequest";
+import { UpdateProductRequest } from "./requests/updateProductRequest";
+import { ProductToCategory } from "../models/ProductToCategory";
+import { ProductImage } from "../models/ProductImage";
+import { CategoryService } from "../services/categoryService";
+import { OrderProductService } from "../services/OrderProductService";
+import { OrderService } from "../services/OrderService";
+import { ProductRelated } from "../models/ProductRelated";
+import { ProductRelatedService } from "../services/ProductRelatedService";
+import { UpdateTodayDealsParam } from "./requests/UpdateTodayDealsParam";
+import { ProductViewLogService } from "../services/ProductViewLogService";
+import { ProductDiscountService } from "../services/ProductDiscountService";
+import { ProductSpecialService } from "../services/ProductSpecialService";
+import moment = require("moment");
 
-@JsonController('/product')
+@JsonController("/product")
 export class ProductController {
-    constructor(private productService: ProductService,
-                private productToCategoryService: ProductToCategoryService,
-                private productImageService: ProductImageService,
-                private categoryService: CategoryService,
-                private orderProductService: OrderProductService,
-                private orderService: OrderService,
-                private productRelatedService: ProductRelatedService,
-                private productViewLogService: ProductViewLogService,
-                private productDiscountService: ProductDiscountService,
-                private productSpecialService: ProductSpecialService) {
-    }
+    constructor(
+        private productService: ProductService,
+        private productToCategoryService: ProductToCategoryService,
+        private productImageService: ProductImageService,
+        private categoryService: CategoryService,
+        private orderProductService: OrderProductService,
+        private orderService: OrderService,
+        private productRelatedService: ProductRelatedService,
+        private productViewLogService: ProductViewLogService,
+        private productDiscountService: ProductDiscountService,
+        private productSpecialService: ProductSpecialService
+    ) {}
 
     // Product List API
     /**
@@ -82,34 +73,65 @@ export class ProductController {
      * @apiErrorExample {json} productList error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/productlist')
+    @Get("/productlist")
     @Authorized()
-    public async productList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('sku') sku: string, @QueryParam('status') status: string, @QueryParam('price') price: number, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<Product> {
-        const select = ['productId', 'sku', 'name', 'quantity', 'price', 'image', 'imagePath', 'isFeatured', 'todayDeals', 'isActive'];
+    public async productList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("sku") sku: string,
+        @QueryParam("status") status: string,
+        @QueryParam("price") price: number,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<Product> {
+        const select = [
+            "productId",
+            "sku",
+            "name",
+            "quantity",
+            "price",
+            "image",
+            "imagePath",
+            "isFeatured",
+            "todayDeals",
+            "isActive"
+        ];
 
-        const relation = ['productToCategory', 'relatedproduct'];
+        const relation = ["productToCategory", "relatedproduct"];
 
         const WhereConditions = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            }, {
-                name: 'sku',
-                op: 'like',
-                value: sku,
-            }, {
-                name: 'isActive',
-                op: 'like',
-                value: status,
+                name: "name",
+                op: "like",
+                value: keyword
             },
+            {
+                name: "sku",
+                op: "like",
+                value: sku
+            },
+            {
+                name: "isActive",
+                op: "like",
+                value: status
+            }
         ];
-        const productLists: any = await this.productService.list(limit, offset, select, relation, WhereConditions, 0, price, count);
+        const productLists: any = await this.productService.list(
+            limit,
+            offset,
+            select,
+            relation,
+            WhereConditions,
+            0,
+            price,
+            count
+        );
         if (count) {
             const successRes: any = {
                 status: 1,
-                message: 'Successfully got count ',
-                data: productLists,
+                message: "Successfully got count ",
+                data: productLists
             };
             return response.status(200).send(successRes);
         }
@@ -117,14 +139,21 @@ export class ProductController {
             const defaultValue = await this.productImageService.findOne({
                 where: {
                     productId: value.productId,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             const temp: any = value;
             const nowDate = new Date();
-            const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-            const productSpecial = await this.productSpecialService.findSpecialPrice(value.productId, todaydate);
-            const productDiscount = await this.productDiscountService.findDiscountPrice(value.productId, todaydate);
+            const todaydate =
+                nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            const productSpecial = await this.productSpecialService.findSpecialPrice(
+                value.productId,
+                todaydate
+            );
+            const productDiscount = await this.productDiscountService.findDiscountPrice(
+                value.productId,
+                todaydate
+            );
             if (productSpecial !== undefined) {
                 temp.pricerefer = productSpecial.price;
                 temp.flag = 1;
@@ -139,8 +168,8 @@ export class ProductController {
 
         const successResponse: any = {
             status: 1,
-            message: 'Successfully got the complete product list. ',
-            data: classToPlain(results),
+            message: "Successfully got the complete product list. ",
+            data: classToPlain(results)
         };
         return response.status(200).send(successResponse);
     }
@@ -165,19 +194,22 @@ export class ProductController {
      * @apiErrorExample {json} productDelete error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-product/:id')
+    @Delete("/delete-product/:id")
     @Authorized()
-    public async deleteProduct(@Body({validate: true}) productDelete: DeleteProductRequest, @Res() response: any, @Req() request: any): Promise<Product> {
-
+    public async deleteProduct(
+        @Body({ validate: true }) productDelete: DeleteProductRequest,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<Product> {
         const product = await this.productService.findOne({
             where: {
-                productId: productDelete.productId,
-            },
+                productId: productDelete.productId
+            }
         });
         if (!product) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid productId',
+                message: "Invalid productId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -186,13 +218,13 @@ export class ProductController {
         if (deleteProduct) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted Product',
+                message: "Successfully deleted Product"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete product',
+                message: "unable to delete product"
             };
             return response.status(400).send(errorResponse);
         }
@@ -282,10 +314,12 @@ export class ProductController {
      * @apiErrorExample {json} AddProduct error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-product')
+    @Post("/add-product")
     @Authorized()
-    public async addProduct(@Body({validate: true}) product: AddProductRequest, @Res() response: any): Promise<any> {
-
+    public async addProduct(
+        @Body({ validate: true }) product: AddProductRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(product);
         // let productOptions = [];
         // let optionValue = [];
@@ -379,14 +413,14 @@ export class ProductController {
         if (saveProduct) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully created Product',
-                data: saveProduct,
+                message: "Successfully created Product",
+                data: saveProduct
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create Product',
+                message: "unable to create Product"
             };
             return response.status(400).send(errorResponse);
         }
@@ -477,19 +511,22 @@ export class ProductController {
      * @apiErrorExample {json} updateProduct error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/update-product/:id')
+    @Post("/update-product/:id")
     @Authorized()
-    public async updateProduct(@Body({validate: true}) product: UpdateProductRequest, @Res() response: any): Promise<any> {
+    public async updateProduct(
+        @Body({ validate: true }) product: UpdateProductRequest,
+        @Res() response: any
+    ): Promise<any> {
         console.log(product);
         const updateProduct: any = await this.productService.findOne({
             where: {
-                productId: product.productId,
-            },
+                productId: product.productId
+            }
         });
         if (!updateProduct) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid productId',
+                message: "Invalid productId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -513,7 +550,7 @@ export class ProductController {
         const saveProduct = await this.productService.create(updateProduct);
 
         // delete previous category
-        this.productToCategoryService.delete({productId: saveProduct.productId});
+        this.productToCategoryService.delete({ productId: saveProduct.productId });
 
         // save category
         if (product.categoryId) {
@@ -529,14 +566,13 @@ export class ProductController {
 
         const findProduct: any = await this.productRelatedService.findOne({
             where: {
-                productId: saveProduct.productId,
-            },
+                productId: saveProduct.productId
+            }
         });
 
         if (findProduct) {
-
             // delete previous related product
-            this.productRelatedService.delete({productId: saveProduct.productId});
+            this.productRelatedService.delete({ productId: saveProduct.productId });
 
             // update related product
             if (product.relatedProductId) {
@@ -549,7 +585,6 @@ export class ProductController {
                 }
             }
         } else {
-
             // update related product
             if (product.relatedProductId) {
                 const relatedProduct: any = product.relatedProductId;
@@ -560,11 +595,10 @@ export class ProductController {
                     this.productRelatedService.create(newRelatedProduct);
                 }
             }
-
         }
 
         // Delete previous images
-        this.productImageService.delete({productId: saveProduct.productId});
+        this.productImageService.delete({ productId: saveProduct.productId });
         // Save products Image
         if (product.image) {
             const productImage: any = product.image;
@@ -581,7 +615,7 @@ export class ProductController {
         }
 
         // Delete the product discount
-        this.productDiscountService.delete({productId: saveProduct.productId});
+        this.productDiscountService.delete({ productId: saveProduct.productId });
 
         // Product Discount
         if (product.productDiscount) {
@@ -599,7 +633,7 @@ export class ProductController {
         }
 
         // Delete the Product special price
-        this.productSpecialService.delete({productId: saveProduct.productId});
+        this.productSpecialService.delete({ productId: saveProduct.productId });
 
         // Product Special
         if (product.productSpecial) {
@@ -619,13 +653,13 @@ export class ProductController {
         if (saveProduct) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated Product',
+                message: "Successfully updated Product"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to updated Product',
+                message: "unable to updated Product"
             };
             return response.status(400).send(errorResponse);
         }
@@ -647,59 +681,100 @@ export class ProductController {
      * @apiErrorExample {json} productDetail error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/product-detail/:id')
+    @Get("/product-detail/:id")
     @Authorized()
-    public async productDetail(@Param('id') id: number, @Res() response: any): Promise<any> {
-        const select = ['productId', 'sku', 'upc', 'name', 'description', 'location', 'minimumQuantity', 'quantity', 'subtractStock', 'metaTagTitle', 'manufacturerId', 'stockStatusId', 'shipping', 'dateAvailable', 'sortOrder', 'price', 'condition', 'isActive'];
+    public async productDetail(@Param("id") id: number, @Res() response: any): Promise<any> {
+        const select = [
+            "productId",
+            "sku",
+            "upc",
+            "name",
+            "description",
+            "location",
+            "minimumQuantity",
+            "quantity",
+            "subtractStock",
+            "metaTagTitle",
+            "manufacturerId",
+            "stockStatusId",
+            "shipping",
+            "dateAvailable",
+            "sortOrder",
+            "price",
+            "condition",
+            "isActive"
+        ];
 
-        const relation = ['productImage'];
+        const relation = ["productImage"];
 
         const WhereConditions = [
             {
-                name: 'productId',
-                op: 'where',
-                value: id,
-            },
+                name: "productId",
+                op: "where",
+                value: id
+            }
         ];
-        const productDetail: any = await this.productService.list(0, 0, select, relation, WhereConditions, 0, 0, 0);
+        const productDetail: any = await this.productService.list(
+            0,
+            0,
+            select,
+            relation,
+            WhereConditions,
+            0,
+            0,
+            0
+        );
         const productDetails: any = classToPlain(productDetail);
         const promises = productDetails.map(async (result: any) => {
-            const productToCategory = await this.productToCategoryService.findAll({
-                select: ['categoryId', 'productId'],
-                where: {productId: result.productId},
-            }).then((val) => {
-                const category = val.map(async (value: any) => {
-                    const categoryNames = await this.categoryService.findOne({categoryId: value.categoryId});
-                    const JsonData = JSON.stringify(categoryNames);
-                    const ParseData = JSON.parse(JsonData);
-                    const temp: any = value;
-                    temp.categoryName = ParseData.name;
-                    return temp;
-                });
-                const results = Promise.all(category);
-                return results;
-            });
-            const relatedProductData = await this.productRelatedService.findAll({where: {productId: result.productId}}).then((val) => {
-                const relatedProduct = val.map(async (value: any) => {
-                    const productId = value.relatedProductId;
-                    const product = await this.productService.findOne({
-                        select: ['productId', 'name'],
-                        where: {productId},
-                        relations: ['productImage'],
+            const productToCategory = await this.productToCategoryService
+                .findAll({
+                    select: ["categoryId", "productId"],
+                    where: { productId: result.productId }
+                })
+                .then(val => {
+                    const category = val.map(async (value: any) => {
+                        const categoryNames = await this.categoryService.findOne({
+                            categoryId: value.categoryId
+                        });
+                        const JsonData = JSON.stringify(categoryNames);
+                        const ParseData = JSON.parse(JsonData);
+                        const temp: any = value;
+                        temp.categoryName = ParseData.name;
+                        return temp;
                     });
-                    return classToPlain(product);
+                    const results = Promise.all(category);
+                    return results;
                 });
-                const resultData = Promise.all(relatedProduct);
-                return resultData;
-            });
+            const relatedProductData = await this.productRelatedService
+                .findAll({ where: { productId: result.productId } })
+                .then(val => {
+                    const relatedProduct = val.map(async (value: any) => {
+                        const productId = value.relatedProductId;
+                        const product = await this.productService.findOne({
+                            select: ["productId", "name"],
+                            where: { productId },
+                            relations: ["productImage"]
+                        });
+                        return classToPlain(product);
+                    });
+                    const resultData = Promise.all(relatedProduct);
+                    return resultData;
+                });
 
             const productSpecialData = await this.productSpecialService.findAll({
-                select: ['productSpecialId', 'priority', 'price', 'dateStart', 'dateEnd'],
-                where: {productId: result.productId},
+                select: ["productSpecialId", "priority", "price", "dateStart", "dateEnd"],
+                where: { productId: result.productId }
             });
             const productDiscountData = await this.productDiscountService.findAll({
-                select: ['productDiscountId', 'quantity', 'priority', 'price', 'dateStart', 'dateEnd'],
-                where: {productId: result.productId},
+                select: [
+                    "productDiscountId",
+                    "quantity",
+                    "priority",
+                    "price",
+                    "dateStart",
+                    "dateEnd"
+                ],
+                where: { productId: result.productId }
             });
             const dd: any = result;
             dd.Category = productToCategory;
@@ -712,8 +787,8 @@ export class ProductController {
         const finalResult = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get productDetail',
-            data: finalResult,
+            message: "Successfully get productDetail",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
     }
@@ -735,22 +810,22 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Order Detail Function
-    @Get('/top-selling-productlist')
+    @Get("/top-selling-productlist")
     @Authorized()
     public async topSellingProductList(@Req() request: any, @Res() response: any): Promise<any> {
         const data = await this.productService.recentProductSelling(4);
         const promise = data.map(async (result: any) => {
             const product = await this.productService.findOne({
-                select: ['productId', 'image', 'imagePath', 'price', 'name', 'description'],
-                where: {productId: result.product},
+                select: ["productId", "image", "imagePath", "price", "name", "description"],
+                where: { productId: result.product }
             });
             const temp: any = result;
             const productImage = await this.productImageService.findAll({
-                select: ['productId', 'image', 'containerName'],
+                select: ["productId", "image", "containerName"],
                 where: {
                     productId: result.product,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             temp.product = product;
             temp.productImage = productImage;
@@ -761,8 +836,8 @@ export class ProductController {
 
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get Top Selling Product..!',
-            data: value,
+            message: "Successfully get Top Selling Product..!",
+            data: value
         };
         return response.status(200).send(successResponse);
     }
@@ -783,23 +858,23 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Errorproduct
      */
     // Recent selling product function
-    @Get('/recent-selling-product')
+    @Get("/recent-selling-product")
     @Authorized()
     public async sellingProduct(@Req() request: any, @Res() response: any): Promise<any> {
         const limit = 3;
         const orderList = await this.orderProductService.List(limit);
         const promises = orderList.map(async (result: any) => {
             const order = await this.orderService.findOrder({
-                select: ['invoiceNo', 'invoicePrefix', 'orderId', 'orderStatusId'],
-                where: {orderId: result.orderId},
+                select: ["invoiceNo", "invoicePrefix", "orderId", "orderStatusId"],
+                where: { orderId: result.orderId }
             });
             const temp: any = result;
             temp.order = order;
             const product = await this.productImageService.findAll({
                 where: {
                     productId: result.productId,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             temp.productImage = product;
             return temp;
@@ -807,8 +882,8 @@ export class ProductController {
         const results = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'successfully listed recently selling products..!',
-            data: results,
+            message: "successfully listed recently selling products..!",
+            data: results
         };
         return response.status(200).send(successResponse);
     }
@@ -833,19 +908,22 @@ export class ProductController {
      * @apiErrorExample {json} todayDeals error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-todayDeals/:id')
+    @Put("/update-todayDeals/:id")
     @Authorized()
-    public async updateTodayDeals(@Param('id')id: number, @Body({validate: true}) updateTodayDealsParam: UpdateTodayDealsParam, @Res() response: any): Promise<any> {
-
+    public async updateTodayDeals(
+        @Param("id") id: number,
+        @Body({ validate: true }) updateTodayDealsParam: UpdateTodayDealsParam,
+        @Res() response: any
+    ): Promise<any> {
         const product = await this.productService.findOne({
             where: {
-                productId: id,
-            },
+                productId: id
+            }
         });
         if (!product) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid productId',
+                message: "Invalid productId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -855,14 +933,14 @@ export class ProductController {
         if (productSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'product updated successfully .',
-                data: productSave,
+                message: "product updated successfully .",
+                data: productSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update product',
+                message: "unable to update product"
             };
             return response.status(400).send(errorResponse);
         }
@@ -888,25 +966,39 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Error
      */
 
-    @Get('/viewLog-list')
+    @Get("/viewLog-list")
     @Authorized()
-    public async productViewLogList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Req() request: any, @Res() response: any): Promise<any> {
+    public async productViewLogList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         const select = [];
         const whereConditions = [];
         const search = [];
-        const viewLogs = await this.productViewLogService.list(limit, offset, select, search, whereConditions, 0, count);
+        const viewLogs = await this.productViewLogService.list(
+            limit,
+            offset,
+            select,
+            search,
+            whereConditions,
+            0,
+            count
+        );
         if (count) {
             const successresponse: any = {
                 status: 1,
-                message: 'Successfully got view log count',
-                data: viewLogs,
+                message: "Successfully got view log count",
+                data: viewLogs
             };
             return response.status(200).send(successresponse);
         } else {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got view log List',
-                data: viewLogs,
+                message: "Successfully got view log List",
+                data: viewLogs
             };
             return response.status(200).send(successResponse);
         }
@@ -932,28 +1024,45 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Error
      */
 
-    @Get('/customerProductView-list/:id')
+    @Get("/customerProductView-list/:id")
     @Authorized()
-    public async customerProductView(@Param('id') id: number, @QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Req() request: any, @Res() response: any): Promise<any> {
+    public async customerProductView(
+        @Param("id") id: number,
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
         const select = [];
-        const whereConditions = [{
-            name: 'customerId',
-            value: id,
-        }];
+        const whereConditions = [
+            {
+                name: "customerId",
+                value: id
+            }
+        ];
         const search = [];
-        const customerProductview = await this.productViewLogService.list(limit, offset, select, search, whereConditions, 0, count);
+        const customerProductview = await this.productViewLogService.list(
+            limit,
+            offset,
+            select,
+            search,
+            whereConditions,
+            0,
+            count
+        );
         if (count) {
             const successresponse: any = {
                 status: 1,
-                message: 'Successfully got view log count',
-                data: customerProductview,
+                message: "Successfully got view log count",
+                data: customerProductview
             };
             return response.status(200).send(successresponse);
         } else {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got view log List',
-                data: customerProductview,
+                message: "Successfully got view log List",
+                data: customerProductview
             };
             return response.status(200).send(successResponse);
         }

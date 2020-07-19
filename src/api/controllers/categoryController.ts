@@ -1,29 +1,32 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
-import {Get, Post, Put, Delete, Body, JsonController, Authorized, QueryParam, Res, Req} from 'routing-controllers';
-import {classToPlain} from 'class-transformer';
-import {CategoryService} from '../services/categoryService';
-import {AddCategory} from './requests/addCategoryRequest';
-import {UpdateCategoryRequest} from './requests/updateCategoryRequest';
-import {Category} from '../models/categoryModel';
-import {CategoryPath} from '../models/CategoryPath';
-import arrayToTree from 'array-to-tree';
-import {DeleteCategoryRequest} from './requests/deleteCategoryRequest';
-import {CategoryPathService} from '../services/CategoryPathService';
+import "reflect-metadata";
+import {
+    Get,
+    Post,
+    Put,
+    Delete,
+    Body,
+    JsonController,
+    Authorized,
+    QueryParam,
+    Res,
+    Req
+} from "routing-controllers";
+import { classToPlain } from "class-transformer";
+import { CategoryService } from "../services/categoryService";
+import { AddCategory } from "./requests/addCategoryRequest";
+import { UpdateCategoryRequest } from "./requests/updateCategoryRequest";
+import { Category } from "../models/categoryModel";
+import { CategoryPath } from "../models/CategoryPath";
+import arrayToTree from "array-to-tree";
+import { DeleteCategoryRequest } from "./requests/deleteCategoryRequest";
+import { CategoryPathService } from "../services/CategoryPathService";
 
 @JsonController()
 export class CategoryController {
-    constructor(private categoryService: CategoryService, private categoryPathService: CategoryPathService) {
-    }
+    constructor(
+        private categoryService: CategoryService,
+        private categoryPathService: CategoryPathService
+    ) {}
 
     // create Category API
     /**
@@ -57,9 +60,12 @@ export class CategoryController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-category')
+    @Post("/add-category")
     @Authorized()
-    public async addCategory(@Body({validate: true}) category: AddCategory, @Res() response: any): Promise<Category> {
+    public async addCategory(
+        @Body({ validate: true }) category: AddCategory,
+        @Res() response: any
+    ): Promise<Category> {
         console.log(category.name);
         const newCategory = new Category();
         newCategory.name = category.name;
@@ -72,8 +78,8 @@ export class CategoryController {
         const categorySave = await this.categoryService.create(newCategory);
 
         const getAllPath: any = await this.categoryPathService.find({
-            where: {categoryId: category.parentInt},
-            order: {level: 'ASC'},
+            where: { categoryId: category.parentInt },
+            order: { level: "ASC" }
         });
         console.log(getAllPath);
         let level = 0;
@@ -83,7 +89,7 @@ export class CategoryController {
             CategoryPathLoop.pathId = path.pathId;
             CategoryPathLoop.level = level;
             const vv = await this.categoryPathService.create(CategoryPathLoop);
-            console.log('vv' + vv);
+            console.log("vv" + vv);
             level++;
         }
 
@@ -96,14 +102,14 @@ export class CategoryController {
         if (categorySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully created new category.',
-                data: categorySave,
+                message: "Successfully created new category.",
+                data: categorySave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to create the category. ',
+                message: "Unable to create the category. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -144,18 +150,22 @@ export class CategoryController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-category/:id')
+    @Put("/update-category/:id")
     @Authorized()
-    public async updateCategory(@Body({validate: true}) category: UpdateCategoryRequest, @Res() response: any, @Req() request: any): Promise<Category> {
+    public async updateCategory(
+        @Body({ validate: true }) category: UpdateCategoryRequest,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<Category> {
         const categoryId = await this.categoryService.findOne({
             where: {
-                categoryId: category.categoryId,
-            },
+                categoryId: category.categoryId
+            }
         });
         if (!categoryId) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid categoryId',
+                message: "Invalid categoryId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -168,14 +178,16 @@ export class CategoryController {
         categoryId.metaTagKeyword = category.metaTagKeyword;
         const categorySave = await this.categoryService.create(categoryId);
 
-        const deleteCategory = await this.categoryPathService.find({where: {categoryId: category.categoryId}});
+        const deleteCategory = await this.categoryPathService.find({
+            where: { categoryId: category.categoryId }
+        });
         for (const val of deleteCategory) {
             await this.categoryPathService.delete(val.categoryPathId);
         }
 
         const getAllPath: any = await this.categoryPathService.find({
-            where: {categoryId: category.parentInt},
-            order: {level: 'ASC'},
+            where: { categoryId: category.parentInt },
+            order: { level: "ASC" }
         });
         console.log(getAllPath);
         let level = 0;
@@ -197,14 +209,14 @@ export class CategoryController {
         if (categorySave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated category.',
-                data: classToPlain(categorySave),
+                message: "Successfully updated category.",
+                data: classToPlain(categorySave)
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to update the category. ',
+                message: "Unable to update the category. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -230,50 +242,55 @@ export class CategoryController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-category/:id')
+    @Delete("/delete-category/:id")
     @Authorized()
-    public async deleteCategory(@Body({validate: true}) category: DeleteCategoryRequest, @Res() response: any, @Req() request: any): Promise<Category> {
-
+    public async deleteCategory(
+        @Body({ validate: true }) category: DeleteCategoryRequest,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<Category> {
         const categoryId = await this.categoryService.findOne({
             where: {
-                categoryId: category.categoryId,
-            },
+                categoryId: category.categoryId
+            }
         });
         if (!categoryId) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid categoryId',
+                message: "Invalid categoryId"
             };
             return response.status(400).send(errorResponse);
         }
         const parentCategoryId = await this.categoryService.findOne({
             where: {
-                parentInt: category.categoryId,
-            },
+                parentInt: category.categoryId
+            }
         });
         if (parentCategoryId) {
             const errorresponse: any = {
                 status: 0,
-                message: 'you cannot delete parent categoryId',
+                message: "you cannot delete parent categoryId"
             };
             return response.status(400).send(errorresponse);
         }
-        const categoryPath: any = await this.categoryPathService.find({where: {categoryId: category.categoryId}});
+        const categoryPath: any = await this.categoryPathService.find({
+            where: { categoryId: category.categoryId }
+        });
         for (const path of categoryPath) {
             await this.categoryPathService.delete(path.categoryPathId);
         }
         const deleteCategory = await this.categoryService.delete(categoryId);
-        console.log('category' + deleteCategory);
+        console.log("category" + deleteCategory);
         if (!deleteCategory) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted category.',
+                message: "Successfully deleted category."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Unable to delete the category. ',
+                message: "Unable to delete the category. "
             };
             return response.status(400).send(errorResponse);
         }
@@ -300,47 +317,66 @@ export class CategoryController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/categorylist')
+    @Get("/categorylist")
     @Authorized()
-    public async categorylist(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('sortOrder') sortOrder: number, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<any> {
+    public async categorylist(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("sortOrder") sortOrder: number,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
         console.log(keyword);
-        const select = ['categoryId', 'name', 'parentInt', 'sortOrder'];
+        const select = ["categoryId", "name", "parentInt", "sortOrder"];
 
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            },
+                name: "name",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const category: any = await this.categoryService.list(limit, offset, select, search, WhereConditions, sortOrder, count);
-       if (count) {
-           const successResponse: any = {
-               status: 1,
-               message: 'successfully got the complete category list. ',
-               data: category,
-           };
-           return response.status(200).send(successResponse);
-       }
+        const category: any = await this.categoryService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            sortOrder,
+            count
+        );
+        if (count) {
+            const successResponse: any = {
+                status: 1,
+                message: "successfully got the complete category list. ",
+                data: category
+            };
+            return response.status(200).send(successResponse);
+        }
         const promise = category.map(async (result: any) => {
             const temp: any = result;
-            const categoryLevel: any = await this.categoryPathService.find({
-                select: ['level', 'pathId'],
-                where: {categoryId: result.categoryId},
-                order: {level: 'ASC'},
-            }).then((values) => {
-                const categories = values.map(async (val: any) => {
-                    const categoryNames = await this.categoryService.findOne({categoryId: val.pathId});
-                    const JsonData = JSON.stringify(categoryNames);
-                    const ParseData = JSON.parse(JsonData);
-                    const tempVal: any = val;
-                    tempVal.categoryName = ParseData.name;
-                    return tempVal;
+            const categoryLevel: any = await this.categoryPathService
+                .find({
+                    select: ["level", "pathId"],
+                    where: { categoryId: result.categoryId },
+                    order: { level: "ASC" }
+                })
+                .then(values => {
+                    const categories = values.map(async (val: any) => {
+                        const categoryNames = await this.categoryService.findOne({
+                            categoryId: val.pathId
+                        });
+                        const JsonData = JSON.stringify(categoryNames);
+                        const ParseData = JSON.parse(JsonData);
+                        const tempVal: any = val;
+                        tempVal.categoryName = ParseData.name;
+                        return tempVal;
+                    });
+                    const results = Promise.all(categories);
+                    return results;
                 });
-                const results = Promise.all(categories);
-                return results;
-            });
             temp.levels = categoryLevel;
             return temp;
         });
@@ -348,8 +384,8 @@ export class CategoryController {
         if (category) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got the complete category list. ',
-                data: value,
+                message: "successfully got the complete category list. ",
+                data: value
             };
             return response.status(200).send(successResponse);
         }
@@ -376,37 +412,62 @@ export class CategoryController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/category-list-intree')
+    @Get("/category-list-intree")
     @Authorized()
-    public async categoryListTree(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('sortOrder') sortOrder: number, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<Category> {
+    public async categoryListTree(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("sortOrder") sortOrder: number,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<Category> {
         console.log(keyword);
-        const select = ['categoryId', 'name', 'image', 'imagePath', 'parentInt', 'sortOrder', 'metaTagTitle', 'metaTagDescription', 'metaTagKeyword'];
+        const select = [
+            "categoryId",
+            "name",
+            "image",
+            "imagePath",
+            "parentInt",
+            "sortOrder",
+            "metaTagTitle",
+            "metaTagDescription",
+            "metaTagKeyword"
+        ];
 
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            },
+                name: "name",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const category: any = await this.categoryService.list(limit, offset, select, search, WhereConditions, sortOrder, count);
+        const category: any = await this.categoryService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            sortOrder,
+            count
+        );
         if (count) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get category List count',
-                data: category,
+                message: "Successfully get category List count",
+                data: category
             };
             return response.status(200).send(successResponse);
         } else {
             const categoryList = arrayToTree(category, {
-                parentProperty: 'parentInt',
-                customID: 'categoryId',
+                parentProperty: "parentInt",
+                customID: "categoryId"
             });
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got the complete category list.',
-                data: categoryList,
+                message: "successfully got the complete category list.",
+                data: categoryList
             };
             return response.status(200).send(successResponse);
         }

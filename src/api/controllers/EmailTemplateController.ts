@@ -1,23 +1,24 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import {
+    Get,
+    Delete,
+    Req,
+    Put,
+    QueryParam,
+    Param,
+    Post,
+    Body,
+    JsonController,
+    Authorized,
+    Res
+} from "routing-controllers";
+import { EmailTemplate } from "../models/emailTemplate";
+import { CreateEmailTemplate } from "./requests/createEmailTemplateRequest";
+import { EmailTemplateService } from "../services/emailTemplateService";
 
-import 'reflect-metadata';
-import {Get, Delete, Req, Put, QueryParam, Param, Post, Body, JsonController, Authorized, Res} from 'routing-controllers';
-import {EmailTemplate} from '../models/emailTemplate';
-import {CreateEmailTemplate} from './requests/createEmailTemplateRequest';
-import {EmailTemplateService} from '../services/emailTemplateService';
-
-@JsonController('/email-template')
+@JsonController("/email-template")
 export class EmailTemplateController {
-    constructor(private emailTemplateService: EmailTemplateService) {
-    }
+    constructor(private emailTemplateService: EmailTemplateService) {}
 
     // Create EmailTemplate API
     /**
@@ -45,9 +46,12 @@ export class EmailTemplateController {
      * @apiErrorExample {json} EmailTemplate error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-email-template')
+    @Post("/add-email-template")
     @Authorized()
-    public async addEmailTemplate(@Body({validate: true}) emailTemplateParam: CreateEmailTemplate, @Res() response: any): Promise<any> {
+    public async addEmailTemplate(
+        @Body({ validate: true }) emailTemplateParam: CreateEmailTemplate,
+        @Res() response: any
+    ): Promise<any> {
         const emailTemplate = new EmailTemplate();
         emailTemplate.title = emailTemplateParam.title;
         emailTemplate.subject = emailTemplateParam.subject;
@@ -58,14 +62,14 @@ export class EmailTemplateController {
         if (emailTemplateSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully created new email template.',
-                data: emailTemplateSave,
+                message: "Successfully created new email template.",
+                data: emailTemplateSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create emailTemplate',
+                message: "unable to create emailTemplate"
             };
             return response.status(400).send(errorResponse);
         }
@@ -97,30 +101,43 @@ export class EmailTemplateController {
      * @apiErrorExample {json} EmailTemplate error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/email-templatelist')
+    @Get("/email-templatelist")
     @Authorized()
-    public async emailTemplateList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number|boolean, @Res() response: any): Promise<any> {
-        const select = ['emailTemplateId', 'title', 'subject', 'content', 'isActive'];
+    public async emailTemplateList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["emailTemplateId", "title", "subject", "content", "isActive"];
         const search = [
             {
-                name    : 'title',
-                op      : 'like',
-                value   : keyword,
-            },
+                name: "title",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const emailTemplateList = await this.emailTemplateService.list(limit, offset , select, search, WhereConditions, count);
+        const emailTemplateList = await this.emailTemplateService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (emailTemplateList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got the complete email template list.',
-                data: emailTemplateList,
+                message: "Successfully got the complete email template list.",
+                data: emailTemplateList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to list emailTemplate',
+                message: "unable to list emailTemplate"
             };
             return response.status(400).send(errorResponse);
         }
@@ -152,19 +169,22 @@ export class EmailTemplateController {
      * @apiErrorExample {json} emailTemplate error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-email-template/:id')
+    @Put("/update-email-template/:id")
     @Authorized()
-    public async updateEmailTemplate(@Param('id')id: number, @Body({validate: true}) emailTemplateParam: CreateEmailTemplate, @Res() response: any): Promise<any> {
-
+    public async updateEmailTemplate(
+        @Param("id") id: number,
+        @Body({ validate: true }) emailTemplateParam: CreateEmailTemplate,
+        @Res() response: any
+    ): Promise<any> {
         const emailTemplate = await this.emailTemplateService.findOne({
             where: {
-                emailTemplateId: id,
-            },
+                emailTemplateId: id
+            }
         });
         if (!emailTemplate) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid emailTemplate Id',
+                message: "Invalid emailTemplate Id"
             };
             return response.status(400).send(errorResponse);
         }
@@ -176,14 +196,14 @@ export class EmailTemplateController {
         if (templateSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated the email template.',
-                data: templateSave,
+                message: "Successfully updated the email template.",
+                data: templateSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update emailTemplate',
+                message: "unable to update emailTemplate"
             };
             return response.status(400).send(errorResponse);
         }
@@ -208,19 +228,22 @@ export class EmailTemplateController {
      * @apiErrorExample {json} EmailTemplate error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-email-template/:id')
+    @Delete("/delete-email-template/:id")
     @Authorized()
-    public async deleteEmailTemplate(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteEmailTemplate(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const emailTemplate = await this.emailTemplateService.findOne({
             where: {
-                emailTemplateId: id,
-            },
+                emailTemplateId: id
+            }
         });
         if (!emailTemplate) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid emailTemplate',
+                message: "Invalid emailTemplate"
             };
             return response.status(400).send(errorResponse);
         }
@@ -229,13 +252,13 @@ export class EmailTemplateController {
         if (deleteEmailTemplate) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted the email template.',
+                message: "Successfully deleted the email template."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete emailTemplate',
+                message: "unable to delete emailTemplate"
             };
             return response.status(400).send(errorResponse);
         }

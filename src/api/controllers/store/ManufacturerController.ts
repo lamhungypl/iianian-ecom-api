@@ -1,21 +1,10 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import { Get, JsonController, Res, QueryParam } from "routing-controllers";
+import { ManufacturerService } from "../../services/manufacturerService";
 
-import 'reflect-metadata';
-import {Get, JsonController, Res, QueryParam} from 'routing-controllers';
-import {ManufacturerService} from '../../services/manufacturerService';
-
-@JsonController('/manufacturers')
+@JsonController("/manufacturers")
 export class ManufacturerController {
-    constructor(private manufacturerService: ManufacturerService) {
-    }
+    constructor(private manufacturerService: ManufacturerService) {}
 
     // Manufacturer List API
     /**
@@ -42,27 +31,40 @@ export class ManufacturerController {
      * @apiErrorExample {json} Manufacturer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/manufacturerlist')
-    public async manufacturerList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
-        const select = ['manufacturerId', 'name', 'image', 'imagePath', 'sortOrder', 'isActive'];
+    @Get("/manufacturerlist")
+    public async manufacturerList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["manufacturerId", "name", "image", "imagePath", "sortOrder", "isActive"];
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
+                name: "name",
+                op: "like",
+                value: keyword
             },
             {
-                name: 'isActive',
-                op: 'where',
-                value: 1,
-            },
+                name: "isActive",
+                op: "where",
+                value: 1
+            }
         ];
         const WhereConditions = [];
-        const manufacturerList: any = await this.manufacturerService.list(limit, offset, select, search, WhereConditions, count);
+        const manufacturerList: any = await this.manufacturerService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get all manufacturer List',
-            data: manufacturerList,
+            message: "Successfully get all manufacturer List",
+            data: manufacturerList
         };
         return response.status(200).send(successResponse);
     }

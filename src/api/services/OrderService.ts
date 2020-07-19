@@ -1,29 +1,19 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {Like} from 'typeorm/index';
-import {OrderRepository} from '../repositories/OrderRepository';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Like } from "typeorm/index";
+import { OrderRepository } from "../repositories/OrderRepository";
 
 @Service()
 export class OrderService {
-
-    constructor(@OrmRepository() private orderRepository: OrderRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private orderRepository: OrderRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create order
     public async create(order: any): Promise<any> {
-        this.log.info('Create a new order ');
+        this.log.info("Create a new order ");
         return this.orderRepository.save(order);
     }
 
@@ -33,13 +23,13 @@ export class OrderService {
     }
 
     // order count
-    public findAll( ): Promise<any> {
-        return this.orderRepository.find( );
+    public findAll(): Promise<any> {
+        return this.orderRepository.find();
     }
 
     // findOne Condition
     public findOne(whereCondition: any): Promise<any> {
-        this.log.info('Find Order Detail');
+        this.log.info("Find Order Detail");
         const condition: any = {};
         if (whereCondition && whereCondition.length > 0) {
             condition.where = whereCondition[0];
@@ -57,7 +47,15 @@ export class OrderService {
     }
 
     // order List
-    public list(limit: number, offset: number, select: any = [], search: any = [], whereConditions: any = [], relation: any = [], count: number | boolean): Promise<any> {
+    public list(
+        limit: number,
+        offset: number,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        relation: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -75,10 +73,10 @@ export class OrderService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -93,7 +91,7 @@ export class OrderService {
         }
 
         condition.order = {
-            createdDate: 'DESC',
+            createdDate: "DESC"
         };
 
         if (count) {

@@ -1,27 +1,14 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import * as express from "express";
+import { ExpressErrorMiddlewareInterface, HttpError, Middleware } from "routing-controllers";
+import { ValidationError } from "class-validator";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { env } from "../../env";
 
-import * as express from 'express';
-import { ExpressErrorMiddlewareInterface, HttpError, Middleware } from 'routing-controllers';
-import { ValidationError } from 'class-validator';
-import { Logger, LoggerInterface } from '../../decorators/Logger';
-import { env } from '../../env';
-
-@Middleware({ type: 'after' })
+@Middleware({ type: "after" })
 export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
-
     public isProduction = env.isProduction;
 
-    constructor(
-        @Logger(__filename) private log: LoggerInterface
-    ) { }
+    constructor(@Logger(__filename) private log: LoggerInterface) {}
 
     /**
      * Error handler - sets response code and sends json with error message.
@@ -32,22 +19,32 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
      * @param {express.Response} res The Express response object
      * @param {express.NextFunction} next The next Express middleware function
      */
-    public error(error: any, _req: express.Request, res: express.Response, _next: express.NextFunction): void {
+    public error(
+        error: any,
+        _req: express.Request,
+        res: express.Response,
+        _next: express.NextFunction
+    ): void {
         const responseObject = {} as any;
 
         // if its an array of ValidationError
         // console.log(error);
         // console.log(Array.isArray(error));
-        if (error && Array.isArray(error.errors) && error.errors.every((element) => element instanceof ValidationError)) {
+        if (
+            error &&
+            Array.isArray(error.errors) &&
+            error.errors.every(element => element instanceof ValidationError)
+        ) {
             res.status(422);
-            console.log('Inside');
-            responseObject.message = "You have an error in your request's body. Check 'errors' field for more details!";
+            console.log("Inside");
+            responseObject.message =
+                "You have an error in your request's body. Check 'errors' field for more details!";
             // responseObject.errors = error;
             responseObject.status = 0;
             responseObject.data = {};
             responseObject.data.message = [];
             error.errors.forEach((element: ValidationError) => {
-                Object.keys(element.constraints).forEach((type) => {
+                Object.keys(element.constraints).forEach(type => {
                     responseObject.data.message.push(`property ${element.constraints[type]}`);
                 });
             });
@@ -63,12 +60,13 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
                 const developmentMode: boolean = !this.isProduction;
 
                 // set response error fields
-                if (error.name && (developmentMode || error.message)) { // show name only if in development mode and if error message exist too
+                if (error.name && (developmentMode || error.message)) {
+                    // show name only if in development mode and if error message exist too
                     responseObject.name = error.name;
                 }
                 switch (error.name) {
-                    case 'AuthorizationRequiredError':
-                        responseObject.message = 'Unauthorized';
+                    case "AuthorizationRequiredError":
+                        responseObject.message = "Unauthorized";
                         break;
                     default:
                         responseObject.message = error.message;
@@ -78,7 +76,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
                 if (error.stack && developmentMode) {
                     responseObject.stack = error.stack;
                 }
-            } else if (typeof error === 'string') {
+            } else if (typeof error === "string") {
                 responseObject.message = error;
             }
         }
@@ -90,7 +88,6 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
         }
 
         // send json only with error
-       res.json(responseObject);
+        res.json(responseObject);
     }
-
 }

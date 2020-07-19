@@ -1,35 +1,25 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {Like} from 'typeorm/index';
-import {OrderLogRepository} from '../repositories/OrderLogRepository';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Like } from "typeorm/index";
+import { OrderLogRepository } from "../repositories/OrderLogRepository";
 
 @Service()
 export class OrderLogService {
-
-    constructor(@OrmRepository() private orderLogRepository: OrderLogRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private orderLogRepository: OrderLogRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create orderLog
     public async create(order: any): Promise<any> {
-        this.log.info('Create a new orderLog ');
+        this.log.info("Create a new orderLog ");
         return this.orderLogRepository.save(order);
     }
 
-// find Condition
-    public findOne( whereCondition: any ): Promise<any> {
-        this.log.info('Find orderLog Detail');
+    // find Condition
+    public findOne(whereCondition: any): Promise<any> {
+        this.log.info("Find orderLog Detail");
         const condition: any = {};
         if (whereCondition && whereCondition.length > 0) {
             condition.where = whereCondition[0];
@@ -47,7 +37,13 @@ export class OrderLogService {
     }
 
     // orderLog List
-    public list(limit: number, offset: number, search: any = [], whereConditions: any = [], count: number | boolean): Promise<any> {
+    public list(
+        limit: number,
+        offset: number,
+        search: any = [],
+        whereConditions: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         condition.where = {};
@@ -61,10 +57,10 @@ export class OrderLogService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -86,7 +82,7 @@ export class OrderLogService {
     }
 
     // orderLog count
-    public find( ): Promise<any> {
+    public find(): Promise<any> {
         return this.orderLogRepository.find();
     }
 }

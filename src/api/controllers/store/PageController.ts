@@ -1,21 +1,10 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import { Get, QueryParam, Param, JsonController, Res } from "routing-controllers";
+import { PageService } from "../../services/pageService";
 
-import 'reflect-metadata';
-import { Get, QueryParam, Param, JsonController, Res} from 'routing-controllers';
-import { PageService } from '../../services/pageService';
-
-@JsonController('/pages')
+@JsonController("/pages")
 export class PageController {
-    constructor(private pageService: PageService) {
-    }
+    constructor(private pageService: PageService) {}
 
     // Page List API
     /**
@@ -44,29 +33,50 @@ export class PageController {
      * @apiErrorExample {json} pageFront error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/pagelist')
-    public async pageList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count')count: number|boolean, @Res() response: any): Promise<any> {
-        const select = ['pageId', 'title', 'content', 'isActive', 'metaTagTitle', 'metaTagContent', 'metaTagKeyword'];
+    @Get("/pagelist")
+    public async pageList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "pageId",
+            "title",
+            "content",
+            "isActive",
+            "metaTagTitle",
+            "metaTagContent",
+            "metaTagKeyword"
+        ];
         const search = [
             {
-                name: 'title',
-                op: 'like',
-                value: keyword,
-            },
+                name: "title",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const pageList = await this.pageService.list(limit, offset, select, search, WhereConditions, count);
+        const pageList = await this.pageService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (pageList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get pages List',
-                data: pageList,
+                message: "Successfully get pages List",
+                data: pageList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to list pages',
+                message: "unable to list pages"
             };
             return response.status(400).send(errorResponse);
         }
@@ -92,17 +102,17 @@ export class PageController {
      * @apiErrorExample {json} page error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/get_pagedetails/:id')
-    public async pageDetails(@Param('id')id: number, @Res() response: any): Promise<any> {
+    @Get("/get_pagedetails/:id")
+    public async pageDetails(@Param("id") id: number, @Res() response: any): Promise<any> {
         const page = await this.pageService.findOne({
             where: {
-                pageId: id,
-            },
+                pageId: id
+            }
         });
         if (!page) {
             const errorResponse: any = {
                 status: 0,
-                message: 'invalid page id',
+                message: "invalid page id"
             };
             return response.status(400).send(errorResponse);
         }
@@ -111,14 +121,14 @@ export class PageController {
         if (pageDetails) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get page Details',
-                data: pageDetails,
+                message: "Successfully get page Details",
+                data: pageDetails
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to get page Details',
+                message: "unable to get page Details"
             };
             return response.status(400).send(errorResponse);
         }

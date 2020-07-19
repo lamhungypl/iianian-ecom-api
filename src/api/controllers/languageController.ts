@@ -1,27 +1,31 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import {
+    Get,
+    Put,
+    Delete,
+    Param,
+    QueryParam,
+    Post,
+    Body,
+    JsonController,
+    Authorized,
+    Req,
+    Res
+} from "routing-controllers";
+import { Language } from "../models/language";
+import { CreateLanguage } from "./requests/createLanguageRequest";
+import { LanguageService } from "../services/languageService";
+import { env } from "../../env";
+import { S3Service } from "../services/S3Service";
+import { ImageService } from "../services/ImageService";
 
-import 'reflect-metadata';
-import { Get, Put, Delete, Param, QueryParam, Post, Body, JsonController, Authorized, Req, Res} from 'routing-controllers';
-import {Language} from '../models/language';
-import {CreateLanguage} from './requests/createLanguageRequest';
-import {LanguageService} from '../services/languageService';
-import {env} from '../../env';
-import {S3Service} from '../services/S3Service';
-import {ImageService} from '../services/ImageService';
-
-@JsonController('/language')
+@JsonController("/language")
 export class LanguageController {
-    constructor(private languageService: LanguageService, private imageService: ImageService,
-                private s3Service: S3Service) {
-    }
+    constructor(
+        private languageService: LanguageService,
+        private imageService: ImageService,
+        private s3Service: S3Service
+    ) {}
 
     // Create Language API
     /**
@@ -51,20 +55,23 @@ export class LanguageController {
      * @apiErrorExample {json} Language error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-language')
+    @Post("/add-language")
     @Authorized()
-    public async addLanguage(@Body({validate: true}) languageParam: CreateLanguage, @Res() response: any): Promise<any> {
+    public async addLanguage(
+        @Body({ validate: true }) languageParam: CreateLanguage,
+        @Res() response: any
+    ): Promise<any> {
         const image = languageParam.image;
         const newLanguage = new Language();
         if (image) {
-            const type = image.split(';')[0].split('/')[1];
-            const name = 'Img_' + Date.now() + '.' + type;
-            const path = 'language/';
-            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-            if (env.imageserver === 's3') {
-                await this.s3Service.imageUpload((path + name), base64Data, type);
+            const type = image.split(";")[0].split("/")[1];
+            const name = "Img_" + Date.now() + "." + type;
+            const path = "language/";
+            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), "base64");
+            if (env.imageserver === "s3") {
+                await this.s3Service.imageUpload(path + name, base64Data, type);
             } else {
-                await this.imageService.imageUpload((path + name), base64Data);
+                await this.imageService.imageUpload(path + name, base64Data);
             }
             newLanguage.image = name;
             newLanguage.imagePath = path;
@@ -77,14 +84,14 @@ export class LanguageController {
         if (languageSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully added a new language.',
-                data: languageSave,
+                message: "Successfully added a new language.",
+                data: languageSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create language',
+                message: "unable to create language"
             };
             return response.status(400).send(errorResponse);
         }
@@ -115,35 +122,57 @@ export class LanguageController {
      * @apiErrorExample {json} Language error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/languagelist')
+    @Get("/languagelist")
     @Authorized()
-    public async languageList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string,  @QueryParam('status') status: string, @QueryParam('count')count: number|boolean, @Res() response: any): Promise<any> {
-        const select = ['languageId', 'name', 'code', 'image', 'imagePath', 'sortOrder', 'isActive'];
+    public async languageList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("status") status: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "languageId",
+            "name",
+            "code",
+            "image",
+            "imagePath",
+            "sortOrder",
+            "isActive"
+        ];
         const search = [
             {
-                name    : 'name',
-                op      : 'like',
-                value   : keyword,
+                name: "name",
+                op: "like",
+                value: keyword
             },
             {
-                name    : 'isActive',
-                op      : 'like',
-                value   : status,
-            },
+                name: "isActive",
+                op: "like",
+                value: status
+            }
         ];
         const WhereConditions = [];
-        const languageList = await this.languageService.list(limit, offset , select, search, WhereConditions, count);
+        const languageList = await this.languageService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (languageList) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got the complete language list.',
-                data: languageList,
+                message: "successfully got the complete language list.",
+                data: languageList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to list language',
+                message: "unable to list language"
             };
             return response.status(400).send(errorResponse);
         }
@@ -176,31 +205,35 @@ export class LanguageController {
      * @apiErrorExample {json} language error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-language/:id')
+    @Put("/update-language/:id")
     @Authorized()
-    public async updateLanguage(@Param('id')id: number, @Body({validate: true}) languageParam: CreateLanguage, @Res() response: any): Promise<any> {
+    public async updateLanguage(
+        @Param("id") id: number,
+        @Body({ validate: true }) languageParam: CreateLanguage,
+        @Res() response: any
+    ): Promise<any> {
         const language = await this.languageService.findOne({
             where: {
-                languageId: id,
-            },
+                languageId: id
+            }
         });
         if (!language) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid languageId',
+                message: "Invalid languageId"
             };
             return response.status(400).send(errorResponse);
         }
         const image = languageParam.image;
         if (image) {
-            const type = image.split(';')[0].split('/')[1];
-            const name = 'Img_' + Date.now() + '.' + type;
-            const path = 'language/';
-            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ''), 'base64');
-            if (env.imageserver === 's3') {
-                await this.s3Service.imageUpload((path + name), base64Data, type);
+            const type = image.split(";")[0].split("/")[1];
+            const name = "Img_" + Date.now() + "." + type;
+            const path = "language/";
+            const base64Data = new Buffer(image.replace(/^data:image\/\w+;base64,/, ""), "base64");
+            if (env.imageserver === "s3") {
+                await this.s3Service.imageUpload(path + name, base64Data, type);
             } else {
-                await this.imageService.imageUpload((path + name), base64Data);
+                await this.imageService.imageUpload(path + name, base64Data);
             }
             language.image = name;
             language.imagePath = path;
@@ -214,14 +247,14 @@ export class LanguageController {
         if (languageSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Sucessfully updated the language.',
-                data: languageSave,
+                message: "Sucessfully updated the language.",
+                data: languageSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to update language',
+                message: "unable to update language"
             };
             return response.status(400).send(errorResponse);
         }
@@ -246,35 +279,38 @@ export class LanguageController {
      * @apiErrorExample {json} Language error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-language/:id')
+    @Delete("/delete-language/:id")
     @Authorized()
-    public async deleteLanguage(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteLanguage(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const language = await this.languageService.findOne({
             where: {
-                languageId: id,
-            },
+                languageId: id
+            }
         });
         if (!language) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid languageId',
+                message: "Invalid languageId"
             };
             return response.status(400).send(errorResponse);
         }
 
         const deleteLanguage = await this.languageService.delete(language);
-        console.log('language' + deleteLanguage);
+        console.log("language" + deleteLanguage);
         if (deleteLanguage) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted the language. ',
+                message: "Successfully deleted the language. "
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete language',
+                message: "unable to delete language"
             };
             return response.status(400).send(errorResponse);
         }

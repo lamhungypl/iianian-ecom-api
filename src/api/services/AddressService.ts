@@ -1,29 +1,19 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {AddressRepository} from '../repositories/AddressRepository';
-import {Address} from '../models/Address';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { AddressRepository } from "../repositories/AddressRepository";
+import { Address } from "../models/Address";
 
 @Service()
 export class AddressService {
-
-    constructor(@OrmRepository() private addressRepository: AddressRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private addressRepository: AddressRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create address
     public async create(address: Address): Promise<any> {
-        this.log.info('Create a new address ');
+        this.log.info("Create a new address ");
         return this.addressRepository.save(address);
     }
 
@@ -38,7 +28,12 @@ export class AddressService {
     }
 
     // address List
-    public list(limit: number, offset: number, whereConditions: any = [], count: number | boolean): Promise<any> {
+    public list(
+        limit: number,
+        offset: number,
+        whereConditions: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         condition.where = {};

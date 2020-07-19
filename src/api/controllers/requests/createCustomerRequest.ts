@@ -1,17 +1,6 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
-import {IsNotEmpty, IsEmail, MinLength, IsAlphanumeric} from 'class-validator';
+import "reflect-metadata";
+import { IsNotEmpty, IsEmail, MinLength, IsAlphanumeric } from "class-validator";
 export class CreateCustomer {
-
     @IsNotEmpty()
     public customerGroupId: number;
 
@@ -27,7 +16,7 @@ export class CreateCustomer {
     @IsNotEmpty()
     @IsAlphanumeric()
     @MinLength(5, {
-        message: 'password is minimum 5 character',
+        message: "password is minimum 5 character"
     })
     public password: string;
 

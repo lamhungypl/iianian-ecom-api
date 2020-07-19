@@ -1,43 +1,36 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import { Get, Body, QueryParam, Put, JsonController, Res, Req, Param } from "routing-controllers";
+import { classToPlain } from "class-transformer";
+import { ProductToCategoryService } from "../../services/ProductToCategoryService";
+import { ProductService } from "../../services/ProductService";
+import { CategoryService } from "../../services/categoryService";
+import { ProductRelatedService } from "../../services/ProductRelatedService";
+import { UpdateFeatureProduct } from "./requests/UpdateFeatureProductRequest";
+import { ProductImageService } from "../../services/ProductImageService";
+import { ProductViewLog } from "../../models/productViewLog";
+import { ProductViewLogService } from "../../services/ProductViewLogService";
+import jwt from "jsonwebtoken";
+import { CustomerService } from "../../services/CustomerService";
+import { ProductDiscountService } from "../../services/ProductDiscountService";
+import { ProductSpecialService } from "../../services/ProductSpecialService";
+import { CategoryPathService } from "../../services/CategoryPathService";
+import { ProductRatingService } from "../../services/RatingService";
 
-import 'reflect-metadata';
-import {Get, Body, QueryParam, Put, JsonController, Res, Req, Param} from 'routing-controllers';
-import {classToPlain} from 'class-transformer';
-import {ProductToCategoryService} from '../../services/ProductToCategoryService';
-import {ProductService} from '../../services/ProductService';
-import {CategoryService} from '../../services/categoryService';
-import {ProductRelatedService} from '../../services/ProductRelatedService';
-import {UpdateFeatureProduct} from './requests/UpdateFeatureProductRequest';
-import {ProductImageService} from '../../services/ProductImageService';
-import {ProductViewLog} from '../../models/productViewLog';
-import {ProductViewLogService} from '../../services/ProductViewLogService';
-import jwt from 'jsonwebtoken';
-import {CustomerService} from '../../services/CustomerService';
-import {ProductDiscountService} from '../../services/ProductDiscountService';
-import {ProductSpecialService} from '../../services/ProductSpecialService';
-import {CategoryPathService} from '../../services/CategoryPathService';
-import {ProductRatingService} from '../../services/RatingService';
-
-@JsonController('/product-store')
+@JsonController("/product-store")
 export class ProductController {
-    constructor(private productService: ProductService,
-                private productToCategoryService: ProductToCategoryService,
-                private categoryService: CategoryService,
-                private productRelatedService: ProductRelatedService,
-                private productImageService: ProductImageService,
-                private customerService: CustomerService,
-                private productViewLogService: ProductViewLogService,
-                private productDiscountService: ProductDiscountService, private productSpecialService: ProductSpecialService,
-                private categoryPathService: CategoryPathService, private productRatingService: ProductRatingService) {
-    }
+    constructor(
+        private productService: ProductService,
+        private productToCategoryService: ProductToCategoryService,
+        private categoryService: CategoryService,
+        private productRelatedService: ProductRelatedService,
+        private productImageService: ProductImageService,
+        private customerService: CustomerService,
+        private productViewLogService: ProductViewLogService,
+        private productDiscountService: ProductDiscountService,
+        private productSpecialService: ProductSpecialService,
+        private categoryPathService: CategoryPathService,
+        private productRatingService: ProductRatingService
+    ) {}
 
     // Product Details API
     /**
@@ -55,57 +48,104 @@ export class ProductController {
      * @apiErrorExample {json} productDetail error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/productdetail/:id')
-    public async productDetail(@Param('id') id: number, @Req() request: any, @Res() response: any): Promise<any> {
-        const select = ['productId', 'sku', 'upc', 'name', 'description', 'location', 'minimumQuantity', 'quantity', 'subtractStock', 'metaTagTitle', 'manufacturerId', 'stockStatusId', 'shipping', 'dateAvailable', 'sortOrder', 'price', 'condition', 'rating', 'wishListStatus', 'isActive'];
+    @Get("/productdetail/:id")
+    public async productDetail(
+        @Param("id") id: number,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "productId",
+            "sku",
+            "upc",
+            "name",
+            "description",
+            "location",
+            "minimumQuantity",
+            "quantity",
+            "subtractStock",
+            "metaTagTitle",
+            "manufacturerId",
+            "stockStatusId",
+            "shipping",
+            "dateAvailable",
+            "sortOrder",
+            "price",
+            "condition",
+            "rating",
+            "wishListStatus",
+            "isActive"
+        ];
 
-        const relation = ['productImage'];
+        const relation = ["productImage"];
 
         const WhereConditions = [
             {
-                name: 'productId',
-                op: 'where',
-                value: id,
-            },
+                name: "productId",
+                op: "where",
+                value: id
+            }
         ];
-        const productDetail: any = await this.productService.list(0, 0, select, relation, WhereConditions, 0, 0, 0);
+        const productDetail: any = await this.productService.list(
+            0,
+            0,
+            select,
+            relation,
+            WhereConditions,
+            0,
+            0,
+            0
+        );
         const productDetails: any = classToPlain(productDetail);
         const promises = productDetails.map(async (result: any) => {
-            const productToCategory = await this.productToCategoryService.findAll({
-                select: ['categoryId', 'productId'],
-                where: {productId: result.productId},
-            }).then((val) => {
-                const category = val.map(async (value: any) => {
-                    const categoryNames = await this.categoryService.findOne({categoryId: value.categoryId});
-                    const JsonData = JSON.stringify(categoryNames);
-                    const ParseData = JSON.parse(JsonData);
-                    const temp: any = value;
-                    temp.categoryName = ParseData.name;
-                    return temp;
-                });
-                const results = Promise.all(category);
-                return results;
-            });
-            const relatedProductData = await this.productRelatedService.findAll({where: {productId: result.productId}}).then((val) => {
-                const relatedProduct = val.map(async (value: any) => {
-                    const productId = value.relatedProductId;
-                    const product = await this.productService.findOne({
-                        select: ['productId', 'name'],
-                        where: {productId},
-                        relations: ['productImage'],
+            const productToCategory = await this.productToCategoryService
+                .findAll({
+                    select: ["categoryId", "productId"],
+                    where: { productId: result.productId }
+                })
+                .then(val => {
+                    const category = val.map(async (value: any) => {
+                        const categoryNames = await this.categoryService.findOne({
+                            categoryId: value.categoryId
+                        });
+                        const JsonData = JSON.stringify(categoryNames);
+                        const ParseData = JSON.parse(JsonData);
+                        const temp: any = value;
+                        temp.categoryName = ParseData.name;
+                        return temp;
                     });
-                    return classToPlain(product);
+                    const results = Promise.all(category);
+                    return results;
                 });
-                const resultData = Promise.all(relatedProduct);
-                return resultData;
-            });
+            const relatedProductData = await this.productRelatedService
+                .findAll({ where: { productId: result.productId } })
+                .then(val => {
+                    const relatedProduct = val.map(async (value: any) => {
+                        const productId = value.relatedProductId;
+                        const product = await this.productService.findOne({
+                            select: ["productId", "name"],
+                            where: { productId },
+                            relations: ["productImage"]
+                        });
+                        return classToPlain(product);
+                    });
+                    const resultData = Promise.all(relatedProduct);
+                    return resultData;
+                });
             const dd: any = result;
             dd.Category = productToCategory;
             dd.relatedProductDetail = relatedProductData;
             const nowDate = new Date();
-            const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-            const productSpecial = await this.productSpecialService.findSpecialPrice(result.productId, todaydate);
-            const productDiscount = await this.productDiscountService.findDiscountPrice(result.productId, todaydate);
+            const todaydate =
+                nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
+            const productSpecial = await this.productSpecialService.findSpecialPrice(
+                result.productId,
+                todaydate
+            );
+            const productDiscount = await this.productDiscountService.findDiscountPrice(
+                result.productId,
+                todaydate
+            );
             if (productSpecial !== undefined) {
                 dd.pricerefer = productSpecial.price;
                 dd.flag = 1;
@@ -113,24 +153,30 @@ export class ProductController {
                 dd.pricerefer = productDiscount.price;
                 dd.flag = 0;
             } else {
-                dd.pricerefer = '';
-                dd.flag = '';
+                dd.pricerefer = "";
+                dd.flag = "";
             }
             return dd;
         });
         // wait until all promises resolve
         const finalResult = await Promise.all(promises);
 
-        if (request.header('authorization')) {
+        if (request.header("authorization")) {
             let customerId;
-            jwt.verify(request.header('authorization').split(' ')[1], '123##$$)(***&', (err, decoded) => {
-                if (err) {
-                    console.log(err);
+            jwt.verify(
+                request.header("authorization").split(" ")[1],
+                "123##$$)(***&",
+                (err, decoded) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    console.log("lll", decoded.id);
+                    customerId = decoded.id;
                 }
-                console.log('lll', decoded.id);
-                customerId = decoded.id;
+            );
+            const customerDetail = await this.customerService.findOne({
+                where: { id: customerId }
             });
-            const customerDetail = await this.customerService.findOne({where: {id: customerId}});
             const viewLog: any = new ProductViewLog();
             viewLog.productId = id;
             viewLog.customerId = customerDetail.id;
@@ -145,8 +191,8 @@ export class ProductController {
 
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get productDetail',
-            data: finalResult,
+            message: "Successfully get productDetail",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
     }
@@ -170,18 +216,21 @@ export class ProductController {
      * @apiErrorExample {json} isFeature error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-featureproduct/:id')
-    public async updateFeatureProduct(@Param('id')id: number, @Body({validate: true}) updateFeatureProductParam: UpdateFeatureProduct, @Res() response: any): Promise<any> {
-
+    @Put("/update-featureproduct/:id")
+    public async updateFeatureProduct(
+        @Param("id") id: number,
+        @Body({ validate: true }) updateFeatureProductParam: UpdateFeatureProduct,
+        @Res() response: any
+    ): Promise<any> {
         const product = await this.productService.findOne({
             where: {
-                productId: id,
-            },
+                productId: id
+            }
         });
         if (!product) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid productId',
+                message: "Invalid productId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -190,14 +239,14 @@ export class ProductController {
         if (productSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'product updated successfully.',
-                data: productSave,
+                message: "product updated successfully.",
+                data: productSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to updated product',
+                message: "unable to updated product"
             };
             return response.status(400).send(errorResponse);
         }
@@ -224,58 +273,91 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Error
      */
 
-    @Get('/featureproduct-list')
-    public async featureProductList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('sku') sku: string, @QueryParam('count') count: number | boolean, @Req() request: any, @Res() response: any): Promise<any> {
-
-        const select = ['productId', 'sku', 'upc', 'name', 'rating', 'description', 'location', 'minimumQuantity',
-            'quantity', 'subtractStock', 'metaTagTitle', 'manufacturerId', 'stockStatusId',
-            'shipping', 'dateAvailable', 'sortOrder', 'price', 'isActive'];
+    @Get("/featureproduct-list")
+    public async featureProductList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("sku") sku: string,
+        @QueryParam("count") count: number | boolean,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "productId",
+            "sku",
+            "upc",
+            "name",
+            "rating",
+            "description",
+            "location",
+            "minimumQuantity",
+            "quantity",
+            "subtractStock",
+            "metaTagTitle",
+            "manufacturerId",
+            "stockStatusId",
+            "shipping",
+            "dateAvailable",
+            "sortOrder",
+            "price",
+            "isActive"
+        ];
         const whereConditions = [
             {
-                name: 'deleteFlag',
-                op: 'where',
-                value: 0,
+                name: "deleteFlag",
+                op: "where",
+                value: 0
             },
             {
-                name: 'isFeatured',
-                op: 'where',
-                value: 1,
+                name: "isFeatured",
+                op: "where",
+                value: 1
             },
             {
-                name: 'isActive',
-                op: 'where',
-                value: 1,
-            },
+                name: "isActive",
+                op: "where",
+                value: 1
+            }
         ];
 
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
+                name: "name",
+                op: "like",
+                value: keyword
             },
             {
-                name: 'sku',
-                op: 'like',
-                value: sku,
-            },
+                name: "sku",
+                op: "like",
+                value: sku
+            }
         ];
-        const featureProduct = await this.productService.list(limit, offset, select, 0, whereConditions, search, 0, count);
+        const featureProduct = await this.productService.list(
+            limit,
+            offset,
+            select,
+            0,
+            whereConditions,
+            search,
+            0,
+            count
+        );
         if (count) {
             const successresponse: any = {
                 status: 1,
-                message: 'Successfully get feature product count',
-                data: featureProduct,
+                message: "Successfully get feature product count",
+                data: featureProduct
             };
             return response.status(200).send(successresponse);
         }
         const promises = featureProduct.map(async (result: any) => {
             const productImage = await this.productImageService.findOne({
-                select: ['productId', 'image', 'containerName', 'defaultImage'],
+                select: ["productId", "image", "containerName", "defaultImage"],
                 where: {
                     productId: result.productId,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             const temp: any = result;
             temp.Images = productImage;
@@ -284,8 +366,8 @@ export class ProductController {
         const finalResult = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get feature product List',
-            data: finalResult,
+            message: "Successfully get feature product List",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
     }
@@ -311,57 +393,93 @@ export class ProductController {
      * HTTP/1.1 500 Internal Server Error
      */
 
-    @Get('/todayDeals-list')
-    public async todayDealsList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('sku') sku: string, @QueryParam('count') count: number | boolean, @Req() request: any, @Res() response: any): Promise<any> {
-        const select = ['productId', 'sku', 'upc', 'name', 'rating', 'description', 'location', 'minimumQuantity',
-            'quantity', 'subtractStock', 'metaTagTitle', 'manufacturerId', 'stockStatusId', 'isFeatured', 'todayDeals',
-            'shipping', 'dateAvailable', 'sortOrder', 'price', 'isActive'];
+    @Get("/todayDeals-list")
+    public async todayDealsList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("sku") sku: string,
+        @QueryParam("count") count: number | boolean,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        const select = [
+            "productId",
+            "sku",
+            "upc",
+            "name",
+            "rating",
+            "description",
+            "location",
+            "minimumQuantity",
+            "quantity",
+            "subtractStock",
+            "metaTagTitle",
+            "manufacturerId",
+            "stockStatusId",
+            "isFeatured",
+            "todayDeals",
+            "shipping",
+            "dateAvailable",
+            "sortOrder",
+            "price",
+            "isActive"
+        ];
         const whereConditions = [
             {
-                name: 'deleteFlag',
-                op: 'where',
-                value: 0,
+                name: "deleteFlag",
+                op: "where",
+                value: 0
             },
             {
-                name: 'todayDeals',
-                op: 'where',
-                value: 1,
+                name: "todayDeals",
+                op: "where",
+                value: 1
             },
             {
-                name: 'isActive',
-                op: 'where',
-                value: 1,
-            },
+                name: "isActive",
+                op: "where",
+                value: 1
+            }
         ];
 
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
+                name: "name",
+                op: "like",
+                value: keyword
             },
             {
-                name: 'sku',
-                op: 'like',
-                value: sku,
-            },
+                name: "sku",
+                op: "like",
+                value: sku
+            }
         ];
-        const todayDeals = await this.productService.list(limit, offset, select, 0, whereConditions, search, 0, count);
+        const todayDeals = await this.productService.list(
+            limit,
+            offset,
+            select,
+            0,
+            whereConditions,
+            search,
+            0,
+            count
+        );
         if (count) {
             const successresponse: any = {
                 status: 1,
-                message: 'Successfully got today deals count',
-                data: todayDeals,
+                message: "Successfully got today deals count",
+                data: todayDeals
             };
             return response.status(200).send(successresponse);
         }
         const promises = todayDeals.map(async (result: any) => {
             const productImage = await this.productImageService.findOne({
-                select: ['productId', 'image', 'containerName', 'defaultImage'],
+                select: ["productId", "image", "containerName", "defaultImage"],
                 where: {
                     productId: result.productId,
-                    defaultImage: 1,
-                },
+                    defaultImage: 1
+                }
             });
             const temp: any = result;
             temp.Images = productImage;
@@ -370,8 +488,8 @@ export class ProductController {
         const finalResult = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully got today deals List',
-            data: finalResult,
+            message: "Successfully got today deals List",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
     }
@@ -392,33 +510,50 @@ export class ProductController {
      * @apiErrorExample {json} Category error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/Get-Category')
-    public async getCategory(@QueryParam('CategoryId') CategoryId: number, @Res() response: any): Promise<any> {
-        const select = ['categoryId', 'name', 'parentInt', 'sortOrder'];
+    @Get("/Get-Category")
+    public async getCategory(
+        @QueryParam("CategoryId") CategoryId: number,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["categoryId", "name", "parentInt", "sortOrder"];
         const search = [];
-        const WhereConditions = [{
-            name: 'categoryId',
-            value: CategoryId,
-        }];
-        const category: any = await this.categoryService.list(0, 0, select, search, WhereConditions, 0, 0);
+        const WhereConditions = [
+            {
+                name: "categoryId",
+                value: CategoryId
+            }
+        ];
+        const category: any = await this.categoryService.list(
+            0,
+            0,
+            select,
+            search,
+            WhereConditions,
+            0,
+            0
+        );
         const promise = category.map(async (result: any) => {
             const temp: any = result;
-            const categoryLevel: any = await this.categoryPathService.find({
-                select: ['level', 'pathId'],
-                where: {categoryId: result.categoryId},
-                order: {level: 'ASC'},
-            }).then((values) => {
-                const categories = values.map(async (val: any) => {
-                    const categoryNames = await this.categoryService.findOne({categoryId: val.pathId});
-                    const JsonData = JSON.stringify(categoryNames);
-                    const ParseData = JSON.parse(JsonData);
-                    const tempVal: any = val;
-                    tempVal.categoryName = ParseData.name;
-                    return tempVal;
+            const categoryLevel: any = await this.categoryPathService
+                .find({
+                    select: ["level", "pathId"],
+                    where: { categoryId: result.categoryId },
+                    order: { level: "ASC" }
+                })
+                .then(values => {
+                    const categories = values.map(async (val: any) => {
+                        const categoryNames = await this.categoryService.findOne({
+                            categoryId: val.pathId
+                        });
+                        const JsonData = JSON.stringify(categoryNames);
+                        const ParseData = JSON.parse(JsonData);
+                        const tempVal: any = val;
+                        tempVal.categoryName = ParseData.name;
+                        return tempVal;
+                    });
+                    const results = Promise.all(categories);
+                    return results;
                 });
-                const results = Promise.all(categories);
-                return results;
-            });
             temp.levels = categoryLevel;
             return temp;
         });
@@ -426,8 +561,8 @@ export class ProductController {
         if (category) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got the category. ',
-                data: value,
+                message: "successfully got the category. ",
+                data: value
             };
             return response.status(200).send(successResponse);
         }
@@ -452,32 +587,44 @@ export class ProductController {
      * @apiErrorExample {json} Product error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/Get-Product-rating')
-    public async getProductRating(@QueryParam('productId') productId: number, @QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<any> {
-        const select = ['review', 'rating', 'createdDate', 'firstName', 'lastName', 'productId'];
+    @Get("/Get-Product-rating")
+    public async getProductRating(
+        @QueryParam("productId") productId: number,
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["review", "rating", "createdDate", "firstName", "lastName", "productId"];
         const relation = [];
         const WhereConditions = [
             {
-                name: 'productId',
-                op: 'where',
-                value: productId,
-            },
+                name: "productId",
+                op: "where",
+                value: productId
+            }
         ];
-        const rating: any = await this.productRatingService.list(limit, offset, select, relation, WhereConditions, count);
+        const rating: any = await this.productRatingService.list(
+            limit,
+            offset,
+            select,
+            relation,
+            WhereConditions,
+            count
+        );
         if (rating) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got the product Rating. ',
-                data: rating,
+                message: "successfully got the product Rating. ",
+                data: rating
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'unable to get product Rating.',
+                message: "unable to get product Rating."
             };
             return response.status(400).send(errorResponse);
         }
     }
-
 }

@@ -1,29 +1,19 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {Like} from 'typeorm/index';
-import {LoginLogRepository} from '../repositories/LoginLogRepository';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { Like } from "typeorm/index";
+import { LoginLogRepository } from "../repositories/LoginLogRepository";
 
 @Service()
 export class LoginLogService {
-
-    constructor(@OrmRepository() private loginLogRepository: LoginLogRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private loginLogRepository: LoginLogRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create banner
     public async create(loginLog: any): Promise<any> {
-        this.log.info('Create a new log ');
+        this.log.info("Create a new log ");
         return this.loginLogRepository.save(loginLog);
     }
 
@@ -39,7 +29,14 @@ export class LoginLogService {
     }
 
     // log List
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [], count: number | boolean): Promise<any> {
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -56,10 +53,10 @@ export class LoginLogService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }

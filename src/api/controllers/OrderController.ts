@@ -1,32 +1,38 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import "reflect-metadata";
+import {
+    Get,
+    JsonController,
+    Authorized,
+    QueryParam,
+    Res,
+    Req,
+    Post,
+    Body
+} from "routing-controllers";
+import { OrderService } from "../services/OrderService";
+import { CustomerService } from "../services/CustomerService";
+import { UpdateOrderChangeStatus } from "./requests/UpdateOrderChangeStatus";
+import { OrderLogService } from "../services/OrderLogService";
+import { OrderProductService } from "../services/OrderProductService";
+import { ProductService } from "../services/ProductService";
+import { OrderStatusService } from "../services/orderStatusService";
+import { ProductSpecialService } from "../services/ProductSpecialService";
+import { ProductDiscountService } from "../services/ProductDiscountService";
+import { ProductImageService } from "../services/ProductImageService";
 
-import 'reflect-metadata';
-import {Get, JsonController, Authorized, QueryParam, Res, Req, Post, Body} from 'routing-controllers';
-import {OrderService} from '../services/OrderService';
-import {CustomerService} from '../services/CustomerService';
-import {UpdateOrderChangeStatus} from './requests/UpdateOrderChangeStatus';
-import {OrderLogService} from '../services/OrderLogService';
-import {OrderProductService} from '../services/OrderProductService';
-import {ProductService} from '../services/ProductService';
-import {OrderStatusService} from '../services/orderStatusService';
-import {ProductSpecialService} from '../services/ProductSpecialService';
-import {ProductDiscountService} from '../services/ProductDiscountService';
-import {ProductImageService} from '../services/ProductImageService';
-
-@JsonController('/order')
+@JsonController("/order")
 export class OrderController {
-    constructor(private orderService: OrderService, private customerService: CustomerService, private productService: ProductService, private orderLogService: OrderLogService,
-                private orderProductService: OrderProductService, private productDiscountService: ProductDiscountService,
-                private orderStatusService: OrderStatusService,  private productSpecialService: ProductSpecialService,  private productImageService: ProductImageService) {
-    }
+    constructor(
+        private orderService: OrderService,
+        private customerService: CustomerService,
+        private productService: ProductService,
+        private orderLogService: OrderLogService,
+        private orderProductService: OrderProductService,
+        private productDiscountService: ProductDiscountService,
+        private orderStatusService: OrderStatusService,
+        private productSpecialService: ProductSpecialService,
+        private productImageService: ProductImageService
+    ) {}
 
     // order List API
     /**
@@ -60,45 +66,61 @@ export class OrderController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/orderlist')
+    @Get("/orderlist")
     @Authorized()
-    public async orderList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('orderId')orderId: string, @QueryParam('orderStatusId')orderStatusId: string, @QueryParam('customerName')customerName: string,
-                           @QueryParam('totalAmount')totalAmount: string, @QueryParam('dateAdded')dateAdded: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
+    public async orderList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("orderId") orderId: string,
+        @QueryParam("orderStatusId") orderStatusId: string,
+        @QueryParam("customerName") customerName: string,
+        @QueryParam("totalAmount") totalAmount: string,
+        @QueryParam("dateAdded") dateAdded: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
         const search = [
             {
-                name: 'orderPrefixId',
-                op: 'like',
-                value: orderId,
+                name: "orderPrefixId",
+                op: "like",
+                value: orderId
             },
             {
-                name: 'orderStatusId',
-                op: 'like',
-                value: orderStatusId,
+                name: "orderStatusId",
+                op: "like",
+                value: orderStatusId
             },
             {
-                name: 'shippingFirstname',
-                op: 'like',
-                value: customerName,
+                name: "shippingFirstname",
+                op: "like",
+                value: customerName
             },
             {
-                name: 'total',
-                op: 'like',
-                value: totalAmount,
+                name: "total",
+                op: "like",
+                value: totalAmount
             },
             {
-                name: 'createdDate',
-                op: 'like',
-                value: dateAdded,
-            },
-
+                name: "createdDate",
+                op: "like",
+                value: dateAdded
+            }
         ];
         const WhereConditions = [];
-        const orderList = await this.orderService.list(limit, offset, 0, search, WhereConditions, 0, count);
+        const orderList = await this.orderService.list(
+            limit,
+            offset,
+            0,
+            search,
+            WhereConditions,
+            0,
+            count
+        );
         if (count) {
             const Response: any = {
                 status: 1,
-                message: 'Successfully got count.',
-                data: orderList,
+                message: "Successfully got count.",
+                data: orderList
             };
             return response.status(200).send(Response);
         }
@@ -106,22 +128,20 @@ export class OrderController {
             // OrderList API
 
             const status = await this.orderStatusService.findOne({
-                where: {orderStatusId: value.orderStatusId},
-                select: ['orderStatusId', 'name', 'colorCode'],
+                where: { orderStatusId: value.orderStatusId },
+                select: ["orderStatusId", "name", "colorCode"]
             });
             const temp: any = value;
             temp.orderStatus = status;
             return temp;
-
         });
         const results = await Promise.all(orderStatus);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully got the complete order list.',
-            data: results,
+            message: "Successfully got the complete order list.",
+            data: results
         };
         return response.status(200).send(successResponse);
-
     }
 
     //  Order Detail API
@@ -146,69 +166,156 @@ export class OrderController {
      * HTTP/1.1 500 Internal Server Error
      */
     // Order Detail Function
-    @Get('/order-detail')
+    @Get("/order-detail")
     @Authorized()
-    public async orderDetail(@QueryParam('orderId') orderid: number, @Req() request: any, @Res() response: any): Promise<any> {
-        const orderData = await this.orderService.find({where: {orderId: orderid}, select: ['orderId', 'orderStatusId', 'telephone', 'invoiceNo', 'invoicePrefix', 'orderPrefixId', 'shippingFirstname', 'shippingLastname', 'shippingCompany', 'shippingAddress1',
-            'shippingAddress2', 'shippingCity', 'shippingZone', 'shippingPostcode', 'shippingCountry', 'shippingAddressFormat',
-            'paymentFirstname', 'paymentLastname', 'paymentCompany', 'paymentAddress1', 'paymentAddress2', 'paymentCity',
-            'paymentPostcode', 'paymentCountry', 'paymentZone', 'paymentAddressFormat', 'total', 'customerId', 'createdDate']});
+    public async orderDetail(
+        @QueryParam("orderId") orderid: number,
+        @Req() request: any,
+        @Res() response: any
+    ): Promise<any> {
+        const orderData = await this.orderService.find({
+            where: { orderId: orderid },
+            select: [
+                "orderId",
+                "orderStatusId",
+                "telephone",
+                "invoiceNo",
+                "invoicePrefix",
+                "orderPrefixId",
+                "shippingFirstname",
+                "shippingLastname",
+                "shippingCompany",
+                "shippingAddress1",
+                "shippingAddress2",
+                "shippingCity",
+                "shippingZone",
+                "shippingPostcode",
+                "shippingCountry",
+                "shippingAddressFormat",
+                "paymentFirstname",
+                "paymentLastname",
+                "paymentCompany",
+                "paymentAddress1",
+                "paymentAddress2",
+                "paymentCity",
+                "paymentPostcode",
+                "paymentCountry",
+                "paymentZone",
+                "paymentAddressFormat",
+                "total",
+                "customerId",
+                "createdDate"
+            ]
+        });
         const promises = orderData.map(async (result: any) => {
-            const product = await this.orderProductService.find({where: {orderId: orderid}, select: ['orderProductId', 'orderId', 'productId', 'name', 'model', 'quantity', 'total', 'productPrice']}).then((val) => {
-                console.log(val);
-                const productVal = val.map(async (value: any) => {
-                    const productDetail = await this.productService.findOne({
-                        where: {productId: value.productId},
-                        select: ['name', 'quantity', 'minimumQuantity', 'image',
-                            'imagePath', 'shipping', 'price', 'dateAvailable', 'amount', 'rating', 'discount', 'isActive']});
-                    const image = await this.productImageService.findOne({
-                        select: [ 'image', 'containerName'],
-                        where: {productId: value.productId, defaultImage: 1},
+            const product = await this.orderProductService
+                .find({
+                    where: { orderId: orderid },
+                    select: [
+                        "orderProductId",
+                        "orderId",
+                        "productId",
+                        "name",
+                        "model",
+                        "quantity",
+                        "total",
+                        "productPrice"
+                    ]
+                })
+                .then(val => {
+                    console.log(val);
+                    const productVal = val.map(async (value: any) => {
+                        const productDetail = await this.productService.findOne({
+                            where: { productId: value.productId },
+                            select: [
+                                "name",
+                                "quantity",
+                                "minimumQuantity",
+                                "image",
+                                "imagePath",
+                                "shipping",
+                                "price",
+                                "dateAvailable",
+                                "amount",
+                                "rating",
+                                "discount",
+                                "isActive"
+                            ]
+                        });
+                        const image = await this.productImageService.findOne({
+                            select: ["image", "containerName"],
+                            where: { productId: value.productId, defaultImage: 1 }
+                        });
+                        // const orderOption = await this.orderOptionService.find({where: {orderProductId: value.orderProductId},
+                        //     select: ['name', 'value', 'type', 'orderOptionId', 'orderProductId']});
+                        // const rating = await this.productRatingService.findOne({select: ['rating', 'review'], where: {customerId : result.customerId, orderProductId : value.orderProductId, productId: value.productId}});
+                        const tempVal: any = value;
+                        const nowDate = new Date();
+                        const todaydate =
+                            nowDate.getFullYear() +
+                            "-" +
+                            (nowDate.getMonth() + 1) +
+                            "-" +
+                            nowDate.getDate();
+                        const productSpecial = await this.productSpecialService.findSpecialPrice(
+                            value.productId,
+                            todaydate
+                        );
+                        const productDiscount = await this.productDiscountService.findDiscountPrice(
+                            value.productId,
+                            todaydate
+                        );
+                        if (productSpecial !== undefined) {
+                            tempVal.pricerefer = productSpecial.price;
+                            tempVal.flag = 1;
+                        } else if (productDiscount !== undefined) {
+                            tempVal.pricerefer = productDiscount.price;
+                            tempVal.flag = 0;
+                        } else {
+                            tempVal.pricerefer = "";
+                            tempVal.flag = "";
+                        }
+                        tempVal.productDetail = productDetail;
+                        tempVal.productDetail.productImage = image;
+                        // tempVal.orderOptions = orderOption;
+                        // if (rating !== undefined) {
+                        //     tempVal.rating = rating.rating;
+                        //     tempVal.review = rating.review;
+                        // } else {
+                        //     tempVal.rating = 0;
+                        //     tempVal.review = '';
+                        // }
+                        return tempVal;
                     });
-                    // const orderOption = await this.orderOptionService.find({where: {orderProductId: value.orderProductId},
-                    //     select: ['name', 'value', 'type', 'orderOptionId', 'orderProductId']});
-                    // const rating = await this.productRatingService.findOne({select: ['rating', 'review'], where: {customerId : result.customerId, orderProductId : value.orderProductId, productId: value.productId}});
-                    const tempVal: any = value;
-                    const nowDate = new Date();
-                    const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
-                    const productSpecial = await this.productSpecialService.findSpecialPrice(value.productId, todaydate);
-                    const productDiscount = await this.productDiscountService.findDiscountPrice(value.productId, todaydate);
-                    if (productSpecial !== undefined) {
-                        tempVal.pricerefer = productSpecial.price;
-                        tempVal.flag = 1;
-                    } else if (productDiscount !== undefined) {
-                        tempVal.pricerefer = productDiscount.price;
-                        tempVal.flag = 0;
-                    } else {
-                        tempVal.pricerefer = '';
-                        tempVal.flag = '';
-                    }
-                    tempVal.productDetail = productDetail;
-                    tempVal.productDetail.productImage = image;
-                    // tempVal.orderOptions = orderOption;
-                    // if (rating !== undefined) {
-                    //     tempVal.rating = rating.rating;
-                    //     tempVal.review = rating.review;
-                    // } else {
-                    //     tempVal.rating = 0;
-                    //     tempVal.review = '';
-                    // }
-                    return tempVal;
+                    const results = Promise.all(productVal);
+                    return results;
                 });
-                const results = Promise.all(productVal);
-                return results;
-            });
             const orderStatusData = await this.orderStatusService.findOne({
-                where: {orderStatusId: result.orderStatusId},
-                select: ['name', 'colorCode']});
+                where: { orderStatusId: result.orderStatusId },
+                select: ["name", "colorCode"]
+            });
             let str = JSON.stringify(orderStatusData);
-            str = str.replace(/name/g, 'orderStatusName');
-            str = str.replace(/colorCode/g, 'statusColorCode');
+            str = str.replace(/name/g, "orderStatusName");
+            str = str.replace(/colorCode/g, "statusColorCode");
             const orderStatus = JSON.parse(str);
             const data: any = result;
             const temp: any = Object.assign({}, data, orderStatus);
             temp.productList = product;
-            const customer = await this.customerService.findOne({where: {id: result.customerId}, select: ['firstName', 'lastName', 'username', 'mobileNumber', 'email', 'city', 'address', 'pincode', 'countryId', 'zoneId']});
+            const customer = await this.customerService.findOne({
+                where: { id: result.customerId },
+                select: [
+                    "firstName",
+                    "lastName",
+                    "username",
+                    "mobileNumber",
+                    "email",
+                    "city",
+                    "address",
+                    "pincode",
+                    "countryId",
+                    "zoneId"
+                ]
+            });
             console.log(customer);
             temp.customerDetail = customer;
             return temp;
@@ -216,8 +323,8 @@ export class OrderController {
         const resultData = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully shown the order Detail. ',
-            data: resultData,
+            message: "Successfully shown the order Detail. ",
+            data: resultData
         };
         return response.status(200).send(successResponse);
     }
@@ -239,28 +346,38 @@ export class OrderController {
      * @apiErrorExample {json} sales error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/saleslist')
+    @Get("/saleslist")
     @Authorized()
     public async salesList(@Res() response: any): Promise<any> {
-
         const orderList = await this.orderService.salesList();
         console.log(orderList);
         const promises = orderList.map(async (result: any) => {
-            const monthNames = ['', 'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December',
+            const monthNames = [
+                "",
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December"
             ];
             const temp: any = result;
-            temp.monthYear = monthNames[result.month] + '-' + result.year;
+            temp.monthYear = monthNames[result.month] + "-" + result.year;
             return temp;
         });
         const finalResult = await Promise.all(promises);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get sales count List',
-            data: finalResult,
+            message: "Successfully get sales count List",
+            data: finalResult
         };
         return response.status(200).send(successResponse);
-
     }
 
     // total order amount API
@@ -281,7 +398,7 @@ export class OrderController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/total-order-amount')
+    @Get("/total-order-amount")
     @Authorized()
     public async totalOrderAmount(@Res() response: any): Promise<any> {
         let total = 0;
@@ -293,15 +410,15 @@ export class OrderController {
         if (order) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get total order Amount',
-                data: total,
+                message: "Successfully get total order Amount",
+                data: total
             };
 
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to get total order amount',
+                message: "unable to get total order amount"
             };
             return response.status(400).send(errorResponse);
         }
@@ -324,11 +441,12 @@ export class OrderController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/today-order-amount')
+    @Get("/today-order-amount")
     @Authorized()
     public async todayOrderAmount(@Res() response: any): Promise<any> {
         const nowDate = new Date();
-        const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+        const todaydate =
+            nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         console.log(todaydate);
         let total = 0;
         const order = await this.orderService.findAlltodayOrder(todaydate);
@@ -339,15 +457,15 @@ export class OrderController {
         if (order) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully get today order Amount',
-                data: total,
+                message: "Successfully get today order Amount",
+                data: total
             };
 
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to get today order amount',
+                message: "unable to get today order amount"
             };
             return response.status(400).send(errorResponse);
         }
@@ -370,21 +488,20 @@ export class OrderController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/today-order-count')
+    @Get("/today-order-count")
     @Authorized()
     public async orderCount(@Res() response: any): Promise<any> {
-
         const nowDate = new Date();
-        const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+        const todaydate =
+            nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
 
         const orderCount = await this.orderService.findAllTodayOrderCount(todaydate);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get Today order count',
-            data: orderCount,
+            message: "Successfully get Today order count",
+            data: orderCount
         };
         return response.status(200).send(successResponse);
-
     }
 
     // Change order Status API
@@ -408,16 +525,18 @@ export class OrderController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/order-change-status')
+    @Post("/order-change-status")
     @Authorized()
-    public async orderChangeStatus(@Body({validate: true}) orderChangeStatus: UpdateOrderChangeStatus, @Res() response: any): Promise<any> {
-
+    public async orderChangeStatus(
+        @Body({ validate: true }) orderChangeStatus: UpdateOrderChangeStatus,
+        @Res() response: any
+    ): Promise<any> {
         const updateOrder = await this.orderService.findOrder(orderChangeStatus.orderId);
         console.log(updateOrder);
         if (!updateOrder) {
             const errorResponse: any = {
                 status: 0,
-                message: 'invalid order Id',
+                message: "invalid order Id"
             };
             return response.status(400).send(errorResponse);
         }
@@ -432,14 +551,14 @@ export class OrderController {
         if (orderSave) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated Order Status',
-                data: orderSave,
+                message: "Successfully updated Order Status",
+                data: orderSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to updated OrderStatus',
+                message: "unable to updated OrderStatus"
             };
             return response.status(400).send(errorResponse);
         }

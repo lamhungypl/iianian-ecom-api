@@ -1,30 +1,20 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import {Service} from 'typedi';
-import {OrmRepository} from 'typeorm-typedi-extensions';
-import {Logger, LoggerInterface} from '../../decorators/Logger';
-import {LanguageRepository} from '../repositories/languageRepository';
-import {Like} from 'typeorm/index';
-import {Language} from '../models/language';
+import { Service } from "typedi";
+import { OrmRepository } from "typeorm-typedi-extensions";
+import { Logger, LoggerInterface } from "../../decorators/Logger";
+import { LanguageRepository } from "../repositories/languageRepository";
+import { Like } from "typeorm/index";
+import { Language } from "../models/language";
 
 @Service()
 export class LanguageService {
-
-    constructor(@OrmRepository() private languageRepository: LanguageRepository,
-                @Logger(__filename) private log: LoggerInterface) {
-    }
+    constructor(
+        @OrmRepository() private languageRepository: LanguageRepository,
+        @Logger(__filename) private log: LoggerInterface
+    ) {}
 
     // create language
     public async create(language: any): Promise<any> {
-        this.log.info('Create a new language ');
+        this.log.info("Create a new language ");
         return this.languageRepository.save(language);
     }
 
@@ -40,7 +30,14 @@ export class LanguageService {
     }
 
     // language List
-    public list(limit: any, offset: any, select: any = [], search: any = [], whereConditions: any = [], count: number | boolean): Promise<any> {
+    public list(
+        limit: any,
+        offset: any,
+        select: any = [],
+        search: any = [],
+        whereConditions: any = [],
+        count: number | boolean
+    ): Promise<any> {
         const condition: any = {};
 
         if (select && select.length > 0) {
@@ -57,10 +54,10 @@ export class LanguageService {
         if (search && search.length > 0) {
             search.forEach((table: any) => {
                 const operator: string = table.op;
-                if (operator === 'where' && table.value !== '') {
+                if (operator === "where" && table.value !== "") {
                     condition.where[table.name] = table.value;
-                } else if (operator === 'like' && table.value !== '') {
-                    condition.where[table.name] = Like('%' + table.value + '%');
+                } else if (operator === "like" && table.value !== "") {
+                    condition.where[table.name] = Like("%" + table.value + "%");
                 }
             });
         }
@@ -71,7 +68,7 @@ export class LanguageService {
         }
 
         condition.order = {
-            sortOrder: 'ASC',
+            sortOrder: "ASC"
         };
 
         if (count) {

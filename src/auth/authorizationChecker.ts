@@ -1,21 +1,13 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import { Action } from "routing-controllers";
+import { Container } from "typedi";
+import { Connection } from "typeorm";
 
-import {Action} from 'routing-controllers';
-import {Container} from 'typedi';
-import {Connection} from 'typeorm';
+import { Logger } from "../lib/logger";
+import { AuthService } from "./AuthService";
 
-import {Logger} from '../lib/logger';
-import {AuthService} from './AuthService';
-
-export function authorizationChecker(connection: Connection): (action: Action, roles: string[]) => Promise<boolean> | boolean {
+export function authorizationChecker(
+    connection: Connection
+): (action: Action, roles: string[]) => Promise<boolean> | boolean {
     const log = new Logger(__filename);
     const authService = Container.get<AuthService>(AuthService);
 
@@ -28,33 +20,30 @@ export function authorizationChecker(connection: Connection): (action: Action, r
         const userId = await authService.parseBasicAuthFromRequest(action.request);
 
         if (userId === undefined) {
-            log.warn('No credentials given');
+            log.warn("No credentials given");
             return false;
         }
 
         console.log(roles);
 
-        if (roles[0] === 'customer') {
+        if (roles[0] === "customer") {
             action.request.user = await authService.validateCustomer(userId);
             if (action.request.user === undefined) {
-                log.warn('Invalid credentials given');
+                log.warn("Invalid credentials given");
                 return false;
             }
 
-            log.info('Successfully checked credentials');
+            log.info("Successfully checked credentials");
             return true;
-
         } else {
-
             action.request.user = await authService.validateUser(userId);
             if (action.request.user === undefined) {
-                log.warn('Invalid credentials given');
+                log.warn("Invalid credentials given");
                 return false;
             }
 
-            log.info('Successfully checked credentials');
+            log.info("Successfully checked credentials");
             return true;
-
         }
     };
 }

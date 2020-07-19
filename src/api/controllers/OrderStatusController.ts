@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     Post,
@@ -21,15 +11,14 @@ import {
     Req,
     QueryParam,
     Param
-} from 'routing-controllers';
-import {OrderStatus} from '../models/orderStatus';
-import {OrderStatusService} from '../services/orderStatusService';
-import {CreateOrderStatus} from './requests/createOrderStatusRequest';
+} from "routing-controllers";
+import { OrderStatus } from "../models/orderStatus";
+import { OrderStatusService } from "../services/orderStatusService";
+import { CreateOrderStatus } from "./requests/createOrderStatusRequest";
 
-@JsonController('/order-status')
+@JsonController("/order-status")
 export class OrderStatusController {
-    constructor(private orderStatusService: OrderStatusService) {
-    }
+    constructor(private orderStatusService: OrderStatusService) {}
 
     // Create Order Status API
     /**
@@ -54,10 +43,12 @@ export class OrderStatusController {
      * @apiErrorExample {json} createOrderStatus error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/create-order-status')
+    @Post("/create-order-status")
     @Authorized()
-    public async createOrderStatus(@Body({validate: true}) orderStatusParam: CreateOrderStatus, @Res() response: any): Promise<any> {
-
+    public async createOrderStatus(
+        @Body({ validate: true }) orderStatusParam: CreateOrderStatus,
+        @Res() response: any
+    ): Promise<any> {
         const newOrderStatus = new OrderStatus();
         newOrderStatus.name = orderStatusParam.name;
         newOrderStatus.colorCode = orderStatusParam.colorCode;
@@ -67,14 +58,14 @@ export class OrderStatusController {
         if (orderStatusSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully created a new order status.',
-                data: orderStatusSave,
+                message: "successfully created a new order status.",
+                data: orderStatusSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to create OrderStatus',
+                message: "unable to create OrderStatus"
             };
             return response.status(400).send(errorResponse);
         }
@@ -103,19 +94,23 @@ export class OrderStatusController {
      * @apiErrorExample {json} OrderStatus error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-order-status/:id')
+    @Put("/update-order-status/:id")
     @Authorized()
-    public async updateOrderStatus(@Body({validate: true}) orderStatusParams: CreateOrderStatus, @Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async updateOrderStatus(
+        @Body({ validate: true }) orderStatusParams: CreateOrderStatus,
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const orderStatus = await this.orderStatusService.findOne({
             where: {
-                orderStatusId: id,
-            },
+                orderStatusId: id
+            }
         });
         if (!orderStatus) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid orderStatusId',
+                message: "Invalid orderStatusId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -123,18 +118,18 @@ export class OrderStatusController {
         orderStatus.colorCode = orderStatusParams.colorCode;
         orderStatus.isActive = orderStatusParams.status;
         const orderStatusSave = await this.orderStatusService.create(orderStatus);
-        console.log('orderStatus' + orderStatusSave);
+        console.log("orderStatus" + orderStatusSave);
         if (orderStatusSave !== undefined) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully updated the order status.',
-                data: orderStatusSave,
+                message: "Successfully updated the order status.",
+                data: orderStatusSave
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'unable to update OrderStatus.',
+                message: "unable to update OrderStatus."
             };
             return response.status(400).send(errorResponse);
         }
@@ -160,32 +155,43 @@ export class OrderStatusController {
      * @apiErrorExample {json} OrderStatus error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/order-status-list')
+    @Get("/order-status-list")
     @Authorized()
-    public async orderStatusList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('keyword') keyword: string, @QueryParam('count') count: number | boolean, @Res() response: any): Promise<any> {
-
-        const select = ['orderStatusId', 'name', 'colorCode', 'isActive'];
+    public async orderStatusList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("keyword") keyword: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
+        const select = ["orderStatusId", "name", "colorCode", "isActive"];
         const search = [
             {
-                name: 'name',
-                op: 'like',
-                value: keyword,
-            },
-
+                name: "name",
+                op: "like",
+                value: keyword
+            }
         ];
         const WhereConditions = [];
-        const orderStatusList = await this.orderStatusService.list(limit, offset, select, search, WhereConditions, count);
+        const orderStatusList = await this.orderStatusService.list(
+            limit,
+            offset,
+            select,
+            search,
+            WhereConditions,
+            count
+        );
         if (orderStatusList) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully got the complete order status list.',
-                data: orderStatusList,
+                message: "Successfully got the complete order status list.",
+                data: orderStatusList
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 1,
-                message: 'unable to get OrderStatus.',
+                message: "unable to get OrderStatus."
             };
             return response.status(400).send(errorResponse);
         }
@@ -210,19 +216,22 @@ export class OrderStatusController {
      * @apiErrorExample {json} OrderStatus error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-order-status/:id')
+    @Delete("/delete-order-status/:id")
     @Authorized()
-    public async deleteOrderStatus(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteOrderStatus(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const orderStatus = await this.orderStatusService.findOne({
             where: {
-                orderStatusId: id,
-            },
+                orderStatusId: id
+            }
         });
         if (!orderStatus) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid orderStatusId.',
+                message: "Invalid orderStatusId."
             };
             return response.status(400).send(errorResponse);
         }
@@ -231,13 +240,13 @@ export class OrderStatusController {
         if (deleteOrderStatus) {
             const successResponse: any = {
                 status: 1,
-                message: 'Successfully deleted the order status.',
+                message: "Successfully deleted the order status."
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to delete orderStatus.',
+                message: "unable to delete orderStatus."
             };
             return response.status(400).send(errorResponse);
         }

@@ -1,14 +1,4 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
-
-import 'reflect-metadata';
+import "reflect-metadata";
 import {
     Get,
     Post,
@@ -21,30 +11,32 @@ import {
     Authorized,
     Req,
     Res
-} from 'routing-controllers';
-import * as AWS from 'aws-sdk';
-import {classToPlain} from 'class-transformer';
-import {aws_setup} from '../../env';
-import {CustomerService} from '../services/CustomerService';
-import {Customer} from '../models/Customer';
-import {CreateCustomer} from './requests/createCustomerRequest';
-import {User} from '../models/User';
-import {MAILService} from '../../auth/mail.services';
-import {UpdateCustomer} from './requests/updateCustomerRequest';
-import {OrderService} from '../services/OrderService';
-import {ProductImageService} from '../services/ProductImageService';
-import {ProductService} from '../services/ProductService';
-import {OrderProductService} from '../services/OrderProductService';
-import {EmailTemplateService} from '../services/emailTemplateService';
+} from "routing-controllers";
+import * as AWS from "aws-sdk";
+import { classToPlain } from "class-transformer";
+import { aws_setup } from "../../env";
+import { CustomerService } from "../services/CustomerService";
+import { Customer } from "../models/Customer";
+import { CreateCustomer } from "./requests/createCustomerRequest";
+import { User } from "../models/User";
+import { MAILService } from "../../auth/mail.services";
+import { UpdateCustomer } from "./requests/updateCustomerRequest";
+import { OrderService } from "../services/OrderService";
+import { ProductImageService } from "../services/ProductImageService";
+import { ProductService } from "../services/ProductService";
+import { OrderProductService } from "../services/OrderProductService";
+import { EmailTemplateService } from "../services/emailTemplateService";
 
-@JsonController('/customer')
+@JsonController("/customer")
 export class CustomerController {
-    constructor(private customerService: CustomerService, private orderProductService: OrderProductService,
-                private productService: ProductService,
-                private productImageService: ProductImageService,
-                private orderService: OrderService,
-                private emailTemplateService: EmailTemplateService) {
-    }
+    constructor(
+        private customerService: CustomerService,
+        private orderProductService: OrderProductService,
+        private productService: ProductService,
+        private productImageService: ProductImageService,
+        private orderService: OrderService,
+        private emailTemplateService: EmailTemplateService
+    ) {}
 
     // Create Customer API
     /**
@@ -84,42 +76,46 @@ export class CustomerController {
      * @apiErrorExample {json} Customer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Post('/add-customer')
+    @Post("/add-customer")
     @Authorized()
-    public async addCustomer(@Body({validate: true}) customerParam: CreateCustomer, @Res() response: any): Promise<any> {
-
+    public async addCustomer(
+        @Body({ validate: true }) customerParam: CreateCustomer,
+        @Res() response: any
+    ): Promise<any> {
         const avatar = customerParam.avatar;
         const newCustomer: any = new Customer();
-        const resultUser = await this.customerService.findOne({where: {email: customerParam.email, deleteFlag: 0}});
+        const resultUser = await this.customerService.findOne({
+            where: { email: customerParam.email, deleteFlag: 0 }
+        });
         if (resultUser) {
             const successResponse: any = {
                 status: 1,
-                message: 'Already registered with this emailId.',
+                message: "Already registered with this emailId."
             };
             return response.status(400).send(successResponse);
         }
         if (avatar) {
-            const type = avatar.split(';')[0].split('/')[1];
-            const name = 'Img_' + Date.now() + '.' + type;
+            const type = avatar.split(";")[0].split("/")[1];
+            const name = "Img_" + Date.now() + "." + type;
             const s3 = new AWS.S3();
-            const path = 'customer/';
-            const base64Data = new Buffer(avatar.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+            const path = "customer/";
+            const base64Data = new Buffer(avatar.replace(/^data:image\/\w+;base64,/, ""), "base64");
             const params = {
                 Bucket: aws_setup.AWS_BUCKET,
-                Key: 'customer/' + name,
+                Key: "customer/" + name,
                 Body: base64Data,
-                ACL: 'public-read',
-                ContentEncoding: 'base64',
-                ContentType: `image/${type}`,
+                ACL: "public-read",
+                ContentEncoding: "base64",
+                ContentType: `image/${type}`
             };
             newCustomer.avatar = name;
             newCustomer.avatarPath = path;
             s3.upload(params, (err, data) => {
                 if (data) {
-                    console.log('image upload successfully');
+                    console.log("image upload successfully");
                     console.log(data);
                 } else {
-                    console.log('error while uploading image');
+                    console.log("error while uploading image");
                 }
             });
         }
@@ -141,19 +137,27 @@ export class CustomerController {
             if (customerSave) {
                 if (customerParam.mailStatus === 1) {
                     const emailContent = await this.emailTemplateService.findOne(4);
-                    const message = emailContent.content.replace('{name}', customerParam.username).replace('{email}', customerParam.email).replace('{xxxxxx}', customerParam.password);
-                    MAILService.customerLoginMail(message, customerParam.email, emailContent.subject);
+                    const message = emailContent.content
+                        .replace("{name}", customerParam.username)
+                        .replace("{email}", customerParam.email)
+                        .replace("{xxxxxx}", customerParam.password);
+                    MAILService.customerLoginMail(
+                        message,
+                        customerParam.email,
+                        emailContent.subject
+                    );
                     const successResponse: any = {
                         status: 1,
-                        message: 'Successfully created new Customer with user name and password and send an email. ',
-                        data: customerSave,
+                        message:
+                            "Successfully created new Customer with user name and password and send an email. ",
+                        data: customerSave
                     };
                     return response.status(200).send(successResponse);
                 } else {
                     const successResponse: any = {
                         status: 1,
-                        message: 'Customer Created Successfully',
-                        data: customerSave,
+                        message: "Customer Created Successfully",
+                        data: customerSave
                     };
                     return response.status(200).send(successResponse);
                 }
@@ -161,7 +165,7 @@ export class CustomerController {
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Password does not match.',
+                message: "Password does not match."
             };
             return response.status(400).send(errorResponse);
         }
@@ -202,54 +206,70 @@ export class CustomerController {
      * @apiErrorExample {json} customer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/customerlist')
+    @Get("/customerlist")
     @Authorized()
-    public async customerList(@QueryParam('limit') limit: number, @QueryParam('offset') offset: number, @QueryParam('name') name: string, @QueryParam('status') status: string, @QueryParam('email') email: string, @QueryParam('customerGroup') customerGroup: string, @QueryParam('date') date: string, @QueryParam('count')count: number | boolean, @Res() response: any): Promise<any> {
+    public async customerList(
+        @QueryParam("limit") limit: number,
+        @QueryParam("offset") offset: number,
+        @QueryParam("name") name: string,
+        @QueryParam("status") status: string,
+        @QueryParam("email") email: string,
+        @QueryParam("customerGroup") customerGroup: string,
+        @QueryParam("date") date: string,
+        @QueryParam("count") count: number | boolean,
+        @Res() response: any
+    ): Promise<any> {
         const search = [
             {
-                name: 'firstName',
-                op: 'like',
-                value: name,
+                name: "firstName",
+                op: "like",
+                value: name
             },
             {
-                name: 'email',
-                op: 'like',
-                value: email,
+                name: "email",
+                op: "like",
+                value: email
             },
             {
-                name: 'createdDate',
-                op: 'like',
-                value: date,
+                name: "createdDate",
+                op: "like",
+                value: date
             },
             {
-                name: 'customerGroupId',
-                op: 'like',
-                value: customerGroup,
+                name: "customerGroupId",
+                op: "like",
+                value: customerGroup
             },
             {
-                name: 'isActive',
-                op: 'like',
-                value: status,
-            },
+                name: "isActive",
+                op: "like",
+                value: status
+            }
         ];
         const WhereConditions = [
             {
-                name: 'deleteFlag',
-                value: 0,
-            },
+                name: "deleteFlag",
+                value: 0
+            }
         ];
-        const customerList = await this.customerService.list(limit, offset, search, WhereConditions, 0, count);
+        const customerList = await this.customerService.list(
+            limit,
+            offset,
+            search,
+            WhereConditions,
+            0,
+            count
+        );
 
         const successResponse: any = {
             status: 1,
-            message: 'Successfully got Customer list.',
-            data: customerList,
+            message: "Successfully got Customer list.",
+            data: customerList
         };
         return response.status(200).send(successResponse);
-
     }
 
-// Delete Customer API
+    // Delete Customer API
     /**
      * @api {delete} /api/customer/delete-customer/:id Delete Customer API
      * @apiGroup Customer
@@ -268,19 +288,22 @@ export class CustomerController {
      * @apiErrorExample {json} Customer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Delete('/delete-customer/:id')
+    @Delete("/delete-customer/:id")
     @Authorized()
-    public async deleteCustomer(@Param('id')id: number, @Res() response: any, @Req() request: any): Promise<any> {
-
+    public async deleteCustomer(
+        @Param("id") id: number,
+        @Res() response: any,
+        @Req() request: any
+    ): Promise<any> {
         const customer = await this.customerService.findOne({
             where: {
-                id,
-            },
+                id
+            }
         });
         if (!customer) {
             const errorResponse: any = {
                 status: 0,
-                message: 'Invalid customerId',
+                message: "Invalid customerId"
             };
             return response.status(400).send(errorResponse);
         }
@@ -289,13 +312,13 @@ export class CustomerController {
         if (deleteCustomer) {
             const successResponse: any = {
                 status: 1,
-                message: 'Customer Deleted Successfully',
+                message: "Customer Deleted Successfully"
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to change delete flag status',
+                message: "unable to change delete flag status"
             };
             return response.status(400).send(errorResponse);
         }
@@ -339,45 +362,51 @@ export class CustomerController {
      * @apiErrorExample {json} updateCustomer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Put('/update-customer/:id')
+    @Put("/update-customer/:id")
     @Authorized()
-    public async updateCustomer(@Param('id')id: number, @Body({validate: true}) customerParam: UpdateCustomer, @Res() response: any): Promise<any> {
+    public async updateCustomer(
+        @Param("id") id: number,
+        @Body({ validate: true }) customerParam: UpdateCustomer,
+        @Res() response: any
+    ): Promise<any> {
         console.log(customerParam);
         const customer = await this.customerService.findOne({
             where: {
-                id,
-            },
+                id
+            }
         });
         if (!customer) {
             const errorResponse: any = {
                 status: 0,
-                message: 'invalid customer id',
+                message: "invalid customer id"
             };
             return response.status(400).send(errorResponse);
         }
         if (customerParam.password === customerParam.confirmPassword) {
-
             const avatar = customerParam.avatar;
             if (avatar) {
-                const type = avatar.split(';')[0].split('/')[1];
-                const name = 'Img_' + Date.now() + '.' + type;
+                const type = avatar.split(";")[0].split("/")[1];
+                const name = "Img_" + Date.now() + "." + type;
                 const s3 = new AWS.S3();
-                const path = 'customer/';
-                const base64Data = new Buffer(avatar.replace(/^data:image\/\w+;base64,/, ''), 'base64');
+                const path = "customer/";
+                const base64Data = new Buffer(
+                    avatar.replace(/^data:image\/\w+;base64,/, ""),
+                    "base64"
+                );
                 const params = {
                     Bucket: aws_setup.AWS_BUCKET,
-                    Key: 'customer/' + name,
+                    Key: "customer/" + name,
                     Body: base64Data,
-                    ACL: 'public-read',
-                    ContentEncoding: 'base64',
-                    ContentType: `image/${type}`,
+                    ACL: "public-read",
+                    ContentEncoding: "base64",
+                    ContentType: `image/${type}`
                 };
                 s3.upload(params, (err, data) => {
                     if (data) {
-                        console.log('image upload successfully');
+                        console.log("image upload successfully");
                         console.log(data);
                     } else {
-                        console.log('error while uploading image');
+                        console.log("error while uploading image");
                     }
                 });
                 customer.avatar = name;
@@ -399,23 +428,22 @@ export class CustomerController {
             const customerSave = await this.customerService.create(customer);
             if (customerSave) {
                 const successResponse: any = {
-                        status: 1,
-                        message: 'Customer Updated Successfully',
-                        data: customerSave,
+                    status: 1,
+                    message: "Customer Updated Successfully",
+                    data: customerSave
                 };
                 return response.status(200).send(successResponse);
-
             }
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'Password does not match.',
+                message: "Password does not match."
             };
             return response.status(400).send(errorResponse);
         }
     }
 
-// Get Customer Detail API
+    // Get Customer Detail API
     /**
      * @api {get} /api/customer/customer-details/:id Customer Details API
      * @apiGroup Customer
@@ -442,35 +470,43 @@ export class CustomerController {
      * @apiErrorExample {json} customer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/customer-details/:id')
+    @Get("/customer-details/:id")
     @Authorized()
-    public async customerDetails(@Param('id')Id: number, @Res() response: any): Promise<any> {
+    public async customerDetails(@Param("id") Id: number, @Res() response: any): Promise<any> {
         const customer = await this.customerService.findOne({
-            where: {id: Id},
+            where: { id: Id }
         });
         if (!customer) {
             const errorResponse: any = {
                 status: 0,
-                message: 'invalid CustomerId',
+                message: "invalid CustomerId"
             };
             return response.status(400).send(errorResponse);
         }
 
-        const order = await this.orderService.find({where: {customerId: Id}});
+        const order = await this.orderService.find({ where: { customerId: Id } });
         const productLists = await order.map(async (result: any) => {
             const product = await this.orderProductService.find({
-                where: {orderId: result.orderId},
-                select: ['productId', 'orderId', 'name', 'model', 'total', 'createdDate'],
+                where: { orderId: result.orderId },
+                select: ["productId", "orderId", "name", "model", "total", "createdDate"]
             });
             const productPromises = await product.map(async (value: any) => {
                 const productsDetails: any = value;
-                const products = await this.productService.find({where: {productId: value.productId}});
+                const products = await this.productService.find({
+                    where: { productId: value.productId }
+                });
 
                 const productImages = await products.map(async (values: any) => {
                     const productImagesResult: any = values;
                     const Image = await this.productImageService.findOne({
-                        select: ['productId', 'productImageId', 'image', 'containerName', 'defaultImage'],
-                        where: {productId: values.productId, defaultImage: 1},
+                        select: [
+                            "productId",
+                            "productImageId",
+                            "image",
+                            "containerName",
+                            "defaultImage"
+                        ],
+                        where: { productId: values.productId, defaultImage: 1 }
                     });
                     productImagesResult.productImages = Image;
                     return productImagesResult;
@@ -490,14 +526,14 @@ export class CustomerController {
         if (finalResult) {
             const successResponse: any = {
                 status: 1,
-                message: 'successfully got Customer details. ',
-                data: customer,
+                message: "successfully got Customer details. ",
+                data: customer
             };
             return response.status(200).send(successResponse);
         } else {
             const errorResponse: any = {
                 status: 0,
-                message: 'unable to get customer Details',
+                message: "unable to get customer Details"
             };
             return response.status(400).send(errorResponse);
         }
@@ -524,21 +560,21 @@ export class CustomerController {
      * @apiErrorExample {json} customer error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/recent-customerlist')
+    @Get("/recent-customerlist")
     @Authorized()
     public async recentCustomerList(@Res() response: any): Promise<any> {
         const order = 1;
         const WhereConditions = [
             {
-                name: 'deleteFlag',
-                value: 0,
-            },
+                name: "deleteFlag",
+                value: 0
+            }
         ];
         const customerList = await this.customerService.list(0, 0, 0, WhereConditions, order, 0);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully got Customer list.',
-            data: classToPlain(customerList),
+            message: "Successfully got Customer list.",
+            data: classToPlain(customerList)
         };
 
         return response.status(200).send(successResponse);
@@ -561,19 +597,18 @@ export class CustomerController {
      * @apiErrorExample {json} order error
      * HTTP/1.1 500 Internal Server Error
      */
-    @Get('/today-customercount')
+    @Get("/today-customercount")
     @Authorized()
     public async customerCount(@Res() response: any): Promise<any> {
-
         const nowDate = new Date();
-        const todaydate = nowDate.getFullYear() + '-' + (nowDate.getMonth() + 1) + '-' + nowDate.getDate();
+        const todaydate =
+            nowDate.getFullYear() + "-" + (nowDate.getMonth() + 1) + "-" + nowDate.getDate();
         const customerCount = await this.customerService.todayCustomerCount(todaydate);
         const successResponse: any = {
             status: 1,
-            message: 'Successfully get customerCount',
-            data: customerCount,
+            message: "Successfully get customerCount",
+            data: customerCount
         };
         return response.status(200).send(successResponse);
-
     }
 }

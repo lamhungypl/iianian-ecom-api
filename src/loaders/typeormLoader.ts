@@ -1,19 +1,10 @@
-/*
- * spurtcommerce API
- * version 2.2
- * http://api.spurtcommerce.com
- *
- * Copyright (c) 2019 piccosoft ltd
- * Author piccosoft ltd <support@piccosoft.com>
- * Licensed under the MIT license.
- */
+import { MicroframeworkLoader, MicroframeworkSettings } from "microframework-w3tec";
+import { createConnection, getConnectionOptions } from "typeorm";
+import { env } from "../env";
 
-import { MicroframeworkLoader, MicroframeworkSettings } from 'microframework-w3tec';
-import { createConnection, getConnectionOptions } from 'typeorm';
-import { env } from '../env';
-
-export const typeormLoader: MicroframeworkLoader = async (settings: MicroframeworkSettings | undefined) => {
-
+export const typeormLoader: MicroframeworkLoader = async (
+    settings: MicroframeworkSettings | undefined
+) => {
     const loadedConnectionOptions = await getConnectionOptions();
 
     const connectionOptions = Object.assign(loadedConnectionOptions, {
@@ -25,15 +16,15 @@ export const typeormLoader: MicroframeworkLoader = async (settings: Microframewo
         database: env.db.database,
         synchronize: env.db.synchronize,
         logging: true,
-        logger: 'advanced-console',
+        logger: "advanced-console",
         entities: env.app.dirs.entities,
-        migrations: env.app.dirs.migrations,
+        migrations: env.app.dirs.migrations
     });
 
     const connection = await createConnection(connectionOptions);
 
     if (settings) {
-        settings.setData('connection', connection);
+        settings.setData("connection", connection);
         settings.onShutdown(() => connection.close());
     }
 };
