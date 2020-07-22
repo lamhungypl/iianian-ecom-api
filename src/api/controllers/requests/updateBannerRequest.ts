@@ -1,18 +1,18 @@
-import "reflect-metadata";
-import { IsNotEmpty } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty } from 'class-validator';
 
 export class UpdateBanner {
-    @IsNotEmpty()
-    public bannerId: number;
+  @IsNotEmpty()
+  public bannerId: number;
 
-    @IsNotEmpty()
-    public title: string;
+  @IsNotEmpty()
+  public title: string;
 
-    public content: string;
+  public content: string;
 
-    public image: string;
+  public image: string;
 
-    public link: string;
+  public link: string;
 
-    public position: number;
+  public position: number;
 }

@@ -1,50 +1,50 @@
-import "reflect-metadata";
-import { IsNotEmpty, IsEmail, IsOptional, MinLength } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty, IsEmail, IsOptional, MinLength } from 'class-validator';
 
 export class CustomerEditProfileRequest {
-    // @IsString()
-    @IsNotEmpty({
-        message: "First name is required"
-    })
-    public firstName: string;
+  // @IsString()
+  @IsNotEmpty({
+    message: 'First name is required',
+  })
+  public firstName: string;
 
-    public lastName: string;
+  public lastName: string;
 
-    @IsOptional()
-    @MinLength(5, {
-        message: "Old Password is minimum 5 character"
-    })
-    @IsNotEmpty()
-    public password: string;
+  @IsOptional()
+  @MinLength(5, {
+    message: 'Old Password is minimum 5 character',
+  })
+  @IsNotEmpty()
+  public password: string;
 
-    @IsEmail(
-        {},
-        {
-            message: "Please provide username as emailId"
-        }
-    )
-    @IsNotEmpty({
-        message: "Email Id is required"
-    })
-    public emailId: string;
+  @IsEmail(
+    {},
+    {
+      message: 'Please provide username as emailId',
+    }
+  )
+  @IsNotEmpty({
+    message: 'Email Id is required',
+  })
+  public emailId: string;
 
-    @IsOptional()
-    @IsNotEmpty()
-    public address: string;
+  @IsOptional()
+  @IsNotEmpty()
+  public address: string;
 
-    @IsNotEmpty()
-    public countryId: number;
+  @IsNotEmpty()
+  public countryId: number;
 
-    @IsOptional()
-    @IsNotEmpty()
-    public zoneId: number;
+  @IsOptional()
+  @IsNotEmpty()
+  public zoneId: number;
 
-    @IsOptional()
-    public pincode: string;
+  @IsOptional()
+  public pincode: string;
 
-    @IsOptional()
-    @IsNotEmpty()
-    public phoneNumber: number;
+  @IsOptional()
+  @IsNotEmpty()
+  public phoneNumber: number;
 
-    public image: string;
+  public image: string;
 }

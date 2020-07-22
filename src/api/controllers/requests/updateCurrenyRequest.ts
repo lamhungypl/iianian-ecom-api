@@ -1,33 +1,33 @@
-import "reflect-metadata";
-import { IsNotEmpty, MaxLength } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 
 export class UpdateCurrency {
-    @IsNotEmpty()
-    public currencyId: number;
+  @IsNotEmpty()
+  public currencyId: number;
 
-    @MaxLength(30, {
-        message: "title is maximum 30 character"
-    })
-    @IsNotEmpty()
-    public title: string;
+  @MaxLength(30, {
+    message: 'title is maximum 30 character',
+  })
+  @IsNotEmpty()
+  public title: string;
 
-    @MaxLength(3, {
-        message: "code is maximum 3 character"
-    })
-    public code: string;
+  @MaxLength(3, {
+    message: 'code is maximum 3 character',
+  })
+  public code: string;
 
-    @MaxLength(30, {
-        message: "symbolLeft is maximum 30 character"
-    })
-    public symbolLeft: string;
+  @MaxLength(30, {
+    message: 'symbolLeft is maximum 30 character',
+  })
+  public symbolLeft: string;
 
-    @MaxLength(30, {
-        message: "symbolRight is maximum 30 character"
-    })
-    public symbolRight: string;
+  @MaxLength(30, {
+    message: 'symbolRight is maximum 30 character',
+  })
+  public symbolRight: string;
 
-    public value: number;
+  public value: number;
 
-    @IsNotEmpty()
-    public status: number;
+  @IsNotEmpty()
+  public status: number;
 }

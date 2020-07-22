@@ -1,6 +1,6 @@
-import "reflect-metadata";
-import { IsNotEmpty } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty } from 'class-validator';
 export class DeleteOption {
-    @IsNotEmpty()
-    public optionId: number;
+  @IsNotEmpty()
+  public optionId: number;
 }

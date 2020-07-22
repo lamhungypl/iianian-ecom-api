@@ -1,4 +1,4 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 export class UpdateTodayDealsParam {
-    public todayDeals: number;
+  public todayDeals: number;
 }

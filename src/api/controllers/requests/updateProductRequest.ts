@@ -1,70 +1,70 @@
-import "reflect-metadata";
-import { IsNotEmpty } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty } from 'class-validator';
 
 export class UpdateProductRequest {
-    @IsNotEmpty()
-    public productId: number;
+  @IsNotEmpty()
+  public productId: number;
 
-    @IsNotEmpty()
-    public productName: string;
+  @IsNotEmpty()
+  public productName: string;
 
-    // @IsNotEmpty()
-    public productDescription: string;
+  // @IsNotEmpty()
+  public productDescription: string;
 
-    @IsNotEmpty()
-    public sku: string;
+  @IsNotEmpty()
+  public sku: string;
 
-    // @IsNotEmpty()
-    public upc: string;
+  // @IsNotEmpty()
+  public upc: string;
 
-    // @IsNotEmpty()
-    public metaTagTitle: string;
+  // @IsNotEmpty()
+  public metaTagTitle: string;
 
-    @IsNotEmpty()
-    public categoryId: string;
+  @IsNotEmpty()
+  public categoryId: string;
 
-    @IsNotEmpty()
-    public image: string;
+  @IsNotEmpty()
+  public image: string;
 
-    @IsNotEmpty()
-    public model: number;
+  @IsNotEmpty()
+  public model: number;
 
-    @IsNotEmpty()
-    public price: string;
+  @IsNotEmpty()
+  public price: string;
 
-    // @IsNotEmpty()
-    public location: string;
+  // @IsNotEmpty()
+  public location: string;
 
-    // @IsNotEmpty()
-    public minimumQuantity: string;
+  // @IsNotEmpty()
+  public minimumQuantity: string;
 
-    @IsNotEmpty()
-    public quantity: string;
+  @IsNotEmpty()
+  public quantity: string;
 
-    // @IsNotEmpty()
-    public subtractStock: number;
+  // @IsNotEmpty()
+  public subtractStock: number;
 
-    public outOfStockStatus: number;
+  public outOfStockStatus: number;
 
-    public requiredShipping: number;
+  public requiredShipping: number;
 
-    public dateAvailable: string;
+  public dateAvailable: string;
 
-    @IsNotEmpty()
-    public condition: number;
+  @IsNotEmpty()
+  public condition: number;
 
-    @IsNotEmpty()
-    public status: number;
+  @IsNotEmpty()
+  public status: number;
 
-    public sortOrder: number;
+  public sortOrder: number;
 
-    public defaultImage: number;
+  public defaultImage: number;
 
-    public relatedProductId: string;
+  public relatedProductId: string;
 
-    public productOptions: [];
+  public productOptions: [];
 
-    public productDiscount: [];
+  public productDiscount: [];
 
-    public productSpecial: [];
+  public productSpecial: [];
 }

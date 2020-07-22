@@ -1,28 +1,28 @@
-import "reflect-metadata";
-import { IsNotEmpty, IsEmail } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty, IsEmail } from 'class-validator';
 export class UpdateCustomer {
-    @IsNotEmpty()
-    public customerGroupId: number;
+  @IsNotEmpty()
+  public customerGroupId: number;
 
-    @IsNotEmpty()
-    public username: string;
+  @IsNotEmpty()
+  public username: string;
 
-    @IsEmail()
-    public email: string;
+  @IsEmail()
+  public email: string;
 
-    @IsNotEmpty()
-    public mobileNumber: number;
+  @IsNotEmpty()
+  public mobileNumber: number;
 
-    public password: string;
+  public password: string;
 
-    public confirmPassword: string;
+  public confirmPassword: string;
 
-    public avatar: string;
+  public avatar: string;
 
-    public newsletter: number;
+  public newsletter: number;
 
-    @IsNotEmpty()
-    public mailStatus: number;
+  @IsNotEmpty()
+  public mailStatus: number;
 
-    public status: number;
+  public status: number;
 }

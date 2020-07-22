@@ -1,14 +1,14 @@
-import "reflect-metadata";
-import { IsNotEmpty } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty } from 'class-validator';
 
 export class CreateOption {
-    @IsNotEmpty()
-    public name: string;
+  @IsNotEmpty()
+  public name: string;
 
-    public type: string;
+  public type: string;
 
-    @IsNotEmpty()
-    public sortOrder: number;
+  @IsNotEmpty()
+  public sortOrder: number;
 
-    public optionValue: any;
+  public optionValue: any;
 }

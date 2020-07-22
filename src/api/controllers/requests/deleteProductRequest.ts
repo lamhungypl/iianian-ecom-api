@@ -1,6 +1,6 @@
-import "reflect-metadata";
-import { IsNotEmpty } from "class-validator";
+import 'reflect-metadata';
+import { IsNotEmpty } from 'class-validator';
 export class DeleteProductRequest {
-    @IsNotEmpty()
-    public productId: number;
+  @IsNotEmpty()
+  public productId: number;
 }
