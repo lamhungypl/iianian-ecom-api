@@ -98,7 +98,7 @@ module.exports = {
      * Runs TSLint over your project
      */
     lint: {
-      script: tslint(`./src/**/*.ts`),
+      // script: tslint(`./src/**/*.ts`),
       hiddenFromHelp: true,
     },
     /**
@@ -194,7 +194,7 @@ module.exports = {
           description: 'Runs the unit tests',
         },
         pretest: {
-          script: tslint(`./test/unit/**.ts`),
+          // script: tslint(`./test/unit/**.ts`),
           hiddenFromHelp: true,
         },
         run: {
@@ -220,7 +220,7 @@ module.exports = {
           description: 'Runs the integration tests',
         },
         pretest: {
-          script: tslint(`./test/integration/**.ts`),
+          // script: tslint(`./test/integration/**.ts`),
           hiddenFromHelp: true,
         },
         run: {
@@ -248,7 +248,7 @@ module.exports = {
           description: 'Runs the e2e tests',
         },
         pretest: {
-          script: tslint(`./test/e2e/**.ts`),
+          // script: tslint(`./test/e2e/**.ts`),
           hiddenFromHelp: true,
         },
         run: {
@@ -309,5 +309,6 @@ function runFast(path) {
 }
 
 function tslint(path) {
+  return;
   return `tslint -c ./tslint.json ${path} --format stylish`;
 }
