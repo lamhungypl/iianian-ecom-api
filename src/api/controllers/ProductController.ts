@@ -109,14 +109,15 @@ export class ProductController {
       {
         name: 'sku',
         op: 'like',
-        value: sku,
+        value: sku || '',
       },
       {
         name: 'isActive',
         op: 'like',
-        value: status,
+        value: (status && parseInt(status)) || 1,
       },
     ];
+    console.log({ WhereConditions });
     const productLists: any = await this.productService.list(
       limit,
       offset,

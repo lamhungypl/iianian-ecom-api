@@ -82,7 +82,7 @@ export class ProductService {
       condition.skip = offset;
     }
 
-    console.log(condition);
+    console.log({ condition });
     if (count) {
       return this.productRepository.count(condition);
     }

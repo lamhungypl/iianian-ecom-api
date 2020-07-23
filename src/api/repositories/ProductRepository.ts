@@ -63,15 +63,25 @@ export class ProductRepository extends Repository<Product> {
         });
       }
     }
+    console.log('here', { priceFrom, priceTo });
 
-    if (priceFrom && priceTo) {
-      query.andWhere(
-        '(product.price >= :priceFrom AND product.price <= :priceTo)',
-        {
-          priceFrom,
-          priceTo,
-        }
-      );
+    if (priceFrom || priceTo) {
+      console.log({ priceFrom, priceTo });
+      const minPrice = parseInt(priceFrom) || 0;
+      if (priceTo) {
+        const maxPrice = parseInt(priceTo);
+        query.andWhere(
+          '(product.price >= :priceFrom AND product.price <= :priceTo)',
+          {
+            minPrice,
+            maxPrice,
+          }
+        );
+      } else {
+        query.andWhere('(product.price >= :priceFrom )', {
+          minPrice,
+        });
+      }
     }
 
     if (price) {

@@ -153,7 +153,7 @@ export class LanguageController {
       {
         name: 'isActive',
         op: 'like',
-        value: status,
+        value: (status && parseInt(status)) || 1,
       },
     ];
     const WhereConditions = [];
