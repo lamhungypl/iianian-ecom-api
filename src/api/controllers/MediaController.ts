@@ -329,7 +329,7 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('Dim' + width + height);
+    console.log(`Dim: ${width} x ${height}`);
     const widthString = width;
     const heightString = height;
     const imgPath = path;
