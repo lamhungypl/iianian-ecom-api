@@ -1,8 +1,8 @@
 define({
-  name: 'SpurtCommerce V2.2.0',
+  name: 'EShopCommerce',
   version: '2.2.0',
-  description: 'SpurtCommerce RESTFUL API Document',
-  title: 'SpurtCommerce RESTFUL API Document',
+  description: 'EShopCommerce RESTFUL API Document',
+  title: 'EShopCommerce RESTFUL API Document',
   url: 'http://localhost:8000',
   sampleUrl: 'http://localhost:8000',
   defaultVersion: '0.0.0',
