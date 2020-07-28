@@ -5,7 +5,7 @@ import { ProductDiscount } from '../models/ProductDiscount';
 export class ProductDiscountRepository extends Repository<ProductDiscount> {
   public async findDiscountPrice(
     productId: number,
-    todaydate: string
+    todayDate: string
   ): Promise<any> {
     const query: any = await this.manager.createQueryBuilder(
       ProductDiscount,
@@ -14,13 +14,13 @@ export class ProductDiscountRepository extends Repository<ProductDiscount> {
     query.select(['productDiscount.price as price']);
     query.where('productDiscount.productId = ' + productId);
     query.andWhere(
-      '(productDiscount.dateStart <= :todaydate AND productDiscount.dateEnd >= :todaydate)',
-      { todaydate }
+      '(productDiscount.dateStart <= :todayDate AND productDiscount.dateEnd >= :todayDate)',
+      { todayDate }
     );
     query.orderBy('productDiscount.priority', 'ASC');
     query.addOrderBy('productDiscount.price', 'ASC');
     query.limit('1');
-    console.log(query.getQuery());
+    console.log({ findDiscountPrice: query.getQuery() });
     return query.getRawOne();
   }
 }

@@ -15,23 +15,27 @@ export class OrderRepository extends Repository<Order> {
     query.orderBy('year', 'ASC');
     query.addOrderBy('month', 'ASC');
     query.limit('12');
-    console.log(query.getQuery());
+    console.log({ salesList: query.getQuery() });
     return query.getRawMany();
   }
 
-  public async findAllTodayOrder(todaydate: string): Promise<any> {
+  public async findAllTodayOrder(todayDate: string): Promise<any> {
     const query: any = await this.manager.createQueryBuilder(Order, 'order');
     query.select(['order.total as total']);
-    query.where('DATE(order.createdDate) = :todaydate', { todaydate });
-    console.log(query.getQuery());
+    query.where('DATE(order.createdDate) = :todayDate', { todayDate });
+
+    console.log({ findAllTodayOrder: query.getQuery() });
+
     return query.getRawMany();
   }
 
-  public async findAllTodayOrderCount(todaydate: string): Promise<any> {
+  public async findAllTodayOrderCount(todayDate: string): Promise<any> {
     const query: any = await this.manager.createQueryBuilder(Order, 'order');
     query.select(['COUNT(order.orderId) as orderCount']);
-    query.where('DATE(order.createdDate) = :todaydate', { todaydate });
-    console.log(query.getQuery());
+    query.where('DATE(order.createdDate) = :todayDate', { todayDate });
+
+    console.log({ findAllTodayOrderCount: query.getQuery() });
+
     return query.getRawOne();
   }
 }

@@ -52,7 +52,7 @@ export class ProductRepository extends Repository<Product> {
       if (whereConditions && whereConditions.length > 0) {
         whereConditions.forEach((table: any) => {
           const operator: string = table.op;
-          if (operator === 'inraw' && table.value !== undefined) {
+          if (operator === 'where' && table.value !== undefined) {
             const subQb = this.manager
               .getRepository(ProductToCategory)
               .createQueryBuilder('productToCategory')
@@ -63,7 +63,6 @@ export class ProductRepository extends Repository<Product> {
         });
       }
     }
-    console.log('here', { priceFrom, priceTo });
 
     if (priceFrom || priceTo) {
       console.log({ priceFrom, priceTo });
@@ -73,13 +72,13 @@ export class ProductRepository extends Repository<Product> {
         query.andWhere(
           '(product.price >= :priceFrom AND product.price <= :priceTo)',
           {
-            minPrice,
-            maxPrice,
+            priceFrom: minPrice,
+            priceTo: maxPrice,
           }
         );
       } else {
         query.andWhere('(product.price >= :priceFrom )', {
-          minPrice,
+          priceFrom: minPrice,
         });
       }
     }
@@ -95,7 +94,7 @@ export class ProductRepository extends Repository<Product> {
       query.limit(limit);
       query.offset(offset);
     }
-    console.log(query.getQuery());
+    console.log({ productList_Repo: query.getQuery() });
     if (count) {
       return query.getCount();
     }
@@ -109,13 +108,13 @@ export class ProductRepository extends Repository<Product> {
       'orderProduct'
     );
     query.select([
-      'COUNT(orderProduct.order_id) as ordercount',
+      'COUNT(orderProduct.order_id) as orderCount',
       'orderProduct.product_id as product',
     ]);
     query.groupBy('product');
-    query.orderBy('ordercount', 'DESC');
+    query.orderBy('orderCount', 'DESC');
     query.limit(limit);
-    console.log(query.getQuery());
+    console.log({ recentProductSelling: query.getQuery() });
     return query.getRawMany();
   }
 
@@ -125,6 +124,8 @@ export class ProductRepository extends Repository<Product> {
       'product'
     );
     query.select(maximum);
+    console.log({ productMaxPrice: query.getQuery() });
+
     return query.getRawOne();
   }
 }

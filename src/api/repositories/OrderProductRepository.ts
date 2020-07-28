@@ -19,6 +19,8 @@ export class OrderProductRepository extends Repository<OrderProduct> {
     // query.groupBy('productId');
     query.orderBy('created_date', 'DESC');
     query.limit(limit);
+    console.log({ List_OrderProductRepository: query.getQuery() });
+
     return query.getRawMany();
   }
 }
