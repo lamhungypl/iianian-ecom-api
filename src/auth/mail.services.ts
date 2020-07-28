@@ -108,7 +108,7 @@ export class MAILService {
         smtpTransport({
           host: mail.HOST,
           port: mail.PORT,
-          secure: mail.SECURE,
+          secure: mail.SECURE === 'true' ? true : false,
           auth: {
             user: mail.AUTH.user,
             pass: mail.AUTH.pass,
