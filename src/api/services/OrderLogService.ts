@@ -25,17 +25,17 @@ export class OrderLogService {
       condition.where = whereCondition[0];
       condition.relations = whereCondition[1].relation;
     } else {
-      condition.id = whereCondition;
+      condition.orderLogId = whereCondition;
     }
     return this.orderLogRepository.findOne(condition);
   }
 
   // update orderLog
-  public update(id: any, order: any): Promise<any> {
-    this.log.info('update order log ', order);
+  public update(id: any, orderLog: any): Promise<any> {
+    this.log.info('update order log ', orderLog);
 
-    order.oderId = id;
-    return this.orderLogRepository.save(order);
+    orderLog.orderLogId = id;
+    return this.orderLogRepository.save(orderLog);
   }
 
   // orderLog List

@@ -81,7 +81,7 @@ export class CategoryController {
       where: { categoryId: category.parentInt },
       order: { level: 'ASC' },
     });
-    console.log(getAllPath);
+    console.log({ getAllPath });
     let level = 0;
     for (const path of getAllPath) {
       const CategoryPathLoop: any = new CategoryPath();

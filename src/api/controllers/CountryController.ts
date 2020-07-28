@@ -279,7 +279,7 @@ export class CountryController {
       };
       return response.status(400).send(errorResponse);
     }
-    const deleteCountry = await this.countryService.delete(country);
+    const deleteCountry = await this.countryService.delete(country.countryId);
     if (deleteCountry) {
       const successResponse: any = {
         status: 1,

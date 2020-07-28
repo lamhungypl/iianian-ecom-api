@@ -211,7 +211,7 @@ export class BannerController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteBanner = await this.bannerService.delete(banner);
+    const deleteBanner = await this.bannerService.delete(banner.bannerId);
     if (deleteBanner) {
       const successResponse: any = {
         status: 1,

@@ -12,9 +12,9 @@ export class CustomerWishlistService {
     @Logger(__filename) private log: LoggerInterface
   ) {}
 
-  public async create(productdata: any): Promise<CustomerWishlist> {
+  public async create(productData: any): Promise<CustomerWishlist> {
     this.log.info('create a wishlist product');
-    return this.customerWishlistRepository.save(productdata);
+    return this.customerWishlistRepository.save(productData);
   }
 
   // find Condition

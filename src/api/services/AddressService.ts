@@ -61,8 +61,13 @@ export class AddressService {
 
   // delete address
   public async delete(id: number): Promise<any> {
-    await this.addressRepository.delete(id);
-    return 1;
+    try {
+      await this.addressRepository.delete(id);
+      return 1;
+    } catch (error) {
+      this.log.info({ error });
+      return -1;
+    }
   }
 
   // find Customer addresses

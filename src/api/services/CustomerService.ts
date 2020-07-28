@@ -89,7 +89,7 @@ export class CustomerService {
     return await this.customerRepository.delete(id);
   }
   // today customer count
-  public async todayCustomerCount(todaydate: string): Promise<any> {
-    return await this.customerRepository.TodayCustomerCount(todaydate);
+  public async todayCustomerCount(todayDate: string): Promise<any> {
+    return await this.customerRepository.TodayCustomerCount(todayDate);
   }
 }

@@ -122,12 +122,12 @@ export class OrderService {
   }
 
   // find today orders
-  public async findAlltodayOrder(todaydate: string): Promise<any> {
-    return await this.orderRepository.findAllTodayOrder(todaydate);
+  public async findAlltodayOrder(todayDate: string): Promise<any> {
+    return await this.orderRepository.findAllTodayOrder(todayDate);
   }
 
   // find today orders count
-  public async findAllTodayOrderCount(todaydate: string): Promise<any> {
-    return await this.orderRepository.findAllTodayOrderCount(todaydate);
+  public async findAllTodayOrderCount(todayDate: string): Promise<any> {
+    return await this.orderRepository.findAllTodayOrderCount(todayDate);
   }
 }

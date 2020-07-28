@@ -81,8 +81,7 @@ export class ProductService {
       condition.take = limit;
       condition.skip = offset;
     }
-
-    console.log({ condition });
+    this.log.info('condition product list', { condition });
     if (count) {
       return this.productRepository.count(condition);
     }

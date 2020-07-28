@@ -270,7 +270,7 @@ export class AddressController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteAddress = await this.addressService.delete(address);
+    const deleteAddress = await this.addressService.delete(address.addressId);
     if (deleteAddress === 1) {
       const successResponse: any = {
         status: 1,
@@ -321,7 +321,7 @@ export class AddressController {
   ): Promise<any> {
     console.log(id);
     const customer = await this.customerService.findOne({ where: { id } });
-    console.log(customer);
+    console.log({ customer });
     if (customer.length === 0) {
       const errorResponse: any = {
         status: 0,

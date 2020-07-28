@@ -19,7 +19,7 @@ export class AuthService {
   public async parseBasicAuthFromRequest(
     req: express.Request
   ): Promise<number> {
-    const authorization = req.header('authorization');
+    const authorization = req.header('Authorization');
 
     console.log(authorization);
     console.log(authorization.split(' ')[0]);

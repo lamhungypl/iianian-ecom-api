@@ -11,9 +11,9 @@ export class OrderProductService {
     @Logger(__filename) private log: LoggerInterface
   ) {}
 
-  public async createData(checkoutdata: any): Promise<OrderProduct> {
+  public async createData(checkoutData: any): Promise<OrderProduct> {
     this.log.info('create a order product data');
-    return this.orderProductRepository.save(checkoutdata);
+    return this.orderProductRepository.save(checkoutData);
   }
 
   public async findData(

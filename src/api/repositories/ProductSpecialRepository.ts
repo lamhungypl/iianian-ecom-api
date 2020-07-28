@@ -12,7 +12,7 @@ export class ProductSpecialRepository extends Repository<ProductSpecial> {
       'productSpecial'
     );
     query.select(['productSpecial.price as price']);
-    query.where('productSpecial.productId = ' + productId);
+    query.where('productSpecial.product_id = ' + productId);
     query.andWhere(
       '(productSpecial.dateStart <= :todayDate AND productSpecial.dateEnd >= :todayDate)',
       { todayDate }

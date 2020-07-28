@@ -27,7 +27,7 @@ export class EmailTemplateService {
   public update(id: any, emailTemplate: any): Promise<any> {
     this.log.info('update emailTemplate ', id, emailTemplate);
 
-    emailTemplate.id = id;
+    emailTemplate.emailTemplateId = id;
     return this.emailTemplateRepository.save(emailTemplate);
   }
 
