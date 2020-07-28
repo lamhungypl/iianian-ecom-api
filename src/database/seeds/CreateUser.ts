@@ -9,7 +9,7 @@ export class CreateUser implements Seed {
     user.userId = 1;
     user.username = 'admin@piccocart.com';
     user.password = await User.hashPassword('cart123@');
-    user.email = 'no-reply@spurtcommerce.com';
+    user.email = 'no-reply@commerce.com';
     const userGroupData = await factory(UserGroup)().seed();
     user.userGroupId = userGroupData.groupId;
     return await em.save(user);
