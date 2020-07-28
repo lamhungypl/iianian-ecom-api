@@ -124,8 +124,8 @@ export class ImageService {
   public async isDirCheck(pathfile: string): Promise<boolean> {
     return new Promise<boolean>((subresolve, subreject) => {
       fs.stat(pathfile, (error, stat) => {
-        this.log.info(stat);
-        this.log.info(stat.isDirectory());
+        console.log(stat);
+        console.log(stat.isDirectory());
         if (stat && stat.isDirectory()) {
           subresolve(true);
         } else {

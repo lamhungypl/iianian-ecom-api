@@ -65,7 +65,7 @@ export class AddressService {
       await this.addressRepository.delete(id);
       return 1;
     } catch (error) {
-      this.log.info({ error });
+      this.log.info('error', error);
       return -1;
     }
   }

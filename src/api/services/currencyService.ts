@@ -19,7 +19,7 @@ export class CurrencyService {
 
   // findCondition
   public findOne(country: any): Promise<any> {
-    this.log.info('findOne currency ', currency);
+    this.log.info('findOne currency ', country);
 
     return this.currencyRepository.findOne(country);
   }
