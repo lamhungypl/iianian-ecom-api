@@ -60,6 +60,7 @@ export class StockStatusService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list stock  ', { condition, search });
 
     if (count) {
       return this.stockStatusRepository.count(condition);

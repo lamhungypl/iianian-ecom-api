@@ -59,7 +59,7 @@ export class ProductRatingService {
       condition.take = limit;
       condition.skip = offset;
     }
-    console.log(condition);
+    this.log.info('list rating  ', { condition });
     if (count) {
       return this.ratingRepository.count(condition);
     } else {

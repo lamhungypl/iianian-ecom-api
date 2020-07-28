@@ -17,16 +17,16 @@ export class OrderProductService {
   }
 
   public async findData(
-    productid: number,
-    orderid: number,
-    orderProductid: number
+    productId: number,
+    orderId: number,
+    orderProductId: number
   ): Promise<any> {
     this.log.info('find a order product data');
     return this.orderProductRepository.find({
       where: {
-        productId: productid,
-        orderId: orderid,
-        orderProductId: orderProductid,
+        productId,
+        orderId,
+        orderProductId,
       },
     });
   }

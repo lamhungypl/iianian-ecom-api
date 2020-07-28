@@ -20,6 +20,7 @@ export class OrderStatusService {
 
   // find one orderStatus
   public findOne(orderStatus: any): Promise<any> {
+    this.log.info('findOne orderStatus', orderStatus);
     return this.orderStatusRepository.findOne(orderStatus);
   }
 
@@ -60,6 +61,8 @@ export class OrderStatusService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list order status ', { condition, search });
+
     if (count) {
       return this.orderStatusRepository.count(condition);
     } else {

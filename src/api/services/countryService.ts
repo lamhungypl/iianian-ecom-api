@@ -14,17 +14,20 @@ export class CountryService {
 
   // create Country
   public async create(country: any): Promise<Country> {
-    this.log.info('Create a new country ');
+    this.log.info('Create a new country ', country);
     return this.countryRepository.save(country);
   }
 
   // findCondition
   public findOne(country: any): Promise<any> {
+    this.log.info('findOne  country ', country);
+
     return this.countryRepository.findOne(country);
   }
 
   // update country
   public update(id: any, country: Country): Promise<any> {
+    this.log.info('update country ', id, country);
     country.countryId = id;
     return this.countryRepository.save(country);
   }
@@ -66,6 +69,8 @@ export class CountryService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('find countries ', { condition }, { search });
+
     if (count) {
       return this.countryRepository.count(condition);
     } else {

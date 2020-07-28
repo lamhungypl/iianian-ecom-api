@@ -2,23 +2,31 @@ import { Service } from 'typedi';
 import { OrmRepository } from 'typeorm-typedi-extensions';
 import { CategoryPath } from '../models/CategoryPath';
 import { CategoryPathRepository } from '../repositories/CategoryPathRepository';
+import { Logger, LoggerInterface } from '../../decorators/Logger';
+
 import { Like } from 'typeorm/index';
 
 @Service()
 export class CategoryPathService {
   constructor(
-    @OrmRepository() private categoryPathRepository: CategoryPathRepository
+    @OrmRepository() private categoryPathRepository: CategoryPathRepository,
+    @Logger(__filename) private log: LoggerInterface
+
   ) {}
   // create CategoryPath
   public async create(categoryPath: any): Promise<CategoryPath> {
+    this.log.info('Create a new category path ', {categoryPath});
     return this.categoryPathRepository.save(categoryPath);
   }
   // findone CategoryPath
   public findOne(categoryPath: any): Promise<any> {
+    this.log.info('findOne category path ', {categoryPath});
     return this.categoryPathRepository.findOne(categoryPath);
   }
   // delete CategoryPath
   public async delete(id: any): Promise<any> {
+    this.log.info('delete a  category path ', id);
+
     await this.categoryPathRepository.delete(id);
     return;
   }
@@ -72,7 +80,8 @@ export class CategoryPathService {
       };
     }
 
-    console.log(condition);
+    this.log.info('list category path ', { search }, { condition });
+
     if (count) {
       return this.categoryPathRepository.count(condition);
     }
@@ -81,6 +90,8 @@ export class CategoryPathService {
 
   // find categoryPath
   public find(categoryPath: any): Promise<any> {
+    this.log.info('fine categoryPath ',categoryPath);
+
     return this.categoryPathRepository.find(categoryPath);
   }
 }

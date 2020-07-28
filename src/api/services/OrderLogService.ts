@@ -32,6 +32,8 @@ export class OrderLogService {
 
   // update orderLog
   public update(id: any, order: any): Promise<any> {
+    this.log.info('update order log ', order);
+
     order.oderId = id;
     return this.orderLogRepository.save(order);
   }
@@ -69,6 +71,8 @@ export class OrderLogService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list order log ', { condition, search });
+
     if (count) {
       return this.orderLogRepository.count(condition);
     } else {

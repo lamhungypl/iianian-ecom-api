@@ -13,11 +13,15 @@ export class ManufacturerService {
   ) {}
   // create Manufacturer
   public async create(manufacturer: any): Promise<Manufacturer> {
+    this.log.info('Create a manufacturer ', manufacturer);
+
     return this.manufacturerRepository.save(manufacturer);
   }
 
   // find condition
   public findOne(manufacturer: any): Promise<any> {
+    this.log.info('findOne manufacturer ', manufacturer);
+
     return this.manufacturerRepository.findOne(manufacturer);
   }
 
@@ -64,6 +68,8 @@ export class ManufacturerService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list login log ', { condition, search });
+
     if (count) {
       return this.manufacturerRepository.count(condition);
     }

@@ -19,11 +19,15 @@ export class CustomerWishlistService {
 
   // find Condition
   public findOne(customer: any): Promise<any> {
+    this.log.info('findOne wishlist product', customer);
+
     return this.customerWishlistRepository.findOne(customer);
   }
 
   // delete customer wishlist
   public async delete(id: number): Promise<any> {
+    this.log.info('delete wishlist product', id);
+
     this.log.info('delete a wishlist product');
     return await this.customerWishlistRepository.delete(id);
   }
@@ -50,7 +54,7 @@ export class CustomerWishlistService {
       condition.skip = offset;
     }
 
-    console.log(condition);
+    this.log.info('list customer wishlist ', { condition });
 
     if (count) {
       return this.customerWishlistRepository.count(condition);

@@ -19,12 +19,12 @@ export class ProductDiscountService {
   }
   // findone a data
   public findOne(id: number): Promise<ProductDiscount> {
-    this.log.info('Find a data');
+    this.log.info('Find a data product discount');
     return this.productDiscountRepository.findOne(id);
   }
   // find a data
   public findAll(productDiscount: any): Promise<ProductDiscount[]> {
-    this.log.info('Find a data');
+    this.log.info('Find all data product discount');
     return this.productDiscountRepository.find(productDiscount);
   }
   // delete product option

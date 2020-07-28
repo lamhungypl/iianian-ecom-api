@@ -13,17 +13,21 @@ export class CurrencyService {
 
   // create Currency
   public async create(currency: any): Promise<any> {
-    this.log.info('Create a new currency ');
+    this.log.info('Create a new currency ', currency);
     return this.currencyRepository.save(currency);
   }
 
   // findCondition
   public findOne(country: any): Promise<any> {
+    this.log.info('findOne currency ', currency);
+
     return this.currencyRepository.findOne(country);
   }
 
   // update currency
   public update(id: any, currency: any): Promise<any> {
+    this.log.info('update currency ', id, currency);
+
     currency.currencyId = id;
     return this.currencyRepository.save(currency);
   }
@@ -65,6 +69,8 @@ export class CurrencyService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list countries ', { condition }, { search });
+
     if (count) {
       return this.currencyRepository.count(condition);
     } else {

@@ -19,11 +19,14 @@ export class EmailTemplateService {
 
   // Find Condition
   public findOne(emailTemplate: any): Promise<any> {
+    this.log.info('findOne emailTemplate ', emailTemplate);
     return this.emailTemplateRepository.findOne(emailTemplate);
   }
 
   // Update EmailTemplate
   public update(id: any, emailTemplate: any): Promise<any> {
+    this.log.info('update emailTemplate ', id, emailTemplate);
+
     emailTemplate.id = id;
     return this.emailTemplateRepository.save(emailTemplate);
   }
@@ -65,6 +68,8 @@ export class EmailTemplateService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list email template  ', { condition });
+
     if (count) {
       return this.emailTemplateRepository.count(condition);
     } else {

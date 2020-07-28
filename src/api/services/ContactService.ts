@@ -12,7 +12,7 @@ export class ContactService {
 
   // create contact info
   public async create(customer: any): Promise<any> {
-    this.log.info('Create a Contact customer Infomation ');
+    this.log.info('Create a Contact customer Infomation ', { customer });
     return this.contactRepository.save(customer);
   }
 }

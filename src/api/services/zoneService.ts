@@ -71,6 +71,7 @@ export class ZoneService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list zone  ', { condition, search });
 
     if (count) {
       return this.zoneRepository.count(condition);

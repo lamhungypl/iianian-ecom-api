@@ -13,17 +13,20 @@ export class BannerService {
 
   // create banner
   public async create(banner: any): Promise<any> {
-    this.log.info('Create a new banner ');
+    this.log.info('Create a new banner ', banner);
     return this.bannerRepository.save(banner);
   }
 
   // find Condition
   public findOne(banner: any): Promise<any> {
+    this.log.info('find one banner ', banner);
+
     return this.bannerRepository.findOne(banner);
   }
 
   // update banner
   public update(banner: any): Promise<any> {
+    this.log.info('save/update one banner ', banner);
     return this.bannerRepository.save(banner);
   }
 
@@ -68,6 +71,7 @@ export class BannerService {
     condition.order = {
       position: 'ASC',
     };
+    this.log.info('list banner ', { search }, { condition });
 
     if (count) {
       return this.bannerRepository.count(condition);

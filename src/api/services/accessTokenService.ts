@@ -12,16 +12,18 @@ export class AccessTokenService {
   ) {}
 
   public findOne(accessToken: any): Promise<any> {
+    this.log.info('find one access token', accessToken);
     return this.accessTokenRepository.findOne(accessToken);
   }
   // delete token
   public async delete(id: number): Promise<any> {
-    this.log.info('Delete a token');
+    this.log.info('Delete a token', id);
     await this.accessTokenRepository.delete(id);
     return;
   }
   // create token
   public async create(accessToken: any): Promise<AccessToken> {
+    this.log.info('create one access token', accessToken);
     return this.accessTokenRepository.save(accessToken);
   }
 }

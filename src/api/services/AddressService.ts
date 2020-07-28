@@ -13,16 +13,18 @@ export class AddressService {
 
   // create address
   public async create(address: Address): Promise<any> {
-    this.log.info('Create a new address ');
+    this.log.info('Create a new address ', { address });
     return this.addressRepository.save(address);
   }
 
   // find Condition
   public findOne(address: any): Promise<any> {
+    this.log.info('find a new address ', { address });
     return this.addressRepository.findOne(address);
   }
   // update address
   public update(id: number, address: Address): Promise<any> {
+    this.log.info('update an address ', id, { address });
     address.addressId = id;
     return this.addressRepository.save(address);
   }
@@ -48,6 +50,8 @@ export class AddressService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list address ', { condition });
+
     if (count) {
       return this.addressRepository.count(condition);
     } else {

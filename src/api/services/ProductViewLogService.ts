@@ -74,6 +74,8 @@ export class ProductViewLogService {
     condition.order = {
       id: 'DESC',
     };
+    this.log.info('list product view log  ', { condition, search });
+
     if (count) {
       return this.productViewLogRepository.count(condition);
     } else {

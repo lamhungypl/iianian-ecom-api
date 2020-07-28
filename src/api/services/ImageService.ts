@@ -7,10 +7,12 @@
 import { Service } from 'typedi';
 import * as path from 'path';
 import * as fs from 'fs';
+import { Logger, LoggerInterface } from '../../decorators/Logger';
 
 @Service()
 export class ImageService {
   // Bucket list
+  constructor(@Logger(__filename) private log: LoggerInterface) {}
   public async listFolders(
     limit: number = 0,
     folderName: string = ''
@@ -19,9 +21,9 @@ export class ImageService {
       process.cwd(),
       'uploads' + '/' + folderName
     );
-    console.log(directoryPath);
-    console.log(__dirname);
-    console.log(process.cwd());
+    this.log.info(directoryPath);
+    this.log.info(__dirname);
+    this.log.info(process.cwd());
     const files = await this.readDir(directoryPath);
     const contents = [];
     const commonPrefix = [];
@@ -103,7 +105,7 @@ export class ImageService {
       process.cwd(),
       'uploads' + '/' + imgPath + imgName
     );
-    console.log(directoryPath);
+    this.log.info(directoryPath);
     return new Promise((resolve, reject) => {
       const gm = require('gm').subClass({ imageMagick: true });
       return gm(directoryPath)
@@ -112,7 +114,7 @@ export class ImageService {
           if (error) {
             reject(error);
           } else {
-            console.log('Buffer' + Buffer.isBuffer(buffer));
+            this.log.info('Buffer' + Buffer.isBuffer(buffer));
             resolve(buffer);
           }
         });
@@ -122,8 +124,8 @@ export class ImageService {
   public async isDirCheck(pathfile: string): Promise<boolean> {
     return new Promise<boolean>((subresolve, subreject) => {
       fs.stat(pathfile, (error, stat) => {
-        console.log(stat);
-        console.log(stat.isDirectory());
+        this.log.info(stat);
+        this.log.info(stat.isDirectory());
         if (stat && stat.isDirectory()) {
           subresolve(true);
         } else {
@@ -171,7 +173,7 @@ export class ImageService {
           }
         });
       } else {
-        console.log(files);
+        this.log.info(files);
         for (const file of files) {
           const pathfile = path.resolve(
             path.join(process.cwd(), 'uploads' + '/' + file)

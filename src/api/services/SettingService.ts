@@ -56,7 +56,8 @@ export class SettingService {
     if (limit && limit > 0) {
       condition.take = limit;
     }
-    console.log(condition);
+    this.log.info('list settings  ', { condition });
+
     return this.settingsRepository.find(condition);
   }
 

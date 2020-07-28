@@ -70,6 +70,8 @@ export class ProductImageService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list product image  ', { condition, search });
+
     if (count) {
       return this.productImageRepository.count(condition);
     } else {

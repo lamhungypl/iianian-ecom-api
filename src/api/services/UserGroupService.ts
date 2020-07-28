@@ -48,7 +48,7 @@ export class UserGroupService {
       condition.skip = offset;
     }
 
-    console.log(condition);
+    this.log.info('list user group  ', { condition });
 
     if (count) {
       return this.userGroupRepository.count(condition);

@@ -42,6 +42,7 @@ export class ProductRelatedService {
     if (whereConditions && whereConditions.length > 0) {
       condition.where = whereConditions;
     }
+    this.log.info('list product related  ', { condition });
 
     if (count) {
       return this.productRelatedRepository.count(condition);

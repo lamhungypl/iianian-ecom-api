@@ -19,12 +19,15 @@ export class LanguageService {
   }
 
   // find Condition
-  public findOne(orderStatus: any): Promise<any> {
-    return this.languageRepository.findOne(orderStatus);
+  public findOne(language: any): Promise<any> {
+    this.log.info('findOne language ', language);
+    return this.languageRepository.findOne(language);
   }
 
   // update language
   public update(id: any, language: Language): Promise<any> {
+    this.log.info('update language ', id, language);
+
     language.languageId = id;
     return this.languageRepository.save(language);
   }
@@ -70,6 +73,7 @@ export class LanguageService {
     condition.order = {
       sortOrder: 'ASC',
     };
+    this.log.info('list language ', { condition });
 
     if (count) {
       return this.languageRepository.count(condition);
@@ -80,6 +84,8 @@ export class LanguageService {
 
   // delete language
   public async delete(id: number): Promise<any> {
+    this.log.info('delete language ', id);
+
     return await this.languageRepository.delete(id);
   }
 }

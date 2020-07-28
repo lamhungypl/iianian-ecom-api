@@ -19,11 +19,15 @@ export class CustomerService {
 
   // find Condition
   public findOne(customer: any): Promise<any> {
+    this.log.info('findOne customer ', customer);
+
     return this.customerRepository.findOne(customer);
   }
 
   // update customer
   public update(id: any, customer: any): Promise<any> {
+    this.log.info('update customer ', id, customer);
+
     customer.customerId = id;
     return this.customerRepository.save(customer);
   }
@@ -72,6 +76,8 @@ export class CustomerService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list customer ', { condition }, { search });
+
     if (count) {
       return this.customerRepository.count(condition);
     } else {

@@ -18,10 +18,14 @@ export class CategoryService {
   }
   // findone category
   public findOne(category: any): Promise<any> {
+    this.log.info('findOne category => ', category.toString());
+
     return this.categoryRepository.findOne(category);
   }
   // delete Category
   public async delete(id: number): Promise<any> {
+    this.log.info('delete category => ', id);
+
     this.log.info('Delete a user');
     await this.categoryRepository.delete(id);
     return;
@@ -66,6 +70,7 @@ export class CategoryService {
     }
 
     condition.order = { sortOrder: sortOrder === 2 ? 'DESC' : 'ASC' };
+    this.log.info('find categories ', { condition }, { search });
 
     if (count) {
       return this.categoryRepository.count(condition);

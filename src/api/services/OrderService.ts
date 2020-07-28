@@ -19,17 +19,19 @@ export class OrderService {
 
   // order count
   public find(order: any): Promise<any> {
+    this.log.info('find order ', order);
     return this.orderRepository.find(order);
   }
 
   // order count
   public findAll(): Promise<any> {
+    this.log.info('find all ');
+
     return this.orderRepository.find();
   }
 
   // findOne Condition
   public findOne(whereCondition: any): Promise<any> {
-    this.log.info('Find Order Detail');
     const condition: any = {};
     if (whereCondition && whereCondition.length > 0) {
       condition.where = whereCondition[0];
@@ -37,6 +39,8 @@ export class OrderService {
     } else {
       condition.orderId = whereCondition;
     }
+    this.log.info('Find Order Detail', { condition });
+
     return this.orderRepository.findOne(condition);
   }
 
@@ -93,6 +97,7 @@ export class OrderService {
     condition.order = {
       createdDate: 'DESC',
     };
+    this.log.info('list order  ', { condition, search });
 
     if (count) {
       return this.orderRepository.count(condition);

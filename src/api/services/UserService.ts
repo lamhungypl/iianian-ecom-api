@@ -57,7 +57,7 @@ export class UserService {
       condition.skip = offset;
     }
 
-    console.log(condition);
+    this.log.info('list user  ', { condition });
 
     if (count) {
       return this.userLoginRepository.count(condition);

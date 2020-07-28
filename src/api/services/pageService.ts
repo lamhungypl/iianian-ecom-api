@@ -67,6 +67,8 @@ export class PageService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list page  ', { condition, search });
+
     if (count) {
       return this.pageRepository.count(condition);
     } else {

@@ -75,7 +75,8 @@ export class ProductToCategoryService {
       condition.skip = offset;
     }
 
-    console.log(condition);
+    this.log.info('list product to category   ', { condition });
+
     if (count) {
       return this.productToCategoryRepository.count(condition);
     }

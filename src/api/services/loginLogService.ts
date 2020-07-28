@@ -13,17 +13,21 @@ export class LoginLogService {
 
   // create banner
   public async create(loginLog: any): Promise<any> {
-    this.log.info('Create a new log ');
+    this.log.info('Create a new log ', loginLog);
     return this.loginLogRepository.save(loginLog);
   }
 
   // find Condition
   public findOne(loginLog: any): Promise<any> {
+    this.log.info('findOne log ', loginLog);
+
     return this.loginLogRepository.findOne(loginLog);
   }
 
   // update loginlog
   public update(id: any, loginLog: any): Promise<any> {
+    this.log.info('update log ', id, loginLog);
+
     loginLog.id = id;
     return this.loginLogRepository.save(loginLog);
   }
@@ -65,6 +69,8 @@ export class LoginLogService {
       condition.take = limit;
       condition.skip = offset;
     }
+    this.log.info('list login log ', { condition });
+
     if (count) {
       return this.loginLogRepository.count(condition);
     } else {
