@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 19, 2020 at 10:39 AM
+-- Generation Time: Aug 02, 2020 at 02:45 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.4.2
 
@@ -36,7 +36,13 @@ CREATE TABLE `access_token` (
 --
 
 INSERT INTO `access_token` (`id`, `user_id`, `token`, `is_active`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(1, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTEzNjY4MywiZXhwIjoxNTk1MjIzMDgzfQ.D3C5MG2g3g4QxhSoXjo-ztMPYU61cj71lElLFflBZI4', NULL, '2020-07-19 12:31:23', NULL, NULL, NULL);
+(1, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTEzNjY4MywiZXhwIjoxNTk1MjIzMDgzfQ.D3C5MG2g3g4QxhSoXjo-ztMPYU61cj71lElLFflBZI4', NULL, '2020-07-19 12:31:23', NULL, NULL, NULL),
+(2, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTI0MjcwMywiZXhwIjoxNTk1MzI5MTAzfQ.6rw0G14q934wGoMChdP9z6Mp4zT4tiERPa0uxyypbqE', NULL, '2020-07-20 17:58:23', NULL, NULL, NULL),
+(3, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTM1NTk5MywiZXhwIjoxNTk1NDQyMzkzfQ.O2nqLB6A39D1-hYhIctIq-7iULcCU5t9xDVAxGQdzzM', NULL, '2020-07-22 01:26:33', NULL, NULL, NULL),
+(4, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTQ0NjQ4MiwiZXhwIjoxNTk1NTMyODgyfQ.vUMlZQyx_Mqh-pa_O-M-8PJT3szntefXR3oQTKVAQd0', NULL, '2020-07-23 02:34:42', NULL, NULL, NULL),
+(5, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NTkwMjIzNiwiZXhwIjoxNTk1OTg4NjM2fQ.2TmVSSRe2pkO7Pi9oDlFWR89pWnfe1sq9zRVnGVYy7w', NULL, '2020-07-28 09:10:36', NULL, NULL, NULL),
+(6, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NjE4MjU0NiwiZXhwIjoxNTk2MjY4OTQ2fQ.xBBKHRiSTcGV1thj0RWmBlQP_uQ_-TYu6wW-VbismY0', NULL, '2020-07-31 15:02:26', NULL, NULL, NULL),
+(7, 49, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NDksImlhdCI6MTU5NjI0NzIxNiwiZXhwIjoxNTk2MzMzNjE2fQ.yHHa_RYO8UEsF5c3gG-xF8tDCEaU0QDCkgMBl_LOtB4', NULL, '2020-08-01 09:00:16', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -100,13 +106,11 @@ CREATE TABLE `banner` (
 --
 
 INSERT INTO `banner` (`banner_id`, `title`, `sort_order`, `url`, `banner_group_id`, `container_name`, `view_page_count`, `banner_group_banner_group_id`, `link`, `image`, `image_path`, `content`, `position`, `is_active`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(48, 'festival offer 2019', NULL, NULL, NULL, NULL, 0, 0, 'www.eshopcart.com', 'Img_1551871702778.jpeg', 'banner/', '', 5, NULL, '2019-02-18 03:20:11', '2019-05-09 04:20:39', NULL, NULL),
-(49, 'THE T-SHIRT FEST', NULL, NULL, NULL, NULL, 0, 0, 'www.tshirt.com', 'Img_1551871715853.jpeg', 'banner/', '', 3, NULL, '2019-02-18 03:20:50', '2019-05-09 04:20:52', NULL, NULL),
+(49, 'Hamleys Super Summer Sale Creative ', NULL, NULL, NULL, NULL, 0, 0, 'www.sample.com', 'Img_1595952898837.jpeg', 'banner/', '', 3, NULL, '2019-02-18 03:20:50', '2020-07-28 23:14:58', NULL, NULL),
 (50, 'March - CARNIVAL', NULL, NULL, NULL, NULL, 0, 0, 'www.content.com', 'Img_1551872953437.jpeg', 'banner/', '', 8, NULL, '2019-02-18 04:12:32', '2019-05-09 05:53:53', NULL, NULL),
-(55, 'Prime Exclusives', NULL, NULL, NULL, NULL, 0, 0, 'www.bannerlink.com', 'Img_1557576219467.jpeg', 'banner/', '', 2, NULL, '2019-02-25 06:43:49', '2019-05-09 04:20:07', NULL, NULL),
-(68, 'SAMSUNG', NULL, NULL, NULL, NULL, 0, 0, 'www.samsung.com', 'Img_1553263062033.jpeg', 'banner/', '', 6, NULL, '2019-05-09 04:26:47', NULL, NULL, NULL),
+(55, 'Toys have landed', NULL, NULL, NULL, NULL, 0, 0, 'www.sample.com', 'Img_1595952812140.jpeg', 'banner/', '', 2, NULL, '2019-02-25 06:43:49', '2020-07-28 23:13:32', NULL, NULL),
 (69, 'Mobile Offers', NULL, NULL, NULL, NULL, 0, 0, 'www.moboffers.com', 'Img_1551871752833.jpeg', 'banner/', '', 7, NULL, '2019-05-09 05:52:57', NULL, NULL, NULL),
-(70, 'IPhone X new model', NULL, NULL, NULL, NULL, 0, 0, 'www.iphone.com', 'Img_1551871740879.jpeg', 'banner/', '', 1, NULL, '2019-05-09 05:53:40', NULL, NULL, NULL);
+(70, 'The latest toys have arrived!', NULL, NULL, NULL, NULL, 0, 0, 'https://www.sample.com/', 'Img_1595952537950.jpeg', 'banner/', '', 1, NULL, '2019-05-09 05:53:40', '2020-07-28 23:10:21', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -188,11 +192,11 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`category_id`, `name`, `image`, `image_path`, `parent_int`, `sort_order`, `meta_tag_title`, `meta_tag_description`, `meta_tag_keyword`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(1, 'MENS FASHION', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:00:49', '2019-05-10 02:01:06'),
+(1, 'MENS FASHION', 'image', NULL, 3, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:00:49', '2020-07-31 16:11:21'),
 (3, 'BABY & KIDS', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:02:04', '2019-05-10 02:02:40'),
-(4, 'ELECTRONICS', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:02:53', NULL),
-(5, 'HOME & FURNITURE', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:03:37', NULL),
-(6, 'SPORTS, BOOK AND MORE', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:04:13', NULL),
+(4, 'ELECTRONICS', 'image', NULL, 3, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:02:53', '2020-07-31 16:11:35'),
+(5, 'HOME & FURNITURE', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:03:37', '2020-07-31 16:10:24'),
+(6, 'SPORTS, BOOK AND MORE', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:04:13', '2020-07-31 16:10:46'),
 (7, 'Foot Wear', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:05:37', NULL),
 (8, 'Mens Grooming', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:05:55', NULL),
 (9, 'Top Wear', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:06:10', NULL),
@@ -202,7 +206,13 @@ INSERT INTO `category` (`category_id`, `name`, `image`, `image_path`, `parent_in
 (15, 'Desktop PCs', 'image', NULL, 4, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:11:40', NULL),
 (16, 'Camera', 'image', NULL, 4, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:11:56', NULL),
 (17, 'Toys', 'image', NULL, 3, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:12:48', NULL),
-(90, 'Protein Supplements', 'image', NULL, 27, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:56:09', NULL);
+(90, 'Protein Supplements', 'image', NULL, 1, 1, '', '', '', NULL, NULL, NULL, '2019-05-10 02:56:09', '2020-07-31 16:11:06'),
+(91, 'Kids\'s tablet', 'image', NULL, 0, 1, 'Kids\'s tablet', 'Tablets for kids', 'table', NULL, NULL, NULL, '2020-07-28 09:48:15', NULL),
+(92, 'Android Tablet', 'image', NULL, 91, 1, 'Android Tablet', 'Android Tablet', 'android', NULL, NULL, NULL, '2020-07-28 09:50:15', NULL),
+(93, 'Do choi 2 tuoi', 'image', NULL, 0, 1, '', '', '', NULL, NULL, NULL, '2020-07-31 15:11:32', NULL),
+(94, 'Do choi 4 tuoi', 'image', NULL, 0, 4, '', '', '', NULL, NULL, NULL, '2020-07-31 15:11:54', NULL),
+(95, 'Do choi 8 tuoi', 'image', NULL, 0, 8, '', '', '', NULL, NULL, NULL, '2020-07-31 15:12:09', NULL),
+(96, 'Do choi 12 tuoi', 'image', NULL, 0, 12, '', '', '', NULL, NULL, NULL, '2020-07-31 15:12:38', NULL);
 
 -- --------------------------------------------------------
 
@@ -240,6 +250,24 @@ CREATE TABLE `category_path` (
   `created_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `category_path`
+--
+
+INSERT INTO `category_path` (`category_path_id`, `category_id`, `path_id`, `level`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
+(1, 91, 91, 0, NULL, NULL, NULL, NULL),
+(2, 92, 91, 0, NULL, NULL, NULL, NULL),
+(3, 92, 92, 1, NULL, NULL, NULL, NULL),
+(4, 93, 93, 0, NULL, NULL, NULL, NULL),
+(5, 94, 94, 0, NULL, NULL, NULL, NULL),
+(6, 95, 95, 0, NULL, NULL, NULL, NULL),
+(7, 96, 96, 0, NULL, NULL, NULL, NULL),
+(8, 5, 5, 0, NULL, NULL, NULL, NULL),
+(9, 6, 6, 0, NULL, NULL, NULL, NULL),
+(10, 90, 90, 0, NULL, NULL, NULL, NULL),
+(11, 1, 1, 0, NULL, NULL, NULL, NULL),
+(12, 4, 4, 0, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -577,7 +605,11 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`id`, `first_name`, `last_name`, `username`, `email`, `password`, `mobile`, `address`, `country_id`, `city`, `pincode`, `avatar`, `avatar_path`, `mail_status`, `delete_flag`, `customer_group_id`, `last_login`, `newsletter`, `safe`, `ip`, `zone_id`, `local`, `oauth_data`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', '$2b$10$Hs3LXAIwuhFEq.KWF6k4KO1.ZgmAa89bzn0UX3XY1.BfxdFZZEW8i', '0382463233', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-07-19 16:57:16', NULL, NULL, '::1', NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 16:55:30', '2020-07-19 16:57:16');
+(1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', '$2b$10$ZqFTv.tGUtGvG2H8uQxPfuNnT.oECRIfMss3JjoPanzuY600whodu', '0382463233', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-07-28 23:47:32', NULL, NULL, '::1', NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 16:55:30', '2020-07-28 23:47:32'),
+(2, 'Lam Hung Nuce 01', NULL, 'lamhungnuce01@gmail.com', 'lamhungnuce01@gmail.com', '$2b$10$5orQ7fqS5VrqXypJ6/7OZ.wCDkm.6nZmMpWQEmKoiIWEOCeGM3YNi', '0234789567', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, '::1', NULL, NULL, NULL, 1, NULL, NULL, '2020-07-28 23:51:18', NULL),
+(3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', '$2b$10$LoJkOiMI9tDa8sy37wadDOhros3rZAclRNZdg2eOQ/arF0sUQx3Dy', '0123123334', 'Hoang mai, hn, vn', 230, NULL, '100000', NULL, NULL, NULL, 0, NULL, '2020-08-01 11:06:28', NULL, NULL, '::1', 73, NULL, NULL, 1, NULL, NULL, '2020-07-28 23:59:02', '2020-08-01 11:06:28'),
+(4, 'leleha', NULL, 'leleha@gmail.com', 'leleha@gmail.com', '$2b$10$Oapksd5DJ3aHyIRxcrb14uj1d/OL1qJTFz2J9NiF46g2Bh.BWsWDO', '091231232', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-07-31 16:17:01', NULL, NULL, '::1', NULL, NULL, NULL, 1, NULL, NULL, '2020-07-31 14:57:45', '2020-07-31 16:17:01'),
+(5, 'lamhungypl', NULL, 'lamhungypl@gmail.com', 'lamhungypl@gmail.com', '$2b$10$1iN02CBdY4K3ce1eNuPt0.LGcXi1UBHp9rL4AiCzSaYideWwzZqf2', '033222111', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, '::1', NULL, NULL, NULL, 1, NULL, NULL, '2020-08-02 09:08:42', NULL);
 
 -- --------------------------------------------------------
 
@@ -649,6 +681,17 @@ CREATE TABLE `customer_wishlist` (
   `created_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `customer_wishlist`
+--
+
+INSERT INTO `customer_wishlist` (`id`, `customer_id`, `product_id`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
+(1, 1, 288, 1, NULL, NULL, '2020-07-23 03:49:48', NULL),
+(2, 1, 302, 1, NULL, NULL, '2020-07-23 10:03:59', NULL),
+(4, 3, 298, 1, NULL, NULL, '2020-07-29 00:14:53', NULL),
+(5, 3, 294, 1, NULL, NULL, '2020-07-29 00:17:49', NULL),
+(6, 4, 298, 1, NULL, NULL, '2020-07-31 14:59:49', NULL);
 
 -- --------------------------------------------------------
 
@@ -750,518 +793,26 @@ CREATE TABLE `login_log` (
 --
 
 INSERT INTO `login_log` (`id`, `customer_id`, `email_id`, `first_name`, `ip_address`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(54, 85, 'sorftline@gmail.com', 'amit kumar', '27.5.58.128', '2019-03-01 12:19:43', NULL, NULL, NULL),
-(53, 85, 'sorftline@gmail.com', 'amit kumar', '49.206.114.29', '2019-03-01 07:50:21', NULL, NULL, NULL),
-(52, 85, 'sorftline@gmail.com', 'amit kumar', '49.206.114.29', '2019-03-01 06:27:53', NULL, NULL, NULL),
-(51, 85, 'sorftline@gmail.com', 'amit kumar', '49.206.114.29', '2019-03-01 04:04:28', NULL, NULL, NULL),
-(50, 85, 'sorftline@gmail.com', 'amit kumar', '49.206.114.29', '2019-03-01 01:10:22', NULL, NULL, NULL),
-(49, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.209.130', '2019-02-28 07:03:30', NULL, NULL, NULL),
-(48, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.209.130', '2019-02-28 06:56:02', NULL, NULL, NULL),
-(47, 84, 'hanumanth.eshopsoft@gmail.com', 'hanumanth', '49.204.209.130', '2019-02-28 06:17:26', NULL, NULL, NULL),
-(46, 84, 'hanumanth.eshopsoft@gmail.com', 'hanumanth', '49.204.209.130', '2019-02-28 06:05:20', NULL, NULL, NULL),
-(45, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.209.130', '2019-02-28 05:47:02', NULL, NULL, NULL),
-(44, 84, 'hanumanth.eshopsoft@gmail.com', 'hanumanth', '49.204.209.130', '2019-02-28 05:22:12', NULL, NULL, NULL),
-(43, 84, 'hanumanth.eshopsoft@gmail.com', 'hanumanth', '49.204.209.130', '2019-02-28 05:12:01', NULL, NULL, NULL),
-(42, 77, 'sorftline@gmail.com', 'Amit', '49.204.211.239', '2019-02-27 05:09:33', NULL, NULL, NULL),
-(41, 77, 'sorftline@gmail.com', 'Amit', '49.204.211.239', '2019-02-27 03:29:25', NULL, NULL, NULL),
-(40, 83, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.211.239', '2019-02-27 02:20:46', NULL, NULL, NULL),
-(39, 83, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.211.239', '2019-02-27 01:48:01', NULL, NULL, NULL),
-(38, 83, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.211.239', '2019-02-27 00:12:17', NULL, NULL, NULL),
-(37, 40, 'ganesh.pentagmail.com', 'ganesh', '183.82.38.164', '2019-02-21 23:17:39', NULL, NULL, NULL),
-(36, 76, 'akishamary.pentagmail.com', 'akisha', '49.204.211.235', '2019-02-21 00:34:14', NULL, NULL, NULL),
-(35, 67, 'ganapathy.pentagmail.com', 'sss', '49.204.210.77', '2019-02-19 08:26:34', NULL, NULL, NULL),
-(34, 57, 'veerapandi.pentagmail.com', 'veerapandi', '49.206.115.221', '2019-02-18 04:18:54', NULL, NULL, NULL),
-(55, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.208.22', '2019-03-01 22:06:54', NULL, NULL, NULL),
-(56, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.117.186', '2019-03-01 23:07:02', NULL, NULL, NULL),
-(57, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.208.22', '2019-03-02 00:41:29', NULL, NULL, NULL),
-(58, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.208.22', '2019-03-02 00:44:32', NULL, NULL, NULL),
-(59, 93, 'veerapandi.pentagmail.com', 'veerapandi', '49.204.208.22', '2019-03-02 01:21:46', NULL, NULL, NULL),
-(60, 85, 'sorftline@gmail.com', 'amit kumar', '49.204.208.22', '2019-03-02 03:19:38', NULL, NULL, NULL),
-(61, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.84', '2019-03-03 22:43:58', NULL, NULL, NULL),
-(62, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.84', '2019-03-04 00:50:51', NULL, NULL, NULL),
-(63, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.84', '2019-03-04 01:41:54', NULL, NULL, NULL),
-(64, 85, 'sorftline@gmail.com', 'amit kumar', '183.82.39.84', '2019-03-04 03:07:18', NULL, NULL, NULL),
-(65, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.84', '2019-03-04 03:10:05', NULL, NULL, NULL),
-(66, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.84', '2019-03-04 04:04:33', NULL, NULL, NULL),
-(67, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 05:58:39', NULL, NULL, NULL),
-(68, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:05:57', NULL, NULL, NULL),
-(69, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:07:32', NULL, NULL, NULL),
-(70, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:08:03', NULL, NULL, NULL),
-(71, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:08:20', NULL, NULL, NULL),
-(72, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:12:53', NULL, NULL, NULL),
-(73, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:14:09', NULL, NULL, NULL),
-(74, 97, 'jerald@gmail.com', 'jerald', '157.51.148.109', '2019-03-04 06:19:14', NULL, NULL, NULL),
-(75, 97, 'jerald@gmail.com', 'jerald', '49.206.115.135', '2019-03-04 07:54:12', NULL, NULL, NULL),
-(76, 85, 'sorftline@gmail.com', 'amit kumar', '27.5.97.136', '2019-03-04 11:17:04', NULL, NULL, NULL),
-(77, 85, 'sorftline@gmail.com', 'amit', '49.206.116.40', '2019-03-04 23:44:52', NULL, NULL, NULL),
-(78, 103, 'jerald1@gmail.com', 'jerald', '49.206.117.223', '2019-03-05 00:39:28', NULL, NULL, NULL),
-(79, 93, 'veerapandi.pentagmail.com', 'veerapandi', '49.206.117.223', '2019-03-05 01:17:26', NULL, NULL, NULL),
-(80, 103, 'jerald1@gmail.com', 'jerald', '49.206.117.223', '2019-03-05 03:00:27', NULL, NULL, NULL),
-(81, 84, 'hanumanth.eshopsoft@gmail.com', 'hanumanth', '49.206.117.223', '2019-03-05 03:07:35', NULL, NULL, NULL),
-(82, 103, 'jerald1@gmail.com', 'jerald', '49.206.117.223', '2019-03-05 03:07:45', NULL, NULL, NULL),
-(83, 108, 'veer@gmail.com', 'verr', '49.206.117.223', '2019-03-05 06:49:52', NULL, NULL, NULL),
-(84, 108, 'veer@gmail.com', 'verr', '49.206.117.223', '2019-03-05 06:54:47', NULL, NULL, NULL),
-(85, 85, 'sorftline@gmail.com', 'amit', '60.243.56.158', '2019-03-05 11:16:24', NULL, NULL, NULL),
-(86, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-05 22:48:50', NULL, NULL, NULL),
-(87, 110, 'hanuamnth12@gmail.com', 'hanumanth12', '49.204.208.215', '2019-03-05 23:33:46', NULL, NULL, NULL),
-(88, 109, 'aravind.pentagmail.com', 'Aravindhan', '49.204.208.215', '2019-03-05 23:40:36', NULL, NULL, NULL),
-(89, 110, 'hanuamnth12@gmail.com', 'hanumanth12', '49.204.208.215', '2019-03-05 23:43:44', NULL, NULL, NULL),
-(90, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-06 00:20:31', NULL, NULL, NULL),
-(91, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-06 00:47:36', NULL, NULL, NULL),
-(92, 85, 'sorftline@gmail.com', 'amit', '49.204.209.115', '2019-03-06 00:59:38', NULL, NULL, NULL),
-(93, 76, 'ganapathy.pentagmail.com', 'akishas', '49.204.208.215', '2019-03-06 03:58:52', NULL, NULL, NULL),
-(94, 76, 'ganapathy.pentagmail.com', 'akishas', '49.204.208.215', '2019-03-06 03:59:33', NULL, NULL, NULL),
-(95, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-06 04:13:04', NULL, NULL, NULL),
-(96, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-06 05:00:21', NULL, NULL, NULL),
-(97, 83, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.208.215', '2019-03-06 07:45:27', NULL, NULL, NULL),
-(98, 92, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.215', '2019-03-06 08:22:03', NULL, NULL, NULL),
-(99, 76, 'ganapathy.pentagmail.com', 'akishas', '49.204.211.64', '2019-03-06 23:12:12', NULL, NULL, NULL),
-(100, 83, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.209.92', '2019-03-07 01:27:17', NULL, NULL, NULL),
-(101, 124, 'veerapandi.eshopsoft@gmail.com', 'hanumanth', '49.204.209.92', '2019-03-07 01:38:30', NULL, NULL, NULL),
-(102, 128, 'farman@gmail.com', 'farman', '49.204.209.92', '2019-03-07 03:11:58', NULL, NULL, NULL),
-(103, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 04:22:14', NULL, NULL, NULL),
-(104, 143, 'aravind.pentagmail.com', 'Aravindhan', '49.204.211.64', '2019-03-07 04:41:17', NULL, NULL, NULL),
-(105, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 04:48:37', NULL, NULL, NULL),
-(106, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 04:54:20', NULL, NULL, NULL),
-(107, 143, 'aravind.pentagmail.com', 'Aravindhan', '49.204.211.64', '2019-03-07 04:56:20', NULL, NULL, NULL),
-(108, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.209.191', '2019-03-07 04:56:21', NULL, NULL, NULL),
-(109, 143, 'aravind.pentagmail.com', 'Aravindhan', '49.204.211.64', '2019-03-07 04:57:45', NULL, NULL, NULL),
-(110, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 04:59:00', NULL, NULL, NULL),
-(111, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.209.191', '2019-03-07 05:04:37', NULL, NULL, NULL),
-(112, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 05:39:17', NULL, NULL, NULL),
-(113, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 05:40:35', NULL, NULL, NULL),
-(114, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 05:58:55', NULL, NULL, NULL),
-(115, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 06:01:43', NULL, NULL, NULL),
-(116, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 06:11:37', NULL, NULL, NULL),
-(117, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 06:12:20', NULL, NULL, NULL),
-(118, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 06:22:51', NULL, NULL, NULL),
-(119, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.191', '2019-03-07 07:08:07', NULL, NULL, NULL),
-(120, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 07:10:03', NULL, NULL, NULL),
-(121, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 07:43:08', NULL, NULL, NULL),
-(122, 139, 'sorftline@gmail.com', 'amit', '49.204.209.191', '2019-03-07 07:43:41', NULL, NULL, NULL),
-(123, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.195', '2019-03-08 01:36:18', NULL, NULL, NULL),
-(124, 139, 'sorftline@gmail.com', 'amit', '183.82.38.195', '2019-03-08 01:47:02', NULL, NULL, NULL),
-(125, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.195', '2019-03-08 02:56:36', NULL, NULL, NULL),
-(126, 139, 'sorftline@gmail.com', 'amit', '49.206.114.132', '2019-03-08 07:53:48', NULL, NULL, NULL),
-(127, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 03:55:47', NULL, NULL, NULL),
-(128, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 03:56:39', NULL, NULL, NULL),
-(129, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 04:15:51', NULL, NULL, NULL),
-(130, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 04:17:48', NULL, NULL, NULL),
-(131, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 04:20:26', NULL, NULL, NULL),
-(132, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.210.129', '2019-03-11 04:54:24', NULL, NULL, NULL),
-(133, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.210.129', '2019-03-11 05:06:35', NULL, NULL, NULL),
-(134, 146, 'ganapathy.eshopsoft@gmail.com', 'ShivaGanapathy', '49.204.210.129', '2019-03-11 05:16:36', NULL, NULL, NULL),
-(135, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 05:16:59', NULL, NULL, NULL),
-(136, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.210.129', '2019-03-11 05:20:27', NULL, NULL, NULL),
-(137, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 05:22:24', NULL, NULL, NULL),
-(138, 148, 'jai@gmail.com', 'JaiGanesh', '49.204.210.129', '2019-03-11 05:47:39', NULL, NULL, NULL),
-(139, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.210.129', '2019-03-11 05:51:18', NULL, NULL, NULL),
-(140, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.210.129', '2019-03-11 05:55:54', NULL, NULL, NULL),
-(141, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 06:23:30', NULL, NULL, NULL),
-(142, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.210.129', '2019-03-11 08:40:45', NULL, NULL, NULL),
-(143, 145, 'amit.pentagmail.com', 'Amit', '49.204.210.129', '2019-03-11 08:45:23', NULL, NULL, NULL),
-(144, 139, 'sorftline@gmail.com', 'amit', '183.82.39.227', '2019-03-11 09:08:01', NULL, NULL, NULL),
-(145, 149, 'veerapandi.pentagmail.com', 'veer', '183.82.39.123', '2019-03-12 00:42:31', NULL, NULL, NULL),
-(146, 139, 'sorftline@gmail.com', 'amit', '49.204.211.58', '2019-03-12 00:47:22', NULL, NULL, NULL),
-(147, 139, 'sorftline@gmail.com', 'amit', '49.204.211.58', '2019-03-12 01:00:39', NULL, NULL, NULL),
-(148, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.123', '2019-03-12 01:12:24', NULL, NULL, NULL),
-(149, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.123', '2019-03-12 01:40:42', NULL, NULL, NULL),
-(150, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.123', '2019-03-12 01:54:31', NULL, NULL, NULL),
-(151, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.123', '2019-03-12 07:13:48', NULL, NULL, NULL),
-(152, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.39.123', '2019-03-12 09:04:27', NULL, NULL, NULL),
-(153, 139, 'sorftline@gmail.com', 'amit', '27.5.56.172', '2019-03-12 13:41:41', NULL, NULL, NULL),
-(154, 139, 'sorftline@gmail.com', 'amit', '27.5.56.172', '2019-03-12 13:58:38', NULL, NULL, NULL),
-(155, 139, 'sorftline@gmail.com', 'amit', '27.5.56.172', '2019-03-12 14:01:40', NULL, NULL, NULL),
-(156, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 00:02:29', NULL, NULL, NULL),
-(157, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 00:08:35', NULL, NULL, NULL),
-(158, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 00:09:40', NULL, NULL, NULL),
-(159, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 00:11:00', NULL, NULL, NULL),
-(160, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 00:55:53', NULL, NULL, NULL),
-(161, 149, 'veerapandi.pentagmail.com', 'veer', '183.82.38.76', '2019-03-13 01:00:52', NULL, NULL, NULL),
-(162, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 01:23:16', NULL, NULL, NULL),
-(163, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 01:44:25', NULL, NULL, NULL),
-(164, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 02:04:45', NULL, NULL, NULL),
-(165, 150, 'pavithra.pentagmail.com', 'Pavithra', '183.82.38.76', '2019-03-13 02:07:10', NULL, NULL, NULL),
-(166, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 02:27:08', NULL, NULL, NULL),
-(167, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 02:47:00', NULL, NULL, NULL),
-(168, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 02:50:20', NULL, NULL, NULL),
-(169, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 02:55:22', NULL, NULL, NULL),
-(170, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 03:00:08', NULL, NULL, NULL),
-(171, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 03:53:45', NULL, NULL, NULL),
-(172, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 03:54:10', NULL, NULL, NULL),
-(173, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 03:55:08', NULL, NULL, NULL),
-(174, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 04:00:44', NULL, NULL, NULL),
-(175, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 04:49:33', NULL, NULL, NULL),
-(176, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 04:52:42', NULL, NULL, NULL),
-(177, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:00:21', NULL, NULL, NULL),
-(178, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:04:21', NULL, NULL, NULL),
-(179, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 05:08:55', NULL, NULL, NULL),
-(180, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 05:37:58', NULL, NULL, NULL),
-(181, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 05:43:45', NULL, NULL, NULL),
-(182, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 05:44:38', NULL, NULL, NULL),
-(183, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:46:05', NULL, NULL, NULL),
-(184, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:46:43', NULL, NULL, NULL),
-(185, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:54:26', NULL, NULL, NULL),
-(186, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 05:59:07', NULL, NULL, NULL),
-(187, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:06:15', NULL, NULL, NULL),
-(188, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:18:17', NULL, NULL, NULL),
-(189, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:21:06', NULL, NULL, NULL),
-(190, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:32:20', NULL, NULL, NULL),
-(191, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:36:40', NULL, NULL, NULL),
-(192, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:38:35', NULL, NULL, NULL),
-(193, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:39:01', NULL, NULL, NULL),
-(194, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 06:39:35', NULL, NULL, NULL),
-(195, 150, 'pavithra.pentagmail.com', 'Pavithra', '183.82.38.76', '2019-03-13 06:41:10', NULL, NULL, NULL),
-(196, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 06:51:55', NULL, NULL, NULL),
-(197, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 06:54:10', NULL, NULL, NULL),
-(198, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 07:06:28', NULL, NULL, NULL),
-(199, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 07:13:29', NULL, NULL, NULL),
-(200, 140, 'admin@eshopcart.com', 'amit', '49.204.211.69', '2019-03-13 07:37:52', NULL, NULL, NULL),
-(201, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 07:57:42', NULL, NULL, NULL),
-(202, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:31:44', NULL, NULL, NULL),
-(203, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:32:50', NULL, NULL, NULL),
-(204, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:34:44', NULL, NULL, NULL),
-(205, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:38:28', NULL, NULL, NULL),
-(206, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:41:43', NULL, NULL, NULL),
-(207, 139, 'sorftline@gmail.com', 'amit', '49.204.211.69', '2019-03-13 08:47:17', NULL, NULL, NULL),
-(208, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 09:04:49', NULL, NULL, NULL),
-(209, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.76', '2019-03-13 09:06:27', NULL, NULL, NULL),
-(210, 139, 'sorftline@gmail.com', 'amit', '27.5.87.178', '2019-03-13 12:58:45', NULL, NULL, NULL),
-(211, 139, 'sorftline@gmail.com', 'amit', '27.5.87.178', '2019-03-13 12:59:37', NULL, NULL, NULL),
-(212, 139, 'sorftline@gmail.com', 'amit', '27.5.87.178', '2019-03-13 13:00:51', NULL, NULL, NULL),
-(213, 140, 'admin@eshopcart.com', 'amit', '49.204.209.71', '2019-03-13 23:54:13', NULL, NULL, NULL),
-(214, 139, 'sorftline@gmail.com', 'amit', '49.204.209.71', '2019-03-13 23:54:44', NULL, NULL, NULL),
-(215, 139, 'sorftline@gmail.com', 'amit', '49.204.209.71', '2019-03-14 00:30:24', NULL, NULL, NULL),
-(216, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.59', '2019-03-14 01:34:09', NULL, NULL, NULL),
-(217, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.59', '2019-03-14 04:41:50', NULL, NULL, NULL),
-(218, 140, 'admin@eshopcart.com', 'amit', '49.204.209.71', '2019-03-14 04:42:56', NULL, NULL, NULL),
-(219, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.211.59', '2019-03-14 05:25:31', NULL, NULL, NULL),
-(220, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.211.59', '2019-03-14 06:31:51', NULL, NULL, NULL),
-(221, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.211.59', '2019-03-14 06:39:34', NULL, NULL, NULL),
-(222, 153, 'test.pentagmail.com', 'veerapandi', '49.204.211.59', '2019-03-14 07:06:55', NULL, NULL, NULL),
-(223, 140, 'admin@eshopcart.com', 'amit', '49.204.211.59', '2019-03-14 07:07:50', NULL, NULL, NULL),
-(224, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.59', '2019-03-14 07:29:08', NULL, NULL, NULL),
-(225, 139, 'sorftline@gmail.com', 'amit', '49.204.208.5', '2019-03-15 00:06:13', NULL, NULL, NULL),
-(226, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.98', '2019-03-15 00:38:17', NULL, NULL, NULL),
-(227, 139, 'sorftline@gmail.com', 'amit', '49.204.208.5', '2019-03-15 02:02:26', NULL, NULL, NULL),
-(228, 139, 'sorftline@gmail.com', 'amit', '49.204.208.5', '2019-03-15 02:03:10', NULL, NULL, NULL),
-(229, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.208.98', '2019-03-15 02:49:47', NULL, NULL, NULL),
-(230, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.98', '2019-03-15 05:23:56', NULL, NULL, NULL),
-(231, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.98', '2019-03-15 08:11:16', NULL, NULL, NULL),
-(232, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.98', '2019-03-15 08:44:21', NULL, NULL, NULL),
-(233, 140, 'admin@eshopcart.com', 'amit', '49.204.211.216', '2019-03-15 23:03:05', NULL, NULL, NULL),
-(234, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.210.3', '2019-03-16 00:05:15', NULL, NULL, NULL),
-(235, 140, 'admin@eshopcart.com', 'amit', '49.204.211.216', '2019-03-16 04:36:37', NULL, NULL, NULL),
-(236, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.116.227', '2019-03-18 00:08:54', NULL, NULL, NULL),
-(237, 139, 'sorftline@gmail.com', 'amit', '49.204.211.228', '2019-03-18 04:58:27', NULL, NULL, NULL),
-(238, 139, 'sorftline@gmail.com', 'amit', '49.204.211.228', '2019-03-18 06:59:55', NULL, NULL, NULL),
-(239, 161, 'test.pentagmail.com', 'demo', '49.204.210.123', '2019-03-19 00:52:22', NULL, NULL, NULL),
-(240, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.50', '2019-03-19 03:46:45', NULL, NULL, NULL),
-(241, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.211.50', '2019-03-19 05:20:16', NULL, NULL, NULL),
-(242, 145, 'amit.pentagmail.com', 'Amit', '157.51.246.2', '2019-03-19 08:17:58', NULL, NULL, NULL),
-(243, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.211.41', '2019-03-19 08:56:29', NULL, NULL, NULL),
-(244, 166, 'test@gmail.com', 'test', '49.204.211.41', '2019-03-19 09:57:24', NULL, NULL, NULL),
-(245, 169, 'testdemo@gmail.com', 'test', '49.204.211.41', '2019-03-19 10:05:41', NULL, NULL, NULL),
-(246, 169, 'testdemo@gmail.com', 'test', '49.204.211.41', '2019-03-19 10:08:04', NULL, NULL, NULL),
-(247, 171, 'testdemoo@gmail.com', 'test', '49.204.211.41', '2019-03-19 10:13:13', NULL, NULL, NULL),
-(248, 166, 'test@gmail.com', 'test', '49.206.114.158', '2019-03-19 23:51:37', NULL, NULL, NULL),
-(249, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.147', '2019-03-20 00:17:42', NULL, NULL, NULL),
-(250, 149, 'veerapandi.pentagmail.com', 'veer', '49.206.114.158', '2019-03-20 00:21:27', NULL, NULL, NULL),
-(251, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.158', '2019-03-20 00:23:42', NULL, NULL, NULL),
-(252, 166, 'test@gmail.com', 'test', '49.206.114.158', '2019-03-20 04:59:06', NULL, NULL, NULL),
-(253, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.147', '2019-03-20 05:10:52', NULL, NULL, NULL),
-(254, 166, 'test@gmail.com', 'test', '49.206.114.158', '2019-03-20 05:16:23', NULL, NULL, NULL),
-(255, 166, 'test@gmail.com', 'test', '49.206.114.158', '2019-03-20 06:21:37', NULL, NULL, NULL),
-(256, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.158', '2019-03-20 07:22:46', NULL, NULL, NULL),
-(257, 139, 'sorftline@gmail.com', 'amit', '49.206.114.158', '2019-03-20 07:47:16', NULL, NULL, NULL),
-(258, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.158', '2019-03-20 09:18:25', NULL, NULL, NULL),
-(259, 139, 'sorftline@gmail.com', 'amit', '60.243.55.27', '2019-03-20 12:49:52', NULL, NULL, NULL),
-(260, 173, 'srilekha@novamed.com', 'Srilekha', '49.206.114.188', '2019-03-20 23:45:07', NULL, NULL, NULL),
-(261, 173, 'srilekha@novamed.com', 'srilekha', '49.206.114.188', '2019-03-20 23:49:24', NULL, NULL, NULL),
-(262, 173, 'srilekha@novamed.com', 'srilekha', '49.206.114.188', '2019-03-20 23:55:48', NULL, NULL, NULL),
-(263, 166, 'test@gmail.com', 'test', '183.82.39.153', '2019-03-21 00:29:42', NULL, NULL, NULL),
-(264, 139, 'sorftline@gmail.com', 'amit', '49.206.114.188', '2019-03-21 00:49:20', NULL, NULL, NULL),
-(265, 139, 'sorftline@gmail.com', 'amit', '49.206.114.188', '2019-03-21 00:57:48', NULL, NULL, NULL),
-(266, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.188', '2019-03-21 01:00:35', NULL, NULL, NULL),
-(267, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.188', '2019-03-21 01:11:04', NULL, NULL, NULL),
-(268, 149, 'veerapandi.pentagmail.com', 'veer', '183.82.39.153', '2019-03-21 02:18:43', NULL, NULL, NULL),
-(269, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.114.188', '2019-03-21 02:30:57', NULL, NULL, NULL),
-(270, 139, 'sorftline@gmail.com', 'amit', '49.206.114.188', '2019-03-21 02:31:24', NULL, NULL, NULL),
-(271, 166, 'test@gmail.com', 'test', '49.204.208.7', '2019-03-21 05:58:08', NULL, NULL, NULL),
-(272, 166, 'test@gmail.com', 'test', '49.204.209.84', '2019-03-23 00:12:33', NULL, NULL, NULL),
-(273, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.84', '2019-03-23 00:44:46', NULL, NULL, NULL),
-(274, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.84', '2019-03-23 00:52:35', NULL, NULL, NULL),
-(275, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.84', '2019-03-23 00:53:50', NULL, NULL, NULL),
-(276, 139, 'sorftline@gmail.com', 'amit', '49.204.209.220', '2019-03-23 02:30:45', NULL, NULL, NULL),
-(277, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.220', '2019-03-23 04:29:02', NULL, NULL, NULL),
-(278, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.206.114.54', '2019-03-25 08:59:42', NULL, NULL, NULL),
-(279, 139, 'sorftline@gmail.com', 'amit', '49.204.217.15', '2019-03-25 23:55:46', NULL, NULL, NULL),
-(280, 183, 'prabhusivansit@gmail.com', 'prabhu', '116.72.231.15', '2019-03-26 03:49:42', NULL, NULL, NULL),
-(281, 145, 'amit.pentagmail.com', 'Amit', '49.204.216.216', '2019-03-26 08:06:04', NULL, NULL, NULL),
-(282, 139, 'sorftline@gmail.com', 'amit', '49.204.218.97', '2019-03-26 08:38:36', NULL, NULL, NULL),
-(283, 184, 'keyur@gmail.com', 'keyur', '123.201.226.105', '2019-03-27 02:43:45', NULL, NULL, NULL),
-(284, 139, 'sorftline@gmail.com', 'amit', '49.204.208.33', '2019-03-29 08:03:33', NULL, NULL, NULL),
-(285, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.208.94', '2019-04-01 05:54:41', NULL, NULL, NULL),
-(286, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.208.94', '2019-04-01 06:55:56', NULL, NULL, NULL),
-(287, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.142', '2019-04-02 00:31:18', NULL, NULL, NULL),
-(288, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.142', '2019-04-02 01:27:42', NULL, NULL, NULL),
-(289, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '183.82.246.67', '2019-04-02 07:24:37', NULL, NULL, NULL),
-(290, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:34:20', NULL, NULL, NULL),
-(291, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.246.67', '2019-04-02 07:35:59', NULL, NULL, NULL),
-(292, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:44:49', NULL, NULL, NULL),
-(293, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:44:57', NULL, NULL, NULL),
-(294, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:46:09', NULL, NULL, NULL),
-(295, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:47:24', NULL, NULL, NULL),
-(296, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:48:18', NULL, NULL, NULL),
-(297, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:49:37', NULL, NULL, NULL),
-(298, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:50:42', NULL, NULL, NULL),
-(299, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:51:57', NULL, NULL, NULL),
-(300, 133, 'ganapathy.pentagmail.com', 'GanapathyRam', '49.204.209.223', '2019-04-02 07:52:49', NULL, NULL, NULL),
-(301, 185, 'hari@gmail.com', 'Hari', '49.204.209.223', '2019-04-02 08:49:19', NULL, NULL, NULL),
-(302, 139, 'sorftline@gmail.com', 'amit', '49.204.209.187', '2019-04-04 04:12:29', NULL, NULL, NULL),
-(303, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.204.209.67', '2019-04-05 00:52:13', NULL, NULL, NULL),
-(304, 192, 'vallarasan.eshopsoft@gmail.com', 'Vallarasan T', '49.204.209.67', '2019-04-05 01:13:33', NULL, NULL, NULL),
-(305, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.209.67', '2019-04-05 01:17:01', NULL, NULL, NULL),
-(306, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.208.240', '2019-04-05 05:33:20', NULL, NULL, NULL),
-(307, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.208.240', '2019-04-05 05:34:54', NULL, NULL, NULL),
-(308, 139, 'sorftline@gmail.com', 'amit', '49.204.210.227', '2019-04-06 00:55:15', NULL, NULL, NULL),
-(309, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '183.82.38.84', '2019-04-06 01:50:40', NULL, NULL, NULL),
-(310, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.38.84', '2019-04-06 04:44:29', NULL, NULL, NULL),
-(311, 196, 'testing@gmail.com', 'veerapandi', '49.204.210.227', '2019-04-06 05:05:50', NULL, NULL, NULL),
-(312, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.209.50', '2019-04-08 00:24:19', NULL, NULL, NULL),
-(313, 139, 'sorftline@gmail.com', 'amit', '183.82.247.250', '2019-04-08 06:16:51', NULL, NULL, NULL),
-(314, 139, 'sorftline@gmail.com', 'amit', '49.206.114.79', '2019-04-09 00:36:29', NULL, NULL, NULL),
-(315, 139, 'sorftline@gmail.com', 'amit', '49.206.114.79', '2019-04-09 02:03:08', NULL, NULL, NULL),
-(316, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.114.79', '2019-04-09 02:38:24', NULL, NULL, NULL),
-(317, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.251', '2019-04-09 05:02:31', NULL, NULL, NULL),
-(318, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.251', '2019-04-09 05:28:28', NULL, NULL, NULL),
-(319, 145, 'amit.pentagmail.com', 'Amit', '49.206.114.2', '2019-04-10 04:59:59', NULL, NULL, NULL),
-(320, 196, 'testing@gmail.com', 'veerapandi', '49.206.114.2', '2019-04-10 06:50:56', NULL, NULL, NULL),
-(321, 185, 'hari@gmail.com', 'Hari', '49.204.218.112', '2019-04-11 00:19:31', NULL, NULL, NULL),
-(322, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.210.117', '2019-04-11 04:07:18', NULL, NULL, NULL),
-(323, 185, 'hari@gmail.com', 'Hari', '49.204.218.112', '2019-04-11 04:23:55', NULL, NULL, NULL),
-(324, 185, 'hari@gmail.com', 'Hari', '49.204.210.203', '2019-04-12 06:43:59', NULL, NULL, NULL),
-(325, 185, 'hari@gmail.com', 'Hari', '49.204.210.203', '2019-04-12 06:48:10', NULL, NULL, NULL),
-(326, 185, 'hari@gmail.com', 'Hari', '49.204.210.203', '2019-04-12 06:55:44', NULL, NULL, NULL),
-(327, 185, 'hari@gmail.com', 'Hari', '49.204.210.203', '2019-04-12 07:25:17', NULL, NULL, NULL),
-(328, 185, 'hari@gmail.com', 'Hari', '49.204.210.141', '2019-04-13 00:02:53', NULL, NULL, NULL),
-(329, 185, 'hari@gmail.com', 'Hari', '49.204.210.141', '2019-04-13 01:28:27', NULL, NULL, NULL),
-(330, 185, 'hari@gmail.com', 'Hari', '49.204.210.125', '2019-04-14 01:34:11', NULL, NULL, NULL),
-(331, 185, 'hari@gmail.com', 'Hari', '49.204.210.125', '2019-04-14 02:08:35', NULL, NULL, NULL),
-(332, 185, 'hari@gmail.com', 'Hari', '49.204.210.125', '2019-04-14 02:54:05', NULL, NULL, NULL),
-(333, 185, 'hari@gmail.com', 'Hari', '49.204.210.125', '2019-04-14 05:14:09', NULL, NULL, NULL),
-(334, 185, 'hari@gmail.com', 'Hari', '183.82.247.249', '2019-04-15 04:10:08', NULL, NULL, NULL),
-(335, 185, 'hari@gmail.com', 'Hari', '49.204.214.24', '2019-04-15 05:07:33', NULL, NULL, NULL),
-(336, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.114.181', '2019-04-16 02:40:53', NULL, NULL, NULL),
-(337, 145, 'amit.pentagmail.com', 'Amit', '49.206.114.181', '2019-04-16 02:52:42', NULL, NULL, NULL),
-(338, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.114.181', '2019-04-16 04:16:10', NULL, NULL, NULL),
-(339, 192, 'vallarasan.eshopsoft@gmail.com', 'Vallarasan T', '49.206.114.181', '2019-04-16 05:13:19', NULL, NULL, NULL),
-(340, 145, 'amit.pentagmail.com', 'Amit', '49.206.114.181', '2019-04-16 05:24:43', NULL, NULL, NULL),
-(341, 185, 'hari@gmail.com', 'Hari', '49.204.209.70', '2019-04-16 05:42:39', NULL, NULL, NULL),
-(342, 145, 'amit.pentagmail.com', 'Amit', '49.206.114.181', '2019-04-16 06:29:18', NULL, NULL, NULL),
-(343, 185, 'hari@gmail.com', 'Hari', '157.50.75.151', '2019-04-16 23:51:02', NULL, NULL, NULL),
-(344, 185, 'hari@gmail.com', 'Hari', '49.206.117.61', '2019-04-17 01:10:46', NULL, NULL, NULL),
-(345, 138, 'jayaprakash.pentagmail.com', 'jayaprakash', '49.206.116.107', '2019-04-17 01:12:50', NULL, NULL, NULL),
-(346, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.91', '2019-04-19 01:57:13', NULL, NULL, NULL),
-(347, 185, 'hari@gmail.com', 'Hari', '157.46.13.174', '2019-04-21 23:46:17', NULL, NULL, NULL),
-(348, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.218.9', '2019-04-22 00:27:33', NULL, NULL, NULL),
-(349, 145, 'amit.pentagmail.com', 'Amit', '49.204.218.9', '2019-04-22 00:27:34', NULL, NULL, NULL),
-(350, 145, 'amit.pentagmail.com', 'Amit', '49.204.218.9', '2019-04-22 00:28:37', NULL, NULL, NULL),
-(351, 145, 'amit.pentagmail.com', 'Amit', '49.204.218.9', '2019-04-22 02:12:17', NULL, NULL, NULL),
-(352, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.218.135', '2019-04-22 04:25:24', NULL, NULL, NULL),
-(353, 145, 'amit.pentagmail.com', 'Amit', '49.204.218.135', '2019-04-22 05:29:07', NULL, NULL, NULL),
-(354, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.38.180', '2019-04-23 00:07:25', NULL, NULL, NULL),
-(355, 139, 'sorftline@gmail.com', 'amit', '49.204.210.60', '2019-04-23 00:23:17', NULL, NULL, NULL),
-(356, 145, 'amit.pentagmail.com', 'Amit', '49.204.210.60', '2019-04-23 00:24:14', NULL, NULL, NULL),
-(357, 143, 'aravind.pentagmail.com', 'Aravindhan', '49.204.209.6', '2019-04-23 01:25:23', NULL, NULL, NULL),
-(358, 145, 'amit.pentagmail.com', 'Amit', '183.82.38.180', '2019-04-23 08:45:57', NULL, NULL, NULL),
-(359, 185, 'hari@gmail.com', 'Hari', '49.204.208.185', '2019-04-23 23:49:02', NULL, NULL, NULL),
-(360, 185, 'hari@gmail.com', 'Hari', '49.204.208.185', '2019-04-24 00:23:28', NULL, NULL, NULL),
-(361, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 00:23:58', NULL, NULL, NULL),
-(362, 185, 'hari@gmail.com', 'Hari', '49.204.208.185', '2019-04-24 00:30:56', NULL, NULL, NULL),
-(363, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 00:44:11', NULL, NULL, NULL),
-(364, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 01:06:03', NULL, NULL, NULL),
-(365, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 01:09:13', NULL, NULL, NULL),
-(366, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 01:23:02', NULL, NULL, NULL),
-(367, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 02:30:14', NULL, NULL, NULL),
-(368, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 04:04:27', NULL, NULL, NULL),
-(369, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 05:11:29', NULL, NULL, NULL),
-(370, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.17', '2019-04-24 05:25:51', NULL, NULL, NULL),
-(371, 185, 'hari@gmail.com', 'Hari', '49.204.208.185', '2019-04-24 08:48:13', NULL, NULL, NULL),
-(372, 139, 'sorftline@gmail.com', 'amit', '49.204.210.109', '2019-04-24 23:58:32', NULL, NULL, NULL),
-(373, 145, 'amit.pentagmail.com', 'Amit', '49.204.210.109', '2019-04-24 23:59:23', NULL, NULL, NULL),
-(374, 143, 'aravind.pentagmail.com', 'Aravindhan', '49.204.217.200', '2019-04-25 00:57:34', NULL, NULL, NULL),
-(375, 185, 'hari@gmail.com', 'Hari', '49.204.217.200', '2019-04-25 01:18:26', NULL, NULL, NULL),
-(376, 145, 'amit.pentagmail.com', 'Amit', '49.204.210.109', '2019-04-25 04:11:17', NULL, NULL, NULL),
-(377, 185, 'hari@gmail.com', 'Hari', '157.50.123.86', '2019-04-25 07:03:01', NULL, NULL, NULL),
-(378, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 00:05:03', NULL, NULL, NULL),
-(379, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 00:10:22', NULL, NULL, NULL),
-(380, 185, 'hari@gmail.com', 'Hari', '49.206.115.134', '2019-04-26 00:18:20', NULL, NULL, NULL),
-(381, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 00:30:03', NULL, NULL, NULL),
-(382, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 01:52:46', NULL, NULL, NULL),
-(383, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 01:57:43', NULL, NULL, NULL),
-(384, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.86', '2019-04-26 02:04:36', NULL, NULL, NULL),
-(385, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.115.134', '2019-04-26 02:31:43', NULL, NULL, NULL),
-(386, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.117.86', '2019-04-26 04:09:02', NULL, NULL, NULL),
-(387, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.117.86', '2019-04-26 07:43:06', NULL, NULL, NULL),
-(388, 145, 'amit.pentagmail.com', 'Amit', '49.206.115.134', '2019-04-26 09:00:22', NULL, NULL, NULL),
-(389, 185, 'hari@gmail.com', 'Hari', '49.204.208.141', '2019-04-27 00:19:58', NULL, NULL, NULL),
-(390, 145, 'amit.pentagmail.com', 'Amit', '183.82.246.123', '2019-04-27 00:34:42', NULL, NULL, NULL),
-(391, 145, 'amit.pentagmail.com', 'Amit', '183.82.246.123', '2019-04-27 00:53:08', NULL, NULL, NULL),
-(392, 185, 'hari@gmail.com', 'Hari', '157.50.95.246', '2019-04-27 05:31:25', NULL, NULL, NULL),
-(393, 185, 'hari@gmail.com', 'Hari', '157.50.72.64', '2019-04-28 08:55:58', NULL, NULL, NULL),
-(394, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.208.16', '2019-04-28 23:52:21', NULL, NULL, NULL),
-(395, 185, 'hari@gmail.com', 'Hari', '49.204.208.16', '2019-04-28 23:59:01', NULL, NULL, NULL),
-(396, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.203', '2019-04-29 04:35:00', NULL, NULL, NULL),
-(397, 211, 'demodemo@email.com', 'demodemo', '182.52.217.160', '2019-04-29 05:44:23', NULL, NULL, NULL),
-(398, 212, 'gurneetgurneet10@gmail.com', 'kabir', '171.48.116.53', '2019-04-29 07:10:56', NULL, NULL, NULL),
-(399, 185, 'hari@gmail.com', 'Hari', '49.204.217.173', '2019-04-30 00:11:05', NULL, NULL, NULL),
-(400, 213, 'singamuthu@gmail.com', 'Singamuthu', '27.62.38.117', '2019-04-30 04:01:50', NULL, NULL, NULL),
-(401, 213, 'shine@gmail.com', 'shine', '49.204.217.173', '2019-04-30 04:11:12', NULL, NULL, NULL),
-(402, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 04:31:01', NULL, NULL, NULL),
-(403, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 04:35:19', NULL, NULL, NULL),
-(404, 145, 'amit.pentagmail.com', 'Amit', '183.82.246.141', '2019-04-30 04:41:16', NULL, NULL, NULL),
-(405, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 04:44:20', NULL, NULL, NULL),
-(406, 192, 'vallarasan.eshopsoft@gmail.com', 'Vallarasan T', '49.204.217.173', '2019-04-30 04:48:31', NULL, NULL, NULL),
-(407, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 05:47:51', NULL, NULL, NULL),
-(408, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 06:43:54', NULL, NULL, NULL),
-(409, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 07:36:18', NULL, NULL, NULL),
-(410, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.173', '2019-04-30 08:08:36', NULL, NULL, NULL),
-(411, 185, 'hari@gmail.com', 'Hari', '49.204.217.173', '2019-04-30 09:02:07', NULL, NULL, NULL),
-(412, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.245', '2019-05-01 23:54:40', NULL, NULL, NULL),
-(413, 145, 'amit.pentagmail.com', 'Amit', '49.206.114.83', '2019-05-01 23:56:48', NULL, NULL, NULL),
-(414, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.245', '2019-05-02 00:44:44', NULL, NULL, NULL),
-(415, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.245', '2019-05-02 01:06:55', NULL, NULL, NULL),
-(416, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.245', '2019-05-02 01:10:29', NULL, NULL, NULL),
-(417, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.114.83', '2019-05-02 01:45:45', NULL, NULL, NULL),
-(418, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.206.114.83', '2019-05-02 02:01:44', NULL, NULL, NULL),
-(419, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.245', '2019-05-02 03:54:30', NULL, NULL, NULL),
-(420, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.245', '2019-05-02 04:53:01', NULL, NULL, NULL),
-(421, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.245', '2019-05-02 05:08:06', NULL, NULL, NULL),
-(422, 185, 'hari@gmail.com', 'Hari', '49.206.114.83', '2019-05-02 07:27:23', NULL, NULL, NULL),
-(423, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.114.83', '2019-05-02 07:41:18', NULL, NULL, NULL),
-(424, 185, 'hari@gmail.com', 'Hari', '27.62.32.117', '2019-05-02 07:43:32', NULL, NULL, NULL),
-(425, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.114.83', '2019-05-02 07:46:11', NULL, NULL, NULL),
-(426, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.245', '2019-05-02 08:18:19', NULL, NULL, NULL),
-(427, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.226', '2019-05-02 08:59:13', NULL, NULL, NULL),
-(428, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.226', '2019-05-02 09:01:30', NULL, NULL, NULL),
-(429, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.226', '2019-05-02 09:12:48', NULL, NULL, NULL),
-(430, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.226', '2019-05-02 09:17:42', NULL, NULL, NULL),
-(431, 145, 'amit.pentagmail.com', 'Amit', '49.204.217.226', '2019-05-02 09:23:04', NULL, NULL, NULL),
-(432, 185, 'hari@gmail.com', 'Hari', '49.206.114.83', '2019-05-02 09:45:13', NULL, NULL, NULL),
-(433, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.208.185', '2019-05-03 00:08:40', NULL, NULL, NULL),
-(434, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.208.185', '2019-05-03 00:24:21', NULL, NULL, NULL),
-(435, 217, 'vallarasan@gmail.com', 'vallarasan', '49.204.208.185', '2019-05-03 00:35:47', NULL, NULL, NULL),
-(436, 218, 'vallarasan@eshop.com', 'vallarasan', '49.204.208.185', '2019-05-03 00:36:43', NULL, NULL, NULL),
-(437, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.185', '2019-05-03 00:43:44', NULL, NULL, NULL),
-(438, 185, 'hari@gmail.com', 'Hari', '49.206.116.70', '2019-05-03 01:04:19', NULL, NULL, NULL),
-(439, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.185', '2019-05-03 01:58:51', NULL, NULL, NULL),
-(440, 221, 'karthi@gmail.com', 'Karthi K', '49.204.208.185', '2019-05-03 02:03:37', NULL, NULL, NULL),
-(441, 221, 'karthi@gmail.com', 'Karthi K', '49.204.208.185', '2019-05-03 02:06:07', NULL, NULL, NULL),
-(442, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.208.185', '2019-05-03 04:03:12', NULL, NULL, NULL),
-(443, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.116.70', '2019-05-03 05:16:30', NULL, NULL, NULL),
-(444, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.208.185', '2019-05-03 06:08:58', NULL, NULL, NULL),
-(445, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.208.185', '2019-05-03 07:19:25', NULL, NULL, NULL),
-(446, 185, 'hari@gmail.com', 'Hari', '183.82.247.94', '2019-05-03 23:09:58', NULL, NULL, NULL),
-(447, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.209.24', '2019-05-04 00:25:59', NULL, NULL, NULL),
-(448, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.24', '2019-05-04 00:39:53', NULL, NULL, NULL),
-(449, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.246.77', '2019-05-04 04:12:00', NULL, NULL, NULL),
-(450, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-04 04:16:26', NULL, NULL, NULL),
-(451, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.246.77', '2019-05-04 04:43:23', NULL, NULL, NULL),
-(452, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-04 05:14:26', NULL, NULL, NULL),
-(453, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '183.82.39.126', '2019-05-04 06:29:41', NULL, NULL, NULL),
-(454, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.39.126', '2019-05-06 00:03:57', NULL, NULL, NULL),
-(455, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-06 00:14:52', NULL, NULL, NULL),
-(456, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-06 00:48:01', NULL, NULL, NULL),
-(457, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-06 01:08:20', NULL, NULL, NULL),
-(458, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '183.82.39.126', '2019-05-06 02:55:04', NULL, NULL, NULL),
-(459, 145, 'amit.pentagmail.com', 'Amit', '183.82.39.126', '2019-05-06 05:30:29', NULL, NULL, NULL),
-(460, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.39.126', '2019-05-06 05:36:48', NULL, NULL, NULL),
-(461, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.39.126', '2019-05-06 05:38:59', NULL, NULL, NULL),
-(462, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.39.126', '2019-05-06 07:24:56', NULL, NULL, NULL),
-(463, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.39.126', '2019-05-06 07:25:56', NULL, NULL, NULL),
-(464, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.218.56', '2019-05-06 07:45:25', NULL, NULL, NULL),
-(465, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.218.56', '2019-05-06 08:06:24', NULL, NULL, NULL),
-(466, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.218.56', '2019-05-06 09:54:30', NULL, NULL, NULL),
-(467, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.117.137', '2019-05-06 23:37:30', NULL, NULL, NULL),
-(468, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.117.137', '2019-05-06 23:51:07', NULL, NULL, NULL),
-(469, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.209.101', '2019-05-07 00:50:12', NULL, NULL, NULL),
-(470, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.209.101', '2019-05-07 00:57:25', NULL, NULL, NULL),
-(471, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.101', '2019-05-07 01:07:05', NULL, NULL, NULL),
-(472, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.101', '2019-05-07 01:08:36', NULL, NULL, NULL),
-(473, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.209.101', '2019-05-07 01:09:02', NULL, NULL, NULL),
-(474, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.101', '2019-05-07 03:00:31', NULL, NULL, NULL),
-(475, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.101', '2019-05-07 04:03:03', NULL, NULL, NULL),
-(476, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.101', '2019-05-07 04:15:34', NULL, NULL, NULL),
-(477, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.209.101', '2019-05-07 04:25:14', NULL, NULL, NULL),
-(478, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.209.101', '2019-05-07 04:45:29', NULL, NULL, NULL),
-(479, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.209.101', '2019-05-07 05:01:51', NULL, NULL, NULL),
-(480, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.117.137', '2019-05-07 08:08:00', NULL, NULL, NULL),
-(481, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.247.116', '2019-05-07 23:38:01', NULL, NULL, NULL),
-(482, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.55', '2019-05-08 00:28:12', NULL, NULL, NULL),
-(483, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.55', '2019-05-08 00:46:58', NULL, NULL, NULL),
-(484, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '183.82.247.116', '2019-05-08 01:34:35', NULL, NULL, NULL),
-(485, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.247.55', '2019-05-08 01:40:14', NULL, NULL, NULL),
-(486, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.247.116', '2019-05-08 03:57:05', NULL, NULL, NULL),
-(487, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.55', '2019-05-08 04:11:50', NULL, NULL, NULL),
-(488, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '183.82.247.116', '2019-05-08 04:46:38', NULL, NULL, NULL),
-(489, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '183.82.247.55', '2019-05-08 05:17:00', NULL, NULL, NULL),
-(490, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.247.116', '2019-05-08 07:15:31', NULL, NULL, NULL),
-(491, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.116', '2019-05-08 08:54:37', NULL, NULL, NULL),
-(492, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.247.116', '2019-05-08 09:14:43', NULL, NULL, NULL),
-(493, 145, 'amit.pentagmail.com', 'Amit', '183.82.247.116', '2019-05-08 09:15:13', NULL, NULL, NULL),
-(494, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.251', '2019-05-08 23:45:44', NULL, NULL, NULL),
-(495, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '183.82.246.9', '2019-05-08 23:46:18', NULL, NULL, NULL),
-(496, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.251', '2019-05-09 00:27:34', NULL, NULL, NULL),
-(497, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.251', '2019-05-09 00:32:47', NULL, NULL, NULL),
-(498, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.251', '2019-05-09 00:34:01', NULL, NULL, NULL),
-(499, 214, 'ganapathyd.pentagmail.com', 'sivaGanapathy', '49.204.211.251', '2019-05-09 00:34:49', NULL, NULL, NULL),
-(500, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 00:54:46', NULL, NULL, NULL),
-(501, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.218.32', '2019-05-09 00:59:06', NULL, NULL, NULL),
-(502, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 01:38:32', NULL, NULL, NULL),
-(503, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 01:39:40', NULL, NULL, NULL),
-(504, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 02:06:57', NULL, NULL, NULL);
-INSERT INTO `login_log` (`id`, `customer_id`, `email_id`, `first_name`, `ip_address`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(505, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 02:23:44', NULL, NULL, NULL),
-(506, 145, 'amit.pentagmail.com', 'Amit', '49.204.211.251', '2019-05-09 03:32:02', NULL, NULL, NULL),
-(507, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 07:08:19', NULL, NULL, NULL),
-(508, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.211.251', '2019-05-09 07:11:51', NULL, NULL, NULL),
-(509, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.204.209.204', '2019-05-09 07:59:25', NULL, NULL, NULL),
-(510, 139, 'sorftline@gmail.com', 'amit', '49.204.218.32', '2019-05-09 08:24:10', NULL, NULL, NULL),
-(511, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.116.175', '2019-05-10 01:38:03', NULL, NULL, NULL),
-(512, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.116.175', '2019-05-10 02:00:52', NULL, NULL, NULL),
-(513, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.60', '2019-05-10 02:02:34', NULL, NULL, NULL),
-(514, 194, 'sou.eshopsoft@gmail.com', 'soundariyaa', '49.206.116.175', '2019-05-10 03:55:24', NULL, NULL, NULL),
-(515, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.117.60', '2019-05-10 04:14:02', NULL, NULL, NULL),
-(516, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.60', '2019-05-10 04:29:19', NULL, NULL, NULL),
-(517, 145, 'amit.pentagmail.com', 'Amit', '49.206.117.60', '2019-05-10 04:46:21', NULL, NULL, NULL),
-(518, 185, 'hari@gmail.com', 'Hari', '49.206.116.175', '2019-05-10 06:49:49', NULL, NULL, NULL),
-(519, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.117.60', '2019-05-10 08:52:08', NULL, NULL, NULL),
-(520, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.117.60', '2019-05-10 08:53:39', NULL, NULL, NULL),
-(521, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.206.116.175', '2019-05-10 09:32:30', NULL, NULL, NULL),
-(522, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.208.60', '2019-05-10 23:48:22', NULL, NULL, NULL),
-(523, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.208.60', '2019-05-11 00:07:33', NULL, NULL, NULL),
-(524, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.60', '2019-05-11 02:44:41', NULL, NULL, NULL),
-(525, 145, 'amit.pentagmail.com', 'Amit', '49.204.209.204', '2019-05-11 03:52:27', NULL, NULL, NULL),
-(526, 145, 'amit.pentagmail.com', 'Amit', '49.204.208.179', '2019-05-11 06:42:31', NULL, NULL, NULL),
-(527, 142, 'vijayalakshmi.pentagmail.com', 'viji', '183.82.38.79', '2019-05-11 07:07:09', NULL, NULL, NULL),
-(528, 142, 'vijayalakshmi.pentagmail.com', 'viji', '27.62.41.33', '2019-05-11 07:38:08', NULL, NULL, NULL),
-(529, 223, 'developer.suresh@gmail.com', 'suresh s', '49.204.210.70', '2019-05-12 01:09:01', NULL, NULL, NULL),
-(530, 224, 'hard@hotmail.com', 'Tiago', '187.39.86.27', '2019-05-12 18:31:55', NULL, NULL, NULL),
-(531, 142, 'vijayalakshmi.pentagmail.com', 'viji', '49.204.210.37', '2019-05-12 23:43:12', NULL, NULL, NULL),
-(532, 227, 'veerapandi.pentagmail.com', 'veerapandi', '49.204.210.37', '2019-05-12 23:59:39', NULL, NULL, NULL),
-(533, 228, 'aravind.pentagmail.com', 'Aravindhan', '49.204.210.37', '2019-05-13 01:10:02', NULL, NULL, NULL),
-(534, 228, 'aravind.pentagmail.com', 'Aravindhan', '49.204.210.37', '2019-05-13 01:10:30', NULL, NULL, NULL),
-(535, 229, 'ganesh.pentagmail.com', 'ganesh', '49.204.210.37', '2019-05-13 01:17:50', NULL, NULL, NULL),
-(536, 142, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.210.37', '2019-05-13 02:40:19', NULL, NULL, NULL),
-(537, 230, 'ganesh@gmail.com', 'ganesh v', '49.204.210.37', '2019-05-13 02:51:11', NULL, NULL, NULL),
-(538, 230, 'ganesh@gmail.com', 'ganesh v', '49.204.210.37', '2019-05-13 03:01:20', NULL, NULL, NULL),
-(539, 230, 'ganesh@gmail.com', 'ganesh v', '49.204.210.37', '2019-05-13 03:04:20', NULL, NULL, NULL),
-(540, 142, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.210.37', '2019-05-13 03:06:59', NULL, NULL, NULL),
-(541, 229, 'ganesh.pentagmail.com', 'ganesh', '49.204.210.37', '2019-05-13 04:11:49', NULL, NULL, NULL),
-(542, 142, 'vijayalakshmi.pentagmail.com', 'vijayalakshmi', '49.204.210.37', '2019-05-13 05:08:42', NULL, NULL, NULL),
-(543, 227, 'veerapandi.pentagmail.com', 'veerapandi', '49.204.210.37', '2019-05-13 08:42:02', NULL, NULL, NULL),
-(544, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-19 16:57:16', NULL, NULL, NULL);
+(544, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-19 16:57:16', NULL, NULL, NULL),
+(545, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-20 17:57:46', NULL, NULL, NULL),
+(546, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-23 03:49:38', NULL, NULL, NULL),
+(547, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-23 04:10:32', NULL, NULL, NULL),
+(548, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-23 04:15:27', NULL, NULL, NULL),
+(549, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-23 04:53:29', NULL, NULL, NULL),
+(550, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-27 10:41:28', NULL, NULL, NULL),
+(551, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-28 10:21:54', NULL, NULL, NULL),
+(552, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-28 12:36:00', NULL, NULL, NULL),
+(553, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-28 13:35:20', NULL, NULL, NULL),
+(554, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-28 22:59:34', NULL, NULL, NULL),
+(555, 1, 'lamvanhung01@gmail.com', 'lamvanhung', '::1', '2020-07-28 23:47:32', NULL, NULL, NULL),
+(556, 3, 'lamhungnuce02@gmail.com', 'lamhungnuce02', '::1', '2020-07-28 23:59:45', NULL, NULL, NULL),
+(557, 3, 'lamhungnuce02@gmail.com', 'lamhung', '::1', '2020-07-29 01:38:44', NULL, NULL, NULL),
+(558, 4, 'leleha@gmail.com', 'leleha', '::1', '2020-07-31 14:58:31', NULL, NULL, NULL),
+(559, 4, 'leleha@gmail.com', 'leleha', '::1', '2020-07-31 14:59:09', NULL, NULL, NULL),
+(560, 4, 'leleha@gmail.com', 'leleha', '::1', '2020-07-31 16:17:01', NULL, NULL, NULL),
+(561, 3, 'lamhungnuce02@gmail.com', 'lamhung', '::1', '2020-08-01 07:44:48', NULL, NULL, NULL),
+(562, 3, 'lamhungnuce02@gmail.com', 'lamhung', '::1', '2020-08-01 10:54:23', NULL, NULL, NULL),
+(563, 3, 'lamhungnuce02@gmail.com', 'lamhung', '::1', '2020-08-01 11:06:28', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1543,7 +1094,13 @@ INSERT INTO `order` (`order_id`, `customer_id`, `currency_id`, `shipping_zone_id
 (1, 1, NULL, NULL, NULL, NULL, NULL, NULL, 'SPU', NULL, NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 16:59:28', NULL),
 (2, 1, NULL, NULL, NULL, NULL, NULL, NULL, 'SPU', NULL, NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 16:59:40', NULL),
 (3, 1, NULL, NULL, NULL, NULL, NULL, '3', 'SPU', 'SPU-202007193', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 17:00:17', '2020-07-19 17:00:17'),
-(4, 1, NULL, NULL, NULL, NULL, NULL, '4', 'SPU', 'SPU-202007194', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490', NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 17:07:19', '2020-07-19 17:10:32');
+(4, 1, NULL, NULL, NULL, NULL, NULL, '4', 'SPU', 'SPU-202007194', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-19 17:07:19', '2020-07-19 17:41:55'),
+(5, 3, NULL, NULL, NULL, NULL, NULL, '5', 'SPU', 'SPU-202007295', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'Duong giai phong', 'so 55 phai phong', 'HN', '100000', 'Viet Nam', 'Hoang mai', '', NULL, 'lamhung', 'nuce02', '', 'Duong giai phong', 'so 55 phai phong', 'HN', '100000', '230', 'Hoang mai', '', NULL, NULL, '9000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-29 01:01:47', '2020-07-29 01:01:47'),
+(6, 4, NULL, NULL, NULL, NULL, NULL, '6', 'SPU', 'SPU-202007316', NULL, NULL, 'leleha@gmail.com', '091231232', NULL, 'leleha', 'llll', '', 'slfwefwfw', 'sdfsdf', 'wrewerew', '1000000', 'Viet Nam', 'wrwr', '', NULL, 'leleha', 'llll', '', 'slfwefwfw', 'sdfsdf', 'wrewerew', '1000000', '230', 'wrwr', '', NULL, NULL, '10500', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-31 15:00:51', '2020-07-31 15:03:19'),
+(7, 4, NULL, NULL, NULL, NULL, NULL, '7', 'SPU', 'SPU-202007317', NULL, NULL, 'leleha@gmail.com', '091231232', NULL, 'leleha', 'nguyen', '', 'hn', 'hn', 'hanoi', '100000', 'Viet Nam', 'hn', '', NULL, 'leleha', 'nguyen', '', 'hn', 'hn', 'hanoi', '100000', '230', 'hn', '', NULL, NULL, '292100', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-07-31 16:37:49', '2020-07-31 16:37:49'),
+(8, 3, NULL, NULL, NULL, NULL, NULL, '8', 'SPU', 'SPU-202008018', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', 'Viet Nam', 'HN', '', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', '230', 'HN', '', NULL, NULL, '69000', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-08-01 09:08:35', '2020-08-01 12:18:58'),
+(9, 3, NULL, NULL, NULL, NULL, NULL, '9', 'SPU', 'SPU-202008019', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'hn', 'hn', 'hn', '10000', 'Viet Nam', 'hn', '', NULL, 'lamhung', 'nuce02', '', 'hn', 'hn', 'hn', '10000', '230', 'hn', '', NULL, NULL, '10500', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-08-01 11:07:12', '2020-08-01 11:07:12'),
+(10, 3, NULL, NULL, NULL, NULL, NULL, '10', 'SPU', 'SPU-2020080110', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'Hanoi', 'HN', 'HN', '100000', 'Viet Nam', 'HN Vietnam', '', NULL, 'lamhung', 'nuce02', '', 'Hanoi', 'HN', 'HN', '100000', '230', 'HN Vietnam', '', NULL, NULL, '637000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, '2020-08-01 16:22:41', '2020-08-01 16:22:41');
 
 -- --------------------------------------------------------
 
@@ -1632,7 +1189,13 @@ CREATE TABLE `order_log` (
 --
 
 INSERT INTO `order_log` (`order_log_id`, `customer_id`, `currency_id`, `shipping_zone_id`, `payment_zone_id`, `shipping_country_id`, `payment_country_id`, `invoice_no`, `invoice_prefix`, `order_prefix_id`, `firstname`, `lastname`, `email`, `telephone`, `fax`, `shipping_firstname`, `shipping_lastname`, `shipping_company`, `shipping_address_1`, `shipping_address_2`, `shipping_city`, `shipping_postcode`, `shipping_country`, `shipping_zone`, `shipping_address_format`, `shipping_method`, `payment_firstname`, `payment_lastname`, `payment_company`, `payment_address_1`, `payment_address_2`, `payment_city`, `payment_postcode`, `payment_country`, `payment_zone`, `payment_address_format`, `payment_method`, `comment`, `total`, `reward`, `order_status_id`, `affiliate_id`, `commision`, `currency_code`, `currency_value`, `ip`, `payment_flag`, `order_name`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(1, 1, NULL, NULL, NULL, NULL, NULL, '4', 'SPU', 'SPU-202007194', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490.0000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-07-19 17:07:19', '2020-07-19 17:07:20');
+(1, 1, NULL, NULL, NULL, NULL, NULL, '4', 'SPU', 'SPU-202007194', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490.0000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-07-19 17:07:19', '2020-07-19 17:07:20'),
+(2, 1, NULL, NULL, NULL, NULL, NULL, '4', 'SPU', 'SPU-202007194', NULL, NULL, 'lamvanhung01@gmail.com', '0382463233', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', 'Viet Nam', 'Phuxuyen', '', NULL, 'lamvanhung', 'Hung', '', 'px,hn,vn', '', 'Hanoi', '1000000', '230', 'Phuxuyen', '', NULL, NULL, '32490.0000', NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-07-19 17:07:19', '2020-07-19 17:10:32'),
+(3, 4, NULL, NULL, NULL, NULL, NULL, '6', 'SPU', 'SPU-202007316', NULL, NULL, 'leleha@gmail.com', '091231232', NULL, 'leleha', 'llll', '', 'slfwefwfw', 'sdfsdf', 'wrewerew', '1000000', 'Viet Nam', 'wrwr', '', NULL, 'leleha', 'llll', '', 'slfwefwfw', 'sdfsdf', 'wrewerew', '1000000', '230', 'wrwr', '', NULL, NULL, '10500.0000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-07-31 15:00:51', '2020-07-31 15:00:51'),
+(4, 3, NULL, NULL, NULL, NULL, NULL, '8', 'SPU', 'SPU-202008018', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', 'Viet Nam', 'HN', '', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', '230', 'HN', '', NULL, NULL, '69000.0000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-08-01 09:08:35', '2020-08-01 09:08:36'),
+(5, 3, NULL, NULL, NULL, NULL, NULL, '8', 'SPU', 'SPU-202008018', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', 'Viet Nam', 'HN', '', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', '230', 'HN', '', NULL, NULL, '69000.0000', NULL, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-08-01 09:08:35', '2020-08-01 12:18:51'),
+(6, 3, NULL, NULL, NULL, NULL, NULL, '8', 'SPU', 'SPU-202008018', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', 'Viet Nam', 'HN', '', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', '230', 'HN', '', NULL, NULL, '69000.0000', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-08-01 09:08:35', '2020-08-01 12:18:53'),
+(7, 3, NULL, NULL, NULL, NULL, NULL, '8', 'SPU', 'SPU-202008018', NULL, NULL, 'lamhungnuce02@gmail.com', '0123123334', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', 'Viet Nam', 'HN', '', NULL, 'lamhung', 'nuce02', '', 'HN', 'HN', 'HaNoi', '100000', '230', 'HN', '', NULL, NULL, '69000.0000', NULL, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '1', NULL, NULL, '2020-08-01 09:08:35', '2020-08-01 12:18:55');
 
 -- --------------------------------------------------------
 
@@ -1688,7 +1251,20 @@ INSERT INTO `order_product` (`order_product_id`, `product_id`, `order_id`, `name
 (1, 289, 3, 'Vivo V11 Pro (Starry Night Black, 6GB RAM, 64GB Storage)', '', 1, NULL, '28990.0000', '28990.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:00:17', NULL),
 (2, 298, 3, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 1, NULL, '3500.0000', '3500.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:00:17', NULL),
 (3, 289, 4, 'Vivo V11 Pro (Starry Night Black, 6GB RAM, 64GB Storage)', '', 1, NULL, '28990.0000', '28990.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:07:19', NULL),
-(4, 298, 4, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 1, NULL, '3500.0000', '3500.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:07:20', NULL);
+(4, 298, 4, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 1, NULL, '3500.0000', '3500.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:07:20', NULL),
+(5, 298, 5, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 2, NULL, '3500.0000', '7000.0000', NULL, NULL, NULL, NULL, '2020-07-29 01:01:47', NULL),
+(6, 294, 5, 'Casio SA-76 KM15 Digital Portable Keyboard  (44 Keys)', '', 1, NULL, '2000.0000', '2000.0000', NULL, NULL, NULL, NULL, '2020-07-29 01:01:47', NULL),
+(7, 298, 6, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 3, NULL, '3500.0000', '10500.0000', NULL, NULL, NULL, NULL, '2020-07-31 15:00:51', NULL),
+(8, 298, 7, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 1, NULL, '3500.0000', '3500.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:49', NULL),
+(9, 289, 7, 'Bo trong cay', '', 1, NULL, '57000.0000', '57000.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:49', NULL),
+(10, 290, 7, 'bo loc nuoc do choi', '', 1, NULL, '123000.0000', '123000.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:49', NULL),
+(11, 295, 7, 'Quat chua chay thong minh', '', 1, NULL, '54000.0000', '54000.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:49', NULL),
+(12, 294, 7, 'Ten lua do choi', '', 1, NULL, '54600.0000', '54600.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:49', NULL),
+(13, 294, 8, 'Ten lua do choi', '', 3, NULL, '23000.0000', '69000.0000', NULL, NULL, NULL, NULL, '2020-08-01 09:08:36', NULL),
+(14, 298, 9, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', 3, NULL, '3500.0000', '10500.0000', NULL, NULL, NULL, NULL, '2020-08-01 11:07:12', NULL),
+(15, 287, 10, 'Touch light on and off automatically', '', 2, NULL, '210000.0000', '420000.0000', NULL, NULL, NULL, NULL, '2020-08-01 16:22:41', NULL),
+(16, 288, 10, 'Weather station', '', 2, NULL, '80000.0000', '160000.0000', NULL, NULL, NULL, NULL, '2020-08-01 16:22:41', NULL),
+(17, 289, 10, 'Planting set', '', 1, NULL, '57000.0000', '57000.0000', NULL, NULL, NULL, NULL, '2020-08-01 16:22:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -1742,7 +1318,13 @@ CREATE TABLE `order_total` (
 --
 
 INSERT INTO `order_total` (`order_total_id`, `order_id`, `code`, `title`, `text`, `value`, `sort_order`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(1, 4, NULL, NULL, NULL, '32490.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:07:20', NULL);
+(1, 4, NULL, NULL, NULL, '32490.0000', NULL, NULL, NULL, NULL, '2020-07-19 17:07:20', NULL),
+(2, 5, NULL, NULL, NULL, '9000.0000', NULL, NULL, NULL, NULL, '2020-07-29 01:01:47', NULL),
+(3, 6, NULL, NULL, NULL, '10500.0000', NULL, NULL, NULL, NULL, '2020-07-31 15:00:51', NULL),
+(4, 7, NULL, NULL, NULL, '292100.0000', NULL, NULL, NULL, NULL, '2020-07-31 16:37:50', NULL),
+(5, 8, NULL, NULL, NULL, '69000.0000', NULL, NULL, NULL, NULL, '2020-08-01 09:08:36', NULL),
+(6, 9, NULL, NULL, NULL, '10500.0000', NULL, NULL, NULL, NULL, '2020-08-01 11:07:12', NULL),
+(7, 10, NULL, NULL, NULL, '637000.0000', NULL, NULL, NULL, NULL, '2020-08-01 16:22:41', NULL);
 
 -- --------------------------------------------------------
 
@@ -1773,10 +1355,10 @@ CREATE TABLE `page` (
 --
 
 INSERT INTO `page` (`page_id`, `title`, `intro`, `full_text`, `page_group_id`, `sort_order`, `meta_tag_title`, `meta_tag_description`, `meta_tag_keywords`, `view_page_count`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(130, 'COMPANY', NULL, '<ul>\n	<li>\n	<p>This InDesign Brochure is Clean &amp; Professional. Create your company&#39;s documentation quick and easy. The template comes with paragraph and character styles, swatches, styles for your spreadsheet / financial info, block quotes, key figures layout, and much more</p>\n	</li>\n</ul>\n', NULL, NULL, 'Company Profile', 'If you continue to have trouble, check out this help file for more tips.', 'company profile', NULL, 0, NULL, NULL, '2019-03-14 06:08:56', '2019-04-04 05:00:40'),
+(130, 'COMPANY', NULL, '<p>STEM LEARNING - SUPPLY TOOLS, LEARNING, SOLUTIONS FOR STEM EDUCATION</p>\n\n<p>STEM is a new educational method being developed in the world. This educational program is applied at all educational levels to help children develop complete thinking. STEM education is always accompanied by theory and practice. What is the practice like? Don&#39;t worry, STEM LEARNING will support this.</p>\n\n<p>First of all, what do we learn about STEM education?</p>\n\n<p>STEM stands for Science (Technology), Technology (Technology), Engineering (Engineering) and Math (Mathematics). STEM educational methods will develop skills for children to apply in life both now and in the future, especially in a modern, technological environment.</p>\n\n<p>STEM LEARNING is the solution of STEM education by:</p>\n\n<p>STEM LEARNING STEM provides STEM educational tools for all ages<br />\nProducts with a combination of fun and scientific learning<br />\nReasonable price, quality commitment, in accordance with demand<br />\nProduct information is presented in detail, specific instructions<br />\nNote when choosing STEM Tools:</p>\n\n<p>Should choose toys appropriate for the child&#39;s age<br />\nChildren&#39;s habits and interests are also important in choosing the right products<br />\nRead the manual carefully before use<br />\nSTEM ACADEMY has discount programs for loyal customers and customers buying in bulk. See details<br />\nContact us :</p>\n', NULL, NULL, 'Company Profile', 'If you continue to have trouble, check out this help file for more tips.', 'company profile', NULL, 0, NULL, NULL, '2019-03-14 06:08:56', '2020-08-01 07:58:33'),
 (132, 'RESOURCES', NULL, '<h2><img alt=\"\" src=\"https://www.google.com/url?sa=i&amp;source=images&amp;cd=&amp;cad=rja&amp;uact=8&amp;ved=2ahUKEwjNqoesyoHhAhUI7HMBHQuNAu8QjRx6BAgBEAU&amp;url=https%3A%2F%2Fwww.pexels.com%2Fsearch%2Fbeautiful%2F&amp;psig=AOvVaw3BVX6YphWlhIlgpF7S6C_i&amp;ust=1552651106648620\" /></h2>\n\n<p>&nbsp;</p>\n\n<h2>a stock or supply of money, materials, staff, and other assets that can be drawn on by a person or organization in order to function effectivel.</h2>\n', NULL, NULL, 'Resources information', 'New Resources Page full of information @2019', ' Resources Page full of information', NULL, 1, NULL, NULL, '2019-03-14 06:16:25', '2019-03-15 00:38:22'),
-(133, 'ABOUT US', NULL, '<p><strong>eshopcart.com&nbsp;is an Indian e-commerce company based in Chennai, India. Founded by Mr&nbsp;</strong><strong>Suresh Sekar, the company initially focused on software Development, before expanding into other product categories such as consumer electronics, fashion, and lifestyle products.</strong></p>\n', NULL, NULL, 'about us', 'about us', 'The total cost of ownership for software created in this manner is reduced', NULL, 0, NULL, NULL, '2019-03-14 06:30:33', '2019-05-06 08:05:28'),
-(138, 'PAGE INFO', NULL, '<p>Description of the page</p>\n', NULL, NULL, '', '', '', NULL, 0, NULL, NULL, '2019-03-21 00:31:43', '2019-05-06 08:05:10');
+(133, 'ABOUT US', NULL, '<h2>&nbsp;</h2>\n\n<p>we believe that everyone should have</p>\n\n<p>the power to create content, digital products</p>\n\n<p>and user experiences that impact the world.</p>\n\n<p>We&rsquo;re here to fuel the word&rsquo;s creativity by</p>\n\n<p>unleashing the power of content.</p>\n', NULL, NULL, 'about us', 'about us', 'The total cost of ownership for software created in this manner is reduced', NULL, 0, NULL, NULL, '2019-03-14 06:30:33', '2020-08-01 08:00:23'),
+(138, 'PAGE INFO', NULL, '<p>Description of the page&nbsp;&nbsp;Description of the page&nbsp;Description of the page&nbsp;Description of the page&nbsp;Description of the page&nbsp;Description of the page&nbsp;</p>\n', NULL, NULL, '', '', '', NULL, 0, NULL, NULL, '2019-03-21 00:31:43', '2020-07-31 15:04:10');
 
 -- --------------------------------------------------------
 
@@ -1841,19 +1423,19 @@ CREATE TABLE `product` (
 --
 
 INSERT INTO `product` (`product_id`, `sku`, `upc`, `quantity`, `stock_status_id`, `image`, `image_path`, `manufacturer_id`, `shipping`, `price`, `date_available`, `sort_order`, `name`, `description`, `amount`, `meta_tag_title`, `meta_tag_description`, `meta_tag_keyword`, `discount`, `subtract_stock`, `minimum_quantity`, `location`, `wishlist_status`, `delete_flag`, `is_featured`, `rating`, `condition`, `today_deals`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(286, 'AB000012', '23324442555', 100, 2, NULL, NULL, 73, 1, '70000', '2019-05-11', 1, 'Sony DSC W830 Cyber-shot 20.1 MP Point and Shoot Camera', '<p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Super HAD CCD sensor with 20.1 effective megapixels<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;720p MP4 movie mode the camera shoots 1280 x 720 high definition movies at 30 fps<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;8x optical zoom Carl Zeiss Vario Tessar lens.Refer user manual<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Equipped with sweep panorama, intelligent auto and picture effect<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;2.7-inch (230K dots) clear photo LCD display, Fpr any queries call brand toll free number: 18001037799</p>\n', NULL, 'Sony DSC W830 Cyber-shot 20.1 MP Point and Shoot Camera', NULL, NULL, NULL, 1, 20, 'Tamin nadu', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 04:39:46', '2019-05-11 05:29:54'),
-(287, 'AB000012', '23334335446', 100, 2, NULL, NULL, 63, 1, '91900', '2019-05-12', 1, 'Apple iPhone X', '<p>Size name:&nbsp;64GB</p>\n\n<ul>\n	<li>5.8-inch Super Retina display (OLED) with HDR</li>\n	<li>IP67 water and dust resistant (maximum depth of 1 meter up to 30 minutes)</li>\n	<li>12MP dual cameras with dual OIS and 7MP TrueDepth front camera&mdash;Portrait mode and Portrait Lighting</li>\n	<li>Face ID for secure authentication</li>\n	<li>A11 Bionic with Neural Engine</li>\n	<li>Wireless charging&mdash;works with Qi chargers</li>\n	<li>iOS 12 with Memoji, Screen Time, Siri Shortcuts, and Group FaceTime</li>\n</ul>\n', NULL, 'Apple iPhone X', NULL, NULL, NULL, 1, 20, 'Tamin nadu', 0, 0, 1, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 04:50:42', '2019-05-13 04:43:41'),
-(288, 'AB000014', '544453336444', 100, 2, NULL, NULL, 63, 1, '20000', '2019-05-10', 1, 'Samsung Guru 1200', '<p>oly Ringtone, Mini-SIM<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;1.52-inch TFT screen with 128x128 pixels resolution; Network: GSM (900/1,800MHz)<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Samsung proprietary operating system<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;800mAH battery providing talktime of 7 hours and standby time of 720 hours<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;1 year manufacturer warranty for device and 6 month manufacturer warranty for in-box accessories including batteries from the date of purchase<br />\n&nbsp;</p>\n', NULL, 'Samsung Guru 1200', NULL, NULL, NULL, 1, 20, 'India', 0, 0, 1, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 04:58:37', '2019-05-11 05:29:54'),
-(289, 'V1100', '', 100, 2, NULL, NULL, 23, 2, '28990', '2019-05-10', 1, 'Vivo V11 Pro (Starry Night Black, 6GB RAM, 64GB Storage)', '<ul>\n	<li>Camera: 12+5 MP Dual pixel rear camera with Ultra HD mode, PPT mode, Professional mode, Slow motion, Time-lapse photography, Camera filter, Live photo, Bokeh mode, HDR mode, AI face beauty, Panorama, Palm capture, Gender detection, Retina flash, AR stickers, AI face shaping, Time watermark, AI selfie lighting, AI scene recognition, Google lens, AI portrait framing | 25 MP front camera</li>\n	<li>Display: 16.29 centimetres (6.41-inch) FHD+ Super AMOLED capacitive touchscreen with 2340x1080 pixels, 403 ppi pixel density and 19.5:9 aspect ratio ; V11 Pro comes with an optical fingerprint sensor hidden beneath the display</li>\n	<li>Memory, Storage &amp; SIM: 6GB RAM | 64GB storage expandable up to 256GB | Dual nano SIM with dual-standby (4G+4G)</li>\n	<li>Operating System and Processor: Android v8.1 Oreo based on Funtouch 4.5 operating system with Qualcomm Snapdragon 660AIE octa core processor</li>\n	<li>Battery: 3400 mAH lithium ion battery with Dual-Engine fast charging</li>\n	<li>Warranty: 1 year manufacturer warranty for device and 6 months manufacturer warranty for in-box accessories including batteries from the date of purchase,for any issues, reach out to brand at 18001023388</li>\n	<li>Included in box: Earphone, Micro USB to USB Cable, USB power adapter, Protective case</li>\n</ul>\n', NULL, '', NULL, NULL, NULL, 1, 2, '', 0, 0, 1, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 05:10:27', '2019-05-10 07:28:49'),
-(290, 'AB000018', '54446555766', 100, 2, NULL, NULL, 93, 1, '40000', '2019-05-10', 1, ' HP Pavilion-15-cc134Tx 2017 15.6-inch Laptop', '<p>1.8GHz Intel core_i7 processor<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;8GB DDR4 RAM<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;2TB Serial ATA hard drive<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;15.6-inch screen, NVIDIA GeForce 940MX (4 GB DDR3 dedicated) 4GB Graphics<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Windows 10 home operating system<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;0.30 kg laptop<br />\n&nbsp;</p>\n', NULL, ' HP Pavilion-15-cc134Tx 2017 15.6-inch Laptop', NULL, NULL, NULL, 1, 20, 'India', 0, 0, 1, 0, 1, 1, 1, NULL, NULL, '2019-05-10 05:23:03', '2019-05-12 01:13:20'),
-(292, 'ST00004', '2778668990', 100, 2, NULL, NULL, 76, 1, '400', '2019-05-07', 1, 'Latest Collection 100% Cotton Full Sleeve Plain Men Tshirt', '<p>&nbsp;100% COTTON MATERIAL || FULL SLEEVE T-SHIRT<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;MFG : Flat Knitting || Wash Care : Dry Clean Only, Do not wring<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;This Product Uniquely designed by SDK Fashion.<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Disclaimer :- PRODUCT COLOR MAY SLIGHTLY VARY DUE TO PHOTOGRAPHIC LIGHTING SOURCES OR YOUR MONITOR SETTINGS.<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;SDK Fashion<br />\n&nbsp;</p>\n', NULL, 'Latest Collection 100% Cotton Full Sleeve Plain Men Tshirt', NULL, NULL, NULL, 1, 20, 'U.K', 0, 0, 1, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 05:51:02', '2019-05-11 08:51:55'),
-(293, 'WA00004', '78889665330', 100, 2, NULL, NULL, 96, 1, '12000', '2019-04-18', 1, 'Fastrack Chrono Upgrade Analog Black Dial Men\'s Watch -NK3072SM02', '<p>Case Shape: Round, Dial Glass Material: Mineral<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Band Color: Silver, Band Material: Stainless Steel<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Watch Movement Type: Quartz, Watch Display Type: Analog<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Case Material: Stainless Steel, Case Diameter: 52.5 x 48.3 millimeters<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Water Resistance Depth: 50 meters, Deployment Clasp<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;1 Year Manufacturing Warranty and 6 Months Battery Warranty<br />\n&nbsp;</p>\n', NULL, 'Fastrack Chrono Upgrade Analog Black Dial Men\'s Watch -NK3072SM02', NULL, NULL, NULL, 1, 20, 'India', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 06:04:50', '2019-05-10 06:14:13'),
-(294, 'SK000230', '678967956989', 10, 2, NULL, NULL, 72, 1, '2000', '2019-05-17', 1, 'Casio SA-76 KM15 Digital Portable Keyboard  (44 Keys)', '<p>Let your child play some delightful tunes using this digital portable keyboard from Casio whose ergonomic design with 44 Mini-sized Keys will bring out the creative best in your little one. It comes with about 100 tones, 50 rhythms, and 10 built-in songs to let your child unearth new variations of music.</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, 'chennai', 0, 0, 0, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 06:07:25', '2019-05-10 07:19:36'),
-(295, 'SH000012', '155576668550', 100, 2, NULL, NULL, 76, 1, '980', '2019-05-08', 1, 'Men Self Design Formal Shirt', '<p>Product comes in assorted prints. Actual colors and prints might vary for the image shown &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;on the website<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Collection: 24 x 7 ; Style no: 2714<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;80% cotton &amp; 20% poly<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Premium Combed Cotton rich fabric<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Modern fit<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Ribbed crew-neck prevents sagging<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;Authentic Jockey logo label<br />\n&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;To be worn as loungewear leisurewear</p>\n', NULL, 'Men Self Design Formal Shirt', NULL, NULL, NULL, 1, 20, 'U.S.A', 0, 0, 0, 2, 1, 1, 1, NULL, NULL, '2019-05-10 06:18:17', '2019-05-13 00:05:50'),
-(298, 'SK868788', 'FR579896', 10, 2, NULL, NULL, 70, 1, '3500', '2019-05-10', 1, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', '<p>Highlights</p>\n\n<ul>\n	<li>Type: Cars &amp; Bikes</li>\n	<li>Material: Plastic</li>\n	<li>Battery Operated, 2 Battteries</li>\n	<li>Rechargeable Batteries</li>\n	<li>Width x Height: 6 inch x 3 inch</li>\n	<li>Minimum Age: 4 years</li>\n</ul>\n\n<p>&nbsp;</p>\n', NULL, 'AR Enterprises RC Jackman 1:18 Ferrari Style Racing Rechargeable Car With Radio Control Steering  (Red)', NULL, NULL, NULL, 1, 1, 'CHENNAI', 0, 0, 0, 2, 1, 1, 1, NULL, NULL, '2019-05-10 06:43:29', '2019-05-13 02:57:55'),
-(299, 'CS000016', '666000800010', 100, 2, NULL, NULL, 75, 1, '700', '2019-03-21', 1, 'Red Tape Men\'s Boat Shoes', '<ul>\n	<li>Closure: Lace-Up</li>\n	<li>Material Type: Leather</li>\n	<li>Lifestyle: Casual</li>\n	<li>Closure Type: Lace-Up</li>\n	<li>Toe Style: Round Toe;Warranty Type: Manufacturer</li>\n	<li>There might be minor color variation between actual product and image shown on screen due to lighting on the photography</li>\n	<li>Product warranty against manufacturing defects: 90 days</li>\n	<li>Care Instructions: Clean your shoes with leather cleaner or leather shampoo, and use a good quality brush to remove loose surface dirt; if your shoes are wet after cleaning, let them air-dry before your proceed with the next step; dry shoes in room temperature only and never expose them to the sun, heat from the sun will cause the leather to shrink, wrinkle, harden, dry, and crack</li>\n</ul>\n', NULL, 'Red Tape Men\'s Boat Shoes', NULL, NULL, NULL, 1, 20, 'India', 0, 0, 0, 0, 1, 0, 1, NULL, NULL, '2019-05-10 06:51:47', '2019-05-12 01:13:17'),
-(300, 'WT000011', '80070077330', 100, 2, NULL, NULL, 96, 1, '8000', '2019-02-13', 1, 'Timex Analog Blue Dial Men\'s Watch', '<ul>\n	<li>Dial Color: Blue, Case Shape: Round, Dial Glass Material: Mineral, Buckle Clasp</li>\n	<li>Band Color: Brown, Band Material: Leather</li>\n	<li>Watch Movement Type: Quartz, Watch Display Type: Analog</li>\n	<li>Case Material: Brass, Case Diameter: 40 millimeters, Brass Bezel ; Case Thickness: 8.8mm</li>\n	<li>Water Resistance Depth: 30 meters,</li>\n	<li>1 year domestic warranty</li>\n</ul>\n', NULL, 'Timex Analog Blue Dial Men\'s Watch', NULL, NULL, NULL, 1, 20, 'Tamil nadu', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 07:19:51', '2019-05-10 07:22:52'),
-(302, 'BB000066', '188000267534', 100, 3, NULL, NULL, 94, 1, '600', '2019-05-11', 1, 'MINNOW Girl\'s Cotton Printed T-Shirt', '<ul>\n	<li>Fit Type: Regular Fit</li>\n	<li>Material : 100% Premium Quality Compact Cotton</li>\n	<li>Wash Care : Cold Machine Wash.</li>\n	<li>Sizes Available : 4-5 Yrs to 14-15 Yrs</li>\n	<li>Perfect for Party,Shopping,Cool Outfit,Etc.</li>\n	<li>Pair It With &quot;Minnow&quot; capris or Jeans for Cool look.</li>\n	<li>Handcrafted by brand &quot;Minnow&quot;</li>\n</ul>\n', NULL, 'MINNOW Girl\'s Cotton Printed T-Shirt', NULL, NULL, NULL, 1, 20, 'Tamil naadu', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 07:34:55', '2019-05-10 08:14:18');
+(286, '555', '', 12, 2, NULL, NULL, 63, 1, '70000', '2020-07-29', 0, 'Set of 92 exam', '<p>Product: Set of 92 Experiments - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 400,000<br />\nSet of 92 experiments to create colorful interesting experiments that satisfy your baby&#39;s dream of doing science<br />\nA variety of products for use such as: fairy tears, cabbage, ,, transition colors, artificial snow ...<br />\nLet your child put on a white blouse and become a child scientist now<br />\nCompact product, absolute safety for the baby<br />\nPracticing intellect, observation ability, practical ability</p>\n\n<p>------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 04:39:46', '2020-08-01 10:02:29'),
+(287, '111', '', 10, 2, NULL, NULL, 74, 1, '210000', '2020-07-31', 0, 'Touch light on and off automatically', '<p>Product: Induction Open Light - STEM Toys - Smart Assembly Toys<br />\n- STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 310,000<br />\nThe auto-opening sensor light will automatically turn on when someone enters the sensor area and will automatically turn off after 30 seconds when no people are available.</p>\n\n<p>Touch lights automatically open from wood, so you can paint another color to match the buildings in the house</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about the STEM Toy Auto-open Induction Lamp.</p>\n\n<p>The auto-opening touch light is a smart toy that is easy to assemble, improving practical ability, thinking ability and innovation ability.<br />\nDeveloping ability: intellect, grasping, crafting, visioning, practicing hobbies, senses, emotions, hand-eye coordination</p>\n\n<p>Wood products are absolutely safe for children</p>\n\n<p>------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 04:50:42', '2020-08-01 10:02:43'),
+(288, '666', '', 16, 3, NULL, NULL, 65, 1, '80000', '2020-07-30', 0, 'Weather station', '<p>Product: Meteorological Station - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 157,000<br />\nMeteorological Station STEM - is a hand-made DIY toy model with detailed instructions for children assembling by hand,<br />\nexercise children&#39;s ability to practice and observe, and train children&#39;s patience. ability to think and be able to innovate.</p>\n\n<p>STEM Meteorological Station is a versatile 6-in-1 product that helps children learn about wind, rain, temperature, greenhouse effects and water circulation.</p>\n\n<p>1. Anemometer</p>\n\n<p>2. Wind speed meter</p>\n\n<p>3. Thermometer measures temperature</p>\n\n<p>4. Rainfall meter</p>\n\n<p>5. The greenhouse effect</p>\n\n<p>6. The closed ecosystem of the tree</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM Meteorological Station of STEM Toys.</p>\n\n<p>STEM weather station is entirely made of ABS, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 04:58:37', '2020-08-01 10:06:29'),
+(289, '777', '', 98, 2, NULL, NULL, 72, 1, '57000', NULL, 0, 'Planting set', '<p>Product: STEM Planting Set - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 157,000<br />\nSTEM Planting Kit - is a hand-made DIY toy model with detailed instructions for children assembling by hand,<br />\nexercise children&#39;s ability to practice and observe, and train children&#39;s patience. ability to think and innovate</p>\n\n<p>STEM Plant Set is a product for children to see the growth of the tree, see the roots, stems, leaves. Supplement biological knowledge for children.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM Planting Kit of STEM Toys.</p>\n\n<p>STEM tree planting kit is entirely made of ABS plastic, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 05:10:27', '2020-08-01 10:03:21'),
+(290, '888', '', 45, 2, NULL, NULL, 73, 1, '123000', '2020-07-29', 0, 'toy water filter', '<p>Product: STEM Water Filter - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 133,000<br />\nSTEM water filter - is a hand-made DIY toy model with detailed instructions for children assembling by hand,<br />\nexercise children&#39;s ability to practice and observe, and train their patience.</p>\n\n<p>STEM water filters are models of filtration from dirty water to clean, usable water.<br />\n&nbsp;Development of biological and chemical knowledge is very helpful. It is suitable for demonstration teaching in students&#39; classroom.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM Water Filter of STEM Toys.<br />\nSTEM water filter made entirely of ABS plastic, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, 0, 1, 1, 1, NULL, NULL, '2019-05-10 05:23:03', '2020-08-01 10:03:44'),
+(292, '222', '', 10, 3, NULL, NULL, 79, 1, '34500', '2020-07-29', 0, '3D screen model', '<p>Product: 3D Solar System Model - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 133,000<br />\n3D solar system model - is a 3D solar system model, simulating the solar system, assembled and created by the children themselves.</p>\n\n<p>3D solar system model helps children learn about the solar system, the names of 9 planets, distances, diameters and other useful information.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM Missiles of STEM Toys.</p>\n\n<p>The 3D solar system model is a smart toy that is easy to assemble, improving practical ability, thinking ability and innovation ability.<br />\n3D solar system model is entirely made of ABS plastic, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 05:51:02', '2020-08-01 10:04:02'),
+(293, '444', '', 41, 1, NULL, NULL, 63, 1, '45321', '2020-07-24', 0, 'Environmental battery', '<p>Product: STEM Environmental Battery - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 42,000<br />\nSTEM environmental battery - intellectual development STEM toy</p>\n\n<p>STEM environmental battery - is a hand-made DIY toy model with detailed instructions for children assembling by hand,<br />\n&nbsp;exercise children&#39;s ability to practice and observe, and train their patience.</p>\n\n<p>STEM environmental battery is a versatile product that is tested in a series of products: generating electricity from potatoes, lemons, water bottles, coins, soft drinks ...</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM environmental electric battery of STEM Toys.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 1, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 06:04:50', '2020-08-01 10:06:35'),
+(294, '333', '', 12, 2, NULL, NULL, 75, 1, '54600', '2020-07-31', 0, 'Toy rocket', '<p>Product: STEM Missile - STEM Toy - Smart Toy - Assembly Toy - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 123,000<br />\nSTEM rocket - is a hand-made DIY toy model with detailed instructions for children to assemble by hand, train their ability to practice and observe, and train their patience. innovation ability, creative thinking</p>\n\n<p>STEM rocket helps children learn about air pressure and uses pressure to launch a rocket into the sky. Also learn about oblique throw equations, experiment with tilt angles to throw the furthest.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children. Let&#39;s assemble &amp; learn with your child about STEM Missiles of STEM Toys.<br />\nSTEM rocket is completely ABS plastic, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 1, 0, 1, NULL, 1, 1, 1, NULL, NULL, '2019-05-10 06:07:25', '2020-08-01 10:22:35'),
+(295, '999', '', 34, 1, NULL, NULL, 79, 1, '54000', '2020-07-31', 0, 'Smart fire fan', '<p>Product: Intelligent Fire Fan - STEM Toys - Smart Toys - Assembly Toys - STEM LEARNING<br />\n--------------------PRODUCT INFORMATION------------------<br />\nPrice: 186,000<br />\nSmart fire fan is a hand-made DIY toy model with detailed instructions for children to assemble by hand,<br />\nexercise children&#39;s ability to practice and observe, and train children&#39;s patience. ability to think and innovate</p>\n\n<p>The intelligent fire-fighting fan mainly uses infrared flame sensor to detect the fire, then transmits the low signal to the relay module, then drives the horn through the relay to emit alarm and audible sounds. .<br />\nAt the same time, the motor drives the propeller to blow the fire source.<br />\nIt is suitable for demonstration in classroom teaching by students, using small-scale inventions, manual labor and small production.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about STEM Toys Smart Fire Fan.<br />\nIntelligent fire-fighting fan is completely made of ABS plastic, absolutely safe for children to use.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 0, 2, 1, 1, 1, NULL, NULL, '2019-05-10 06:18:17', '2020-08-01 10:04:47'),
+(299, '1000', '', 45, 1, NULL, NULL, 63, 1, '76000', '2020-07-31', 0, 'Solar boat', '<p>Today, clean energy - solar energy has been applied a lot in life, contributing to environmental protection and Earth protection.<br />\nSo where does solar power come from? Let your child answer that question through the &quot;Solar Boat&quot; product.</p>\n\n<p>Solar batteries are capable of converting solar energy (energy from light) into electricity.<br />\nbased on the principle of the photovoltaic emission electrons when illuminated. Photovoltaic batteries (solar cells) are made from photovoltaic cells.<br />\nThe solar boat is an easy-to-assemble smart toy that improves hands-on, thinking, and innovation.<br />\nSolar boat is entirely made of ABS plastic, absolutely safe for children to use.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about the STEM Toy Solar Boat.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 0, 0, 1, 0, 1, NULL, NULL, '2019-05-10 06:51:47', '2020-08-01 10:05:04'),
+(300, '1234', '', 25, 3, NULL, NULL, 75, 1, '89000', '2020-07-30', 0, 'Password type box', '<p>Today, clean energy - solar energy has been applied a lot in life, contributing to environmental protection and Earth protection.<br />\nSo where does solar power come from? Let your child answer that question through the &quot;Solar Boat&quot; product.</p>\n\n<p>Solar batteries are capable of converting solar energy (energy from light) into electricity.<br />\nbased on the principle of the photovoltaic emission electrons when illuminated. Photovoltaic batteries (solar cells) are made from photovoltaic cells.<br />\nThe solar boat is an easy-to-assemble smart toy that improves hands-on, thinking, and innovation.<br />\nSolar boat is entirely made of ABS plastic, absolutely safe for children to use.</p>\n\n<p>A complete product - A smart toy - Evoking profound knowledge for children.<br />\nLet&#39;s assemble &amp; learn with your child about the STEM Toy Solar Boat.<br />\n------<br />\nRemember: &quot;Scientific knowledge + educational ability = future competitiveness&quot;<br />\nSee product details at:</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 07:19:51', '2020-08-01 10:05:32'),
+(302, '3467', '', 34, 1, NULL, NULL, 83, 1, '123000', '2020-07-31', 0, 'Robot bionic', '<p>The bionic wind robot is a hand-made DIY toy model with detailed instructions for children assembling by hand,<br />\nexercise children&#39;s ability to practice and observe, and train their patience.</p>\n\n<p>The Viking bionic wind robot doesn&#39;t need any electric fuel.<br />\nIt cares about the wind, the wind like its snacks, it relies on wind energy to run.<br />\nRely on mechanical principles and natural wind to move forward.<br />\nThe intelligence of the structure lies in the proper use of the balance to convert physical variables, and the energy conversion rate is very high.</p>\n\n<p>Production method: specially designed, no need to use glue, safe and convenient. A clever and exciting assembly journey of the product.</p>\n\n<p>Bionics is primarily for observing, studying and simulating the special abilities of the organism in nature, including structure, principles, behavior, various organ functions, chemical processes and physics, energy supplies, memory and the movements of organisms. Therefore, scientists use these principles to provide new design ideas, working principles and scientific and technical methods of system architecture to create new ones.</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, '', 0, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2019-05-10 07:34:55', '2020-07-31 15:56:33'),
+(303, '123123', 'weq', 45, 2, NULL, NULL, 92, 1, '12000', '2020-08-01', 1, 'San pham nhieu danh muc', '<p>dsadsa</p>\n', NULL, '', NULL, NULL, NULL, 1, 1, 'vn', NULL, 0, 0, NULL, 1, 0, 1, NULL, NULL, '2020-08-01 11:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -1901,21 +1483,21 @@ CREATE TABLE `product_discount` (
 --
 
 INSERT INTO `product_discount` (`product_discount_id`, `product_id`, `quantity`, `priority`, `price`, `date_start`, `date_end`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(348, 286, 1, 1, '45000.0000', '2019-05-11', '2019-05-15', NULL, NULL, NULL, NULL, NULL),
 (354, 291, 1, 1, '35000.0000', '2019-05-11', '2019-05-15', NULL, NULL, NULL, NULL, NULL),
-(360, 292, 1, 1, '350.0000', '2019-05-15', '2019-06-19', NULL, NULL, NULL, NULL, NULL),
-(361, 290, 1, 1, '38000.0000', '2019-05-11', '2019-05-22', NULL, NULL, NULL, NULL, NULL),
-(362, 288, 1, 1, '15000.0000', '2019-05-11', '2019-05-21', NULL, NULL, NULL, NULL, NULL),
-(363, 293, 1, 1, '11000.0000', '2019-05-05', '2019-05-16', NULL, NULL, NULL, NULL, NULL),
-(365, 294, 1, 1, '1500.0000', '2019-05-06', '2019-05-17', NULL, NULL, NULL, NULL, NULL),
-(367, 295, 1, 1, '800.0000', '2019-06-05', '2019-05-31', NULL, NULL, NULL, NULL, NULL),
 (370, 298, 0, 0, '0.0000', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(371, 299, 1, 1, '650.0000', '2019-04-11', '2019-05-23', NULL, NULL, NULL, NULL, NULL),
-(373, 287, 1, 1, '80.0000', '2019-05-13', '2019-05-20', NULL, NULL, NULL, NULL, NULL),
-(375, 300, 1, 1, '6500.0000', '2019-05-25', '2019-06-13', NULL, NULL, NULL, NULL, NULL),
-(378, 289, 5, 5, '27500.0000', '2019-05-08', '2019-05-14', NULL, NULL, NULL, NULL, NULL),
-(379, 302, 1, 1, '550.0000', '2019-05-31', '2019-06-05', NULL, NULL, NULL, NULL, NULL),
-(381, 285, 0, 0, '0.0000', NULL, NULL, NULL, NULL, NULL, '2019-05-11 07:29:15', NULL);
+(381, 285, 0, 0, '0.0000', NULL, NULL, NULL, NULL, NULL, '2019-05-11 07:29:15', NULL),
+(395, 302, 1, 1, '14000.0000', '2020-07-30', '2020-08-02', NULL, NULL, NULL, '2020-07-31 15:56:33', NULL),
+(396, 294, 12, 1, '21000.0000', '2020-07-31', '2020-08-03', NULL, NULL, NULL, '2020-08-01 10:02:13', NULL),
+(398, 287, 3, 1, '20000.0000', '2020-07-31', '2020-08-01', NULL, NULL, NULL, '2020-08-01 10:02:43', NULL),
+(399, 288, 4, 1, '35000.0000', '2020-07-30', '2020-08-04', NULL, NULL, NULL, '2020-08-01 10:02:58', NULL),
+(400, 289, 1, 1, '54000.0000', '2020-07-21', '2020-08-06', NULL, NULL, NULL, '2020-08-01 10:03:21', NULL),
+(401, 290, 1, 1, '12300.0000', '2020-07-29', '2020-08-03', NULL, NULL, NULL, '2020-08-01 10:03:44', NULL),
+(402, 292, 2, 1, '20000.0000', '2020-07-29', '2020-07-31', NULL, NULL, NULL, '2020-08-01 10:04:02', NULL),
+(403, 293, 12, 1, '12345.0000', '2020-07-31', '2020-08-03', NULL, NULL, NULL, '2020-08-01 10:04:19', NULL),
+(404, 295, 1, 1, '35000.0000', '2020-07-30', '2020-08-04', NULL, NULL, NULL, '2020-08-01 10:04:47', NULL),
+(405, 299, 1, 1, '45000.0000', '2020-07-29', '2020-08-03', NULL, NULL, NULL, '2020-08-01 10:05:04', NULL),
+(406, 300, 1, 1, '56000.0000', '2020-07-30', '2020-08-04', NULL, NULL, NULL, '2020-08-01 10:05:32', NULL),
+(407, 303, 12, 1, '10000.0000', '2020-08-01', '2020-08-06', NULL, NULL, NULL, '2020-08-01 11:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -1942,47 +1524,24 @@ CREATE TABLE `product_image` (
 --
 
 INSERT INTO `product_image` (`product_image_id`, `product_id`, `image`, `container_name`, `default_image`, `sort_order`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(1886, 286, 'Img_1557479013318.jpeg', 'Product/Electronics/Camera/', 1, NULL, NULL, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(1887, 286, 'Img_1557479003244.jpeg', 'Product/Electronics/Camera/', 0, NULL, NULL, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(1888, 286, 'Img_1557478996350.jpeg', 'Product/Electronics/Camera/', 0, NULL, NULL, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(1926, 292, 'Img_1557485282860.jpeg', 'Product/MensFashion/TopWear/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(1927, 292, 'Img_1557485274204.jpeg', 'Product/MensFashion/TopWear/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(1928, 292, 'Img_1557485295229.jpeg', 'Product/MensFashion/TopWear/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(1929, 290, 'Img_1557483584798.jpeg', 'Product/Electronics/Laptops/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(1930, 290, 'Img_1557483592204.jpeg', 'Product/Electronics/Laptops/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(1931, 290, 'Img_1557483575649.jpeg', 'Product/Electronics/Laptops/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(1932, 290, 'Img_1557483601109.jpeg', 'Product/Electronics/Laptops/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(1933, 288, 'Img_1557482120827.jpeg', 'Product/Electronics/Mobile/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(1934, 288, 'Img_1557482153783.jpeg', 'Product/Electronics/Mobile/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(1935, 288, 'Img_1557482139753.jpeg', 'Product/Electronics/Mobile/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(1936, 293, 'Img_1557485979558.jpeg', 'Product/MensFashion/Watches/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(1937, 293, 'Img_1557485991788.jpeg', 'Product/MensFashion/Watches/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(1938, 293, 'Img_1557486005501.jpeg', 'Product/MensFashion/Watches/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(1939, 293, 'Img_1557485999083.jpeg', 'Product/MensFashion/Watches/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(1942, 294, 'Img_1557484873382.jpeg', 'Product/BabyandKids/Toys/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:12:39', NULL),
-(1943, 294, 'Img_1557484910798.jpeg', 'Product/BabyandKids/Toys/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:12:39', NULL),
-(1947, 295, 'Img_1557486951819.jpeg', 'Product/MensFashion/TopWear/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:30:28', NULL),
-(1948, 295, 'Img_1557486941810.jpeg', 'Product/MensFashion/TopWear/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:30:28', NULL),
-(1949, 295, 'Img_1557486925844.jpeg', 'Product/MensFashion/TopWear/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:30:28', NULL),
 (1951, 296, 'Img_1557487542287.jpeg', 'Product/BabyandKids/Toys/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:31:35', NULL),
 (1955, 298, 'Img_1557488489793.jpeg', 'Product/BabyandKids/Toys/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:43:29', NULL),
 (1956, 298, 'Img_1557488500018.jpeg', 'Product/BabyandKids/Toys/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:43:29', NULL),
-(1957, 299, 'Img_1557488842454.jpeg', 'Product/MensFashion/FootWear/Casual Shoes/', 1, NULL, NULL, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(1958, 299, 'Img_1557488880089.jpeg', 'Product/MensFashion/FootWear/Casual Shoes/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(1959, 299, 'Img_1557488867645.jpeg', 'Product/MensFashion/FootWear/Casual Shoes/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(1960, 299, 'Img_1557488834938.jpeg', 'Product/MensFashion/FootWear/Casual Shoes/', 0, NULL, NULL, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(1964, 287, 'Img_1557490591725.jpeg', '', 0, NULL, NULL, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(1965, 287, 'Img_1557481636009.jpeg', 'Product/Electronics/Mobile/', 1, NULL, NULL, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(1966, 287, 'Img_1557490608386.jpeg', '', NULL, NULL, NULL, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(1970, 300, 'Img_1557489636666.jpeg', 'Product/MensFashion/Watches/', 1, NULL, NULL, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(1971, 300, 'Img_1557489628164.jpeg', 'Product/MensFashion/Watches/', 0, NULL, NULL, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(1972, 300, 'Img_1557489617413.jpeg', 'Product/MensFashion/Watches/', 0, NULL, NULL, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(1977, 289, 'Img_1557491249919.jpeg', '', NULL, NULL, NULL, NULL, NULL, '2019-05-10 07:28:49', NULL),
-(1978, 289, 'Img_1557491239529.jpeg', '', 1, NULL, NULL, NULL, NULL, '2019-05-10 07:28:49', NULL),
-(1979, 302, 'Img_1557491588084.jpeg', 'Product/BabyandKids/GirlsClothing/', 0, NULL, NULL, NULL, NULL, '2019-05-10 07:34:55', NULL),
-(1980, 302, 'Img_1557491577745.jpeg', 'Product/BabyandKids/GirlsClothing/', 1, NULL, NULL, NULL, NULL, '2019-05-10 07:34:55', NULL),
 (1983, 285, 'Img_1557476594786.jpeg', 'Product/Electronics/Camera/', 1, NULL, NULL, NULL, NULL, '2019-05-11 07:29:15', NULL),
-(1984, 285, 'Img_1557476583444.jpeg', 'Product/Electronics/Camera/', 0, NULL, NULL, NULL, NULL, '2019-05-11 07:29:15', NULL);
+(1984, 285, 'Img_1557476583444.jpeg', 'Product/Electronics/Camera/', 0, NULL, NULL, NULL, NULL, '2019-05-11 07:29:15', NULL),
+(2000, 302, 'Img_1596185762120.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-07-31 15:56:33', NULL),
+(2001, 294, 'Img_1596184214751.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:02:13', NULL),
+(2002, 286, 'Img_1596184625847.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:02:29', NULL),
+(2003, 287, 'Img_1596183443080.jpeg', 'Product/sanpham2tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:02:43', NULL),
+(2004, 288, 'Img_1596184788512.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:02:58', NULL),
+(2005, 289, 'Img_1596184923009.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:03:21', NULL),
+(2006, 290, 'Img_1596185092980.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:03:44', NULL),
+(2007, 292, 'Img_1596184021548.jpeg', 'Product/4tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:04:02', NULL),
+(2008, 293, 'Img_1596184397808.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:04:19', NULL),
+(2009, 295, 'Img_1596185246263.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:04:47', NULL),
+(2010, 299, 'Img_1596185419864.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:05:04', NULL),
+(2011, 300, 'Img_1596185617093.jpeg', 'Product/4 tuoi/', 1, NULL, NULL, NULL, NULL, '2020-08-01 10:05:32', NULL),
+(2012, 303, 'Img_1557491249919.jpeg', '', 1, NULL, NULL, NULL, NULL, '2020-08-01 11:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -2075,17 +1634,9 @@ CREATE TABLE `product_related` (
 --
 
 INSERT INTO `product_related` (`related_id`, `product_id`, `related_product_id`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(581, 286, 285, NULL, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(587, 290, 291, NULL, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(588, 288, 287, NULL, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(589, 293, 283, NULL, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(591, 295, 292, NULL, NULL, NULL, '2019-05-10 06:30:28', NULL),
 (592, 296, 294, NULL, NULL, NULL, '2019-05-10 06:31:35', NULL),
 (593, 298, 296, NULL, NULL, NULL, '2019-05-10 06:43:29', NULL),
-(594, 298, 294, NULL, NULL, NULL, '2019-05-10 06:43:29', NULL),
-(595, 299, 297, NULL, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(597, 300, 293, NULL, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(598, 302, 301, NULL, NULL, NULL, '2019-05-10 07:34:55', NULL);
+(594, 298, 294, NULL, NULL, NULL, '2019-05-10 06:43:29', NULL);
 
 -- --------------------------------------------------------
 
@@ -2112,21 +1663,20 @@ CREATE TABLE `product_special` (
 --
 
 INSERT INTO `product_special` (`product_special_id`, `product_id`, `customer_group_id`, `priority`, `price`, `date_start`, `date_end`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(382, 286, NULL, 1, '40000.00', '2019-05-12', '2019-05-20', NULL, NULL, NULL, NULL),
-(394, 292, NULL, 1, '380.00', '2019-05-08', '2019-06-30', NULL, NULL, NULL, NULL),
-(395, 290, NULL, 1, '35000.00', '2019-05-06', '2019-05-28', NULL, NULL, NULL, NULL),
-(396, 288, NULL, 1, '15000.00', '2019-05-08', '2019-05-24', NULL, NULL, NULL, NULL),
-(397, 293, NULL, 1, '10000.00', '2019-04-02', '2019-05-30', NULL, NULL, NULL, NULL),
-(399, 294, NULL, 1, '1700.00', '2019-05-08', '2019-05-18', NULL, NULL, NULL, NULL),
-(401, 295, NULL, 1, '800.00', '2019-05-01', '2019-06-05', NULL, NULL, NULL, NULL),
 (402, 296, NULL, 0, '0.00', NULL, NULL, NULL, NULL, NULL, NULL),
 (404, 298, NULL, 0, '0.00', NULL, NULL, NULL, NULL, NULL, NULL),
-(405, 299, NULL, 1, '600.00', '2019-05-17', '2019-06-06', NULL, NULL, NULL, NULL),
-(407, 287, NULL, 1, '73999.00', '2019-05-09', '2019-05-25', NULL, NULL, NULL, NULL),
-(409, 300, NULL, 1, '6000.00', '2019-05-23', '2019-06-05', NULL, NULL, NULL, NULL),
-(412, 289, NULL, 5, '23990.00', '2019-05-13', '2019-05-18', NULL, NULL, NULL, NULL),
-(413, 302, NULL, 1, '450.00', '2019-05-02', '2019-05-21', NULL, NULL, NULL, NULL),
-(415, 285, NULL, 1, '19000.00', '2019-05-10', '2019-05-31', NULL, NULL, '2019-05-11 07:29:15', NULL);
+(415, 285, NULL, 1, '19000.00', '2019-05-10', '2019-05-31', NULL, NULL, '2019-05-11 07:29:15', NULL),
+(427, 302, NULL, 2, '28000.00', '2020-07-30', '2020-08-08', NULL, NULL, '2020-07-31 15:56:33', NULL),
+(429, 286, NULL, 2, '55000.00', '2020-07-30', '2020-08-03', NULL, NULL, '2020-08-01 10:02:29', NULL),
+(430, 287, NULL, 1, '20000.00', '2020-07-31', '2020-09-08', NULL, NULL, '2020-08-01 10:02:43', NULL),
+(432, 289, NULL, 1, '50000.00', '2020-07-30', '2020-08-05', NULL, NULL, '2020-08-01 10:03:21', NULL),
+(433, 290, NULL, 2, '12500.00', '2020-07-30', '2020-08-04', NULL, NULL, '2020-08-01 10:03:45', NULL),
+(434, 292, NULL, 3, '21000.00', '2020-07-30', '2020-08-03', NULL, NULL, '2020-08-01 10:04:02', NULL),
+(435, 293, NULL, 1, '12346.00', '2020-07-30', '2020-08-04', NULL, NULL, '2020-08-01 10:04:19', NULL),
+(436, 295, NULL, 2, '35000.00', '2020-07-30', '2020-08-04', NULL, NULL, '2020-08-01 10:04:47', NULL),
+(437, 299, NULL, 1, '43000.00', '2020-07-30', '2020-08-04', NULL, NULL, '2020-08-01 10:05:05', NULL),
+(438, 300, NULL, 1, '32000.00', '2020-07-30', '2020-08-04', NULL, NULL, '2020-08-01 10:05:32', NULL),
+(439, 303, NULL, 1, '13000.00', '2020-08-01', '2020-08-06', NULL, NULL, '2020-08-01 11:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -2167,48 +1717,27 @@ CREATE TABLE `product_to_category` (
 --
 
 INSERT INTO `product_to_category` (`product_to_category_id`, `product_id`, `category_id`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
-(2188, 286, 4, 1, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(2189, 286, 16, 1, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(2190, 286, 45, 1, NULL, NULL, '2019-05-10 04:39:46', NULL),
-(2224, 292, 1, 1, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(2225, 292, 9, 1, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(2226, 292, 64, 1, NULL, NULL, '2019-05-10 06:02:35', NULL),
-(2227, 290, 4, 1, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(2228, 290, 14, 1, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(2229, 290, 38, 1, NULL, NULL, '2019-05-10 06:02:59', NULL),
-(2230, 288, 4, 1, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(2231, 288, 13, 1, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(2232, 288, 33, 1, NULL, NULL, '2019-05-10 06:03:38', NULL),
-(2233, 293, 1, 1, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(2234, 293, 11, 1, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(2235, 293, 68, 1, NULL, NULL, '2019-05-10 06:04:50', NULL),
-(2236, 294, 3, 1, NULL, NULL, '2019-05-10 06:12:39', NULL),
-(2237, 294, 50, 1, NULL, NULL, '2019-05-10 06:12:39', NULL),
-(2241, 295, 1, 1, NULL, NULL, '2019-05-10 06:30:28', NULL),
-(2242, 295, 9, 1, NULL, NULL, '2019-05-10 06:30:28', NULL),
-(2243, 295, 65, 1, NULL, NULL, '2019-05-10 06:30:28', NULL),
 (2246, 296, 49, 1, NULL, NULL, '2019-05-10 06:31:35', NULL),
 (2250, 298, 17, 1, NULL, NULL, '2019-05-10 06:43:29', NULL),
 (2251, 298, 48, 1, NULL, NULL, '2019-05-10 06:43:29', NULL),
 (2252, 298, 3, 1, NULL, NULL, '2019-05-10 06:43:29', NULL),
-(2253, 299, 1, 1, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(2254, 299, 7, 1, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(2255, 299, 60, 1, NULL, NULL, '2019-05-10 06:51:47', NULL),
-(2259, 287, 4, 1, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(2260, 287, 13, 1, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(2261, 287, 35, 1, NULL, NULL, '2019-05-10 07:18:22', NULL),
-(2265, 300, 1, 1, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(2266, 300, 11, 1, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(2267, 300, 69, 1, NULL, NULL, '2019-05-10 07:20:35', NULL),
-(2274, 289, 4, 1, NULL, NULL, '2019-05-10 07:28:49', NULL),
-(2275, 289, 13, 1, NULL, NULL, '2019-05-10 07:28:49', NULL),
-(2276, 289, 36, 1, NULL, NULL, '2019-05-10 07:28:49', NULL),
-(2277, 302, 3, 1, NULL, NULL, '2019-05-10 07:34:55', NULL),
-(2278, 302, 19, 1, NULL, NULL, '2019-05-10 07:34:55', NULL),
-(2279, 302, 53, 1, NULL, NULL, '2019-05-10 07:34:55', NULL),
 (2283, 285, 44, 1, NULL, NULL, '2019-05-11 07:29:15', NULL),
 (2284, 285, 4, 1, NULL, NULL, '2019-05-11 07:29:15', NULL),
-(2285, 285, 16, 1, NULL, NULL, '2019-05-11 07:29:15', NULL);
+(2285, 285, 16, 1, NULL, NULL, '2019-05-11 07:29:15', NULL),
+(2301, 302, 96, 1, NULL, NULL, '2020-07-31 15:56:33', NULL),
+(2302, 294, 95, 1, NULL, NULL, '2020-08-01 10:02:13', NULL),
+(2304, 287, 93, 1, NULL, NULL, '2020-08-01 10:02:43', NULL),
+(2305, 288, 95, 1, NULL, NULL, '2020-08-01 10:02:58', NULL),
+(2306, 289, 95, 1, NULL, NULL, '2020-08-01 10:03:21', NULL),
+(2307, 290, 95, 1, NULL, NULL, '2020-08-01 10:03:44', NULL),
+(2308, 292, 94, 1, NULL, NULL, '2020-08-01 10:04:02', NULL),
+(2309, 293, 96, 1, NULL, NULL, '2020-08-01 10:04:19', NULL),
+(2310, 295, 94, 1, NULL, NULL, '2020-08-01 10:04:47', NULL),
+(2311, 299, 95, 1, NULL, NULL, '2020-08-01 10:05:04', NULL),
+(2312, 300, 95, 1, NULL, NULL, '2020-08-01 10:05:32', NULL),
+(2313, 303, 1, 1, NULL, NULL, '2020-08-01 11:10:47', NULL),
+(2314, 303, 3, 1, NULL, NULL, '2020-08-01 11:10:47', NULL),
+(2315, 303, 4, 1, NULL, NULL, '2020-08-01 11:10:47', NULL);
 
 -- --------------------------------------------------------
 
@@ -2232,6 +1761,60 @@ CREATE TABLE `product_view_log` (
   `created_date` datetime DEFAULT NULL,
   `modified_date` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `product_view_log`
+--
+
+INSERT INTO `product_view_log` (`id`, `product_id`, `customer_id`, `first_name`, `last_name`, `email`, `username`, `mobile`, `address`, `is_active`, `created_by`, `modified_by`, `created_date`, `modified_date`) VALUES
+(1, 289, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 08:43:55', NULL),
+(2, 288, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 08:44:45', NULL),
+(3, 292, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 09:51:19', NULL),
+(4, 302, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 10:04:17', NULL),
+(5, 288, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 10:19:21', NULL),
+(6, 288, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-23 10:36:24', NULL),
+(7, 287, 1, 'lamvanhung', NULL, 'lamvanhung01@gmail.com', 'lamvanhung01@gmail.com', 382463233, NULL, NULL, NULL, NULL, '2020-07-28 09:11:00', NULL),
+(8, 298, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:15:28', NULL),
+(9, 298, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:15:38', NULL),
+(10, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:16:19', NULL),
+(11, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:17:47', NULL),
+(12, 298, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:19:07', NULL),
+(13, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:19:14', NULL),
+(14, 292, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:22:28', NULL),
+(15, 293, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:22:57', NULL),
+(16, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:23:12', NULL),
+(17, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:28:30', NULL),
+(18, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:30:31', NULL),
+(19, 298, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:30:43', NULL),
+(20, 294, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:30:49', NULL),
+(21, 298, 3, 'lamhungnuce02', NULL, 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, NULL, NULL, NULL, NULL, '2020-07-29 00:31:11', NULL),
+(22, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:56:30', NULL),
+(23, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:56:30', NULL),
+(24, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:59:28', NULL),
+(25, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:59:29', NULL),
+(26, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:59:45', NULL),
+(27, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 00:59:47', NULL),
+(28, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-07-29 01:03:32', NULL),
+(29, 294, 4, 'leleha', NULL, 'leleha@gmail.com', 'leleha@gmail.com', 91231232, NULL, NULL, NULL, NULL, '2020-07-31 15:57:44', NULL),
+(30, 298, 4, 'leleha', NULL, 'leleha@gmail.com', 'leleha@gmail.com', 91231232, NULL, NULL, NULL, NULL, '2020-07-31 16:36:00', NULL),
+(31, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 07:50:24', NULL),
+(32, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 07:51:19', NULL),
+(33, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 07:53:54', NULL),
+(34, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:21:44', NULL),
+(35, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:21:45', NULL),
+(36, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:22:38', NULL),
+(37, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:22:39', NULL),
+(38, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:23:01', NULL),
+(39, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:23:12', NULL),
+(40, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 08:47:44', NULL),
+(41, 289, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 09:05:20', NULL),
+(42, 294, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 09:06:19', NULL),
+(43, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 10:53:35', NULL),
+(44, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 11:06:37', NULL),
+(45, 298, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 11:06:50', NULL),
+(46, 303, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 11:11:25', NULL),
+(47, 289, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 12:16:02', NULL),
+(48, 290, 3, 'lamhung', 'nuce02', 'lamhungnuce02@gmail.com', 'lamhungnuce02@gmail.com', 123123334, 'Hoang mai, hn, vn', NULL, NULL, NULL, '2020-08-01 12:16:28', NULL);
 
 -- --------------------------------------------------------
 
@@ -2280,7 +1863,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`settings_id`, `url`, `meta_tag_title`, `meta_tag_description`, `meta_tag_keywords`, `store_name`, `store_owner`, `store_address`, `country_id`, `zone_id`, `store_email`, `store_telephone`, `store_fax`, `store_logo`, `store_logo_path`, `maintenance_mode`, `store_language_name`, `store_currency_id`, `store_image`, `store_image_path`, `google`, `facebook`, `twitter`, `instagram`, `order_status`, `invoice_prefix`, `items_per_page`, `category_product_count`, `is_active`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(2, 'www.eshop.com', 'eshopcommerce', 'description', 'keyword', 'online shopping sites in india ', 'Admin', 'Chennai, India', 24, 59, 'admin@eshopcommerce.com', '0000000000', '1221', 'Img_1552892256556.jpeg', 'storeLogo/', 0, 'English', 57, 'storeImage', NULL, 'https://plus.google.com/106505712715559114904', 'https://www.facebook.com/eshopcommerce/', 'https://twitter.com/eshopcommerce', 'https://www.instagram.com/eshop_commerce/', 1, 'SPU', 40, 0, 1, '2019-02-13 06:00:00', '2019-05-10 01:59:16', NULL, NULL);
+(2, 'www.edop.com', 'eshopcommerce', 'description', 'keyword', 'online shopping sites ', 'Admin', 'Ha noi VN', 230, 73, 'admin@shopecommerce.com', '0000000000', '1221', 'Img_1552892256556.jpeg', 'storeLogo/', 0, 'English', 57, 'storeImage', NULL, 'https://www.facebook.com/pon.k.nyt/', 'https://www.facebook.com/pon.k.nyt/', 'https://www.facebook.com/pon.k.nyt/', 'https://www.facebook.com/pon.k.nyt/', 1, 'SPU', 40, 0, 1, '2019-02-13 06:00:00', '2020-07-29 01:16:37', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2339,7 +1922,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `user_group_id`, `username`, `password`, `first_name`, `last_name`, `email`, `avatar`, `avatar_path`, `code`, `ip`, `address`, `phone_number`, `is_active`, `created_date`, `modified_date`, `created_by`, `modified_by`) VALUES
-(49, 1, 'admin@eshopcart.com', '$2a$10$UxGUfPF1/sHJdueBeEQQsOej8hkvEwypOk487D7FjMgi/FhSRLSny', 'Admin', ' ', 'admin@eshopcart.com', 'Img_1558091450014.png', 'user/', NULL, NULL, 'India', 5456465656, 1, '2019-02-15 04:13:22', '2019-05-13 02:12:56', NULL, NULL);
+(49, 1, 'admin@piart.com', '$2a$10$UxGUfPF1/sHJdueBeEQQsOej8hkvEwypOk487D7FjMgi/FhSRLSny', 'Admin', ' ', 'admin@picart.com', 'Img_1558091450014.png', 'user/', NULL, NULL, 'VietNam', 5456465656, 1, '2019-02-15 04:13:22', '2020-07-28 10:14:28', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2775,7 +2358,7 @@ ALTER TABLE `user_group`
 -- AUTO_INCREMENT for table `access_token`
 --
 ALTER TABLE `access_token`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `address`
@@ -2811,7 +2394,7 @@ ALTER TABLE `banner_image_description`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
 
 --
 -- AUTO_INCREMENT for table `category_description`
@@ -2823,7 +2406,7 @@ ALTER TABLE `category_description`
 -- AUTO_INCREMENT for table `category_path`
 --
 ALTER TABLE `category_path`
-  MODIFY `category_path_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_path_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `contact`
@@ -2841,7 +2424,7 @@ ALTER TABLE `country`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `customer_group`
@@ -2865,7 +2448,7 @@ ALTER TABLE `customer_transaction`
 -- AUTO_INCREMENT for table `customer_wishlist`
 --
 ALTER TABLE `customer_wishlist`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `email_template`
@@ -2889,7 +2472,7 @@ ALTER TABLE `language`
 -- AUTO_INCREMENT for table `login_log`
 --
 ALTER TABLE `login_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=545;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=564;
 
 --
 -- AUTO_INCREMENT for table `manufacturer`
@@ -2931,7 +2514,7 @@ ALTER TABLE `option_value_description`
 -- AUTO_INCREMENT for table `order`
 --
 ALTER TABLE `order`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `order_history`
@@ -2943,7 +2526,7 @@ ALTER TABLE `order_history`
 -- AUTO_INCREMENT for table `order_log`
 --
 ALTER TABLE `order_log`
-  MODIFY `order_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_option`
@@ -2955,7 +2538,7 @@ ALTER TABLE `order_option`
 -- AUTO_INCREMENT for table `order_product`
 --
 ALTER TABLE `order_product`
-  MODIFY `order_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `order_product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `order_status`
@@ -2967,7 +2550,7 @@ ALTER TABLE `order_status`
 -- AUTO_INCREMENT for table `order_total`
 --
 ALTER TABLE `order_total`
-  MODIFY `order_total_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_total_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `page`
@@ -2985,7 +2568,7 @@ ALTER TABLE `page_group`
 -- AUTO_INCREMENT for table `product`
 --
 ALTER TABLE `product`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=303;
+  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=304;
 
 --
 -- AUTO_INCREMENT for table `product_description`
@@ -2997,13 +2580,13 @@ ALTER TABLE `product_description`
 -- AUTO_INCREMENT for table `product_discount`
 --
 ALTER TABLE `product_discount`
-  MODIFY `product_discount_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=382;
+  MODIFY `product_discount_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=408;
 
 --
 -- AUTO_INCREMENT for table `product_image`
 --
 ALTER TABLE `product_image`
-  MODIFY `product_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1985;
+  MODIFY `product_image_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2013;
 
 --
 -- AUTO_INCREMENT for table `product_option`
@@ -3027,13 +2610,13 @@ ALTER TABLE `product_rating`
 -- AUTO_INCREMENT for table `product_related`
 --
 ALTER TABLE `product_related`
-  MODIFY `related_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=599;
+  MODIFY `related_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=595;
 
 --
 -- AUTO_INCREMENT for table `product_special`
 --
 ALTER TABLE `product_special`
-  MODIFY `product_special_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=416;
+  MODIFY `product_special_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=440;
 
 --
 -- AUTO_INCREMENT for table `product_tag`
@@ -3045,13 +2628,13 @@ ALTER TABLE `product_tag`
 -- AUTO_INCREMENT for table `product_to_category`
 --
 ALTER TABLE `product_to_category`
-  MODIFY `product_to_category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2286;
+  MODIFY `product_to_category_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2316;
 
 --
 -- AUTO_INCREMENT for table `product_view_log`
 --
 ALTER TABLE `product_view_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT for table `settings`
