@@ -7,7 +7,7 @@ export class CreateUser implements Seed {
     const em = connection.createEntityManager();
     const user = new User();
     user.userId = 1;
-    user.username = 'admin@piccocart.com';
+    user.username = 'admin@eshopcart.com';
     user.password = await User.hashPassword('cart123@');
     user.email = 'no-reply@commerce.com';
     const userGroupData = await factory(UserGroup)().seed();

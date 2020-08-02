@@ -9719,9 +9719,9 @@ define({
       url: '',
       version: '0.0.0',
       filename: 'src/public/apidoc/main.js',
-      group: '_home_piccosoft_Documents_piccocartNew_src_public_apidoc_main_js',
+      group: '_home_eshopsoft_Documents_eshopcartNew_src_public_apidoc_main_js',
       groupTitle:
-        '_home_piccosoft_Documents_piccocartNew_src_public_apidoc_main_js',
+        '_home_eshopsoft_Documents_eshopcartNew_src_public_apidoc_main_js',
       name: '',
     },
     {
@@ -9748,8 +9748,8 @@ define({
       url: '',
       version: '0.0.0',
       filename: 'src/public/main.js',
-      group: '_home_piccosoft_Documents_piccocartNew_src_public_main_js',
-      groupTitle: '_home_piccosoft_Documents_piccocartNew_src_public_main_js',
+      group: '_home_eshopsoft_Documents_eshopcartNew_src_public_main_js',
+      groupTitle: '_home_eshopsoft_Documents_eshopcartNew_src_public_main_js',
       name: '',
     },
     {
