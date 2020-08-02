@@ -8,14 +8,14 @@ export class CreateEmailTemplate implements Seed {
   ): Promise<EmailTemplate> {
     const em = connection.createEntityManager();
     const registerData =
-      "Dear {name},<br/><br/> <p style='margin-bottom:.5em; margin: 0 0 10px 0;text-indent: 50px'> Thank you for expressing your interest and registering with Spurtcommerce, the faster roadway for a smarter eCommerce drive.   </p>";
+      "Dear {name},<br/><br/> <p style='margin-bottom:.5em; margin: 0 0 10px 0;text-indent: 50px'> Thank you for expressing your interest and registering with eshopcommerce, the faster roadway for a smarter eCommerce drive.   </p>";
     const fogotPasswordData =
       "Dear {name},<br/><br/>        <p style='margin-bottom:.5em; margin: 0 0 10px 0;text-indent: 50px'> Your new Password is :  {xxxxxx}  </p>";
     const contactUsData =
       "Dear Admin,<br/><br/>        <p style='margin-bottom:.5em; margin: 0 0 10px 0;text-indent: 50px'> You just received an enquiry from {name} and the details are here: <br> Details: <br> Email: {email}, <br> Phone Number : {phoneNumber}, <br> Message : {message}.  </p>";
     const createCustomerData =
       'Dear {name},<br/><br/>   ' +
-      ' We are glad to inform you that Spurtcommerce  has added you as Customer.Here are your User Credentials for logging into the Application <br>' +
+      ' We are glad to inform you that eshopcommerce  has added you as Customer.Here are your User Credentials for logging into the Application <br>' +
       "     <p style='margin-bottom:.5em; margin: 0 0 10px 0;'>  User ID : {username}</p>     " +
       "   <p style='margin-bottom:.5em; margin: 0 0 10px 0;'>  Password : {password}</p> <br/>        " +
       "<p style='margin-bottom:.5em; margin: 0 0 10px 0;text-indent: 50px'> You may login using the above Email Id and Password. </p>";
