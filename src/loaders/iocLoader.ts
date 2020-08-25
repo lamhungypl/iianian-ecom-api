@@ -4,7 +4,7 @@ import {
   MicroframeworkSettings,
 } from 'microframework-w3tec';
 import { useContainer as routingUseContainer } from 'routing-controllers';
-import { useContainer as typeGraphQLUseContainer } from 'type-graphql';
+// import { useContainer as typeGraphQLUseContainer } from 'type-graphql';
 import { Container } from 'typedi';
 import { useContainer as ormUseContainer } from 'typeorm';
 
@@ -17,5 +17,5 @@ export const iocLoader: MicroframeworkLoader = (
   routingUseContainer(Container);
   ormUseContainer(Container);
   classValidatorUseContainer(Container);
-  typeGraphQLUseContainer(Container);
+  // typeGraphQLUseContainer(Container);
 };
