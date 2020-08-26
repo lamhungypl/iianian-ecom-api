@@ -74,7 +74,8 @@ export class ProductController {
    * HTTP/1.1 500 Internal Server Error
    */
   @Get('/productlist')
-  @Authorized()
+  //don't need authorized when get product list
+  // @Authorized()
   public async productList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,

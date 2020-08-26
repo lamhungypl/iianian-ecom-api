@@ -59,7 +59,7 @@ export class AuthService {
     console.log('userId' + userId);
     const user = await this.userRepository.findOne({
       where: {
-        user_id: userId,
+        userId,
       },
     });
     console.log(user);
