@@ -189,14 +189,13 @@ export class CustomerController {
           defaultImage: 1,
         },
       });
-      const temp: any = productData;
+      const temp: any = { ...productData, pricerefer: '', flag: '' };
+      console.log({ temp, productData });
       const nowDate = new Date();
-      const todaydate =
-        nowDate.getFullYear() +
-        '-' +
-        (nowDate.getMonth() + 1) +
-        '-' +
-        nowDate.getDate();
+      const todaydate = `${nowDate.getFullYear()}-${
+        nowDate.getMonth() + 1
+      }-${nowDate.getDate()}`;
+
       const productSpecial = await this.productSpecialService.findSpecialPrice(
         results.productId,
         todaydate
