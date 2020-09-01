@@ -16,7 +16,7 @@ export class LoginLogRepository extends Repository<LoginLog> {
     query.groupBy('createdDate');
     query.orderBy('createdDate', 'DESC');
     query.limit(limit);
-    console.log({ logList: query.getQuery() });
+    //console.log({ logList: query.getQuery() });
     return query.getRawMany();
   }
 }

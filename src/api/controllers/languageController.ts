@@ -306,7 +306,7 @@ export class LanguageController {
     }
 
     const deleteLanguage = await this.languageService.delete(language);
-    console.log('language' + deleteLanguage);
+    //console.log('language' + deleteLanguage);
     if (deleteLanguage) {
       const successResponse: any = {
         status: 1,

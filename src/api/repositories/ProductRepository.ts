@@ -17,7 +17,7 @@ export class ProductRepository extends Repository<Product> {
     price: number,
     count: number | boolean
   ): Promise<any> {
-    console.log(select);
+    //console.log(select);
     const query: any = await this.manager.createQueryBuilder(
       Product,
       'product'
@@ -65,7 +65,7 @@ export class ProductRepository extends Repository<Product> {
     }
 
     if (priceFrom || priceTo) {
-      console.log({ priceFrom, priceTo });
+      //console.log({ priceFrom, priceTo });
       const minPrice = parseInt(priceFrom) || 0;
       if (priceTo) {
         const maxPrice = parseInt(priceTo);
@@ -94,7 +94,7 @@ export class ProductRepository extends Repository<Product> {
       query.limit(limit);
       query.offset(offset);
     }
-    console.log({ productList_Repo: query.getQuery() });
+    //console.log({ productList_Repo: query.getQuery() });
     if (count) {
       return query.getCount();
     }
@@ -114,7 +114,7 @@ export class ProductRepository extends Repository<Product> {
     query.groupBy('product');
     query.orderBy('orderCount', 'DESC');
     query.limit(limit);
-    console.log({ recentProductSelling: query.getQuery() });
+    //console.log({ recentProductSelling: query.getQuery() });
     return query.getRawMany();
   }
 
@@ -124,7 +124,7 @@ export class ProductRepository extends Repository<Product> {
       'product'
     );
     query.select(maximum);
-    console.log({ productMaxPrice: query.getQuery() });
+    //console.log({ productMaxPrice: query.getQuery() });
 
     return query.getRawOne();
   }

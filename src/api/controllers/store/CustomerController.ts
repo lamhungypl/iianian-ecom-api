@@ -478,7 +478,7 @@ export class CustomerController {
       } else {
         val = await this.imageService.imageUpload(path + name, base64Data);
       }
-      console.log(val);
+      //console.log(val);
       resultData.avatar = name;
       resultData.avatarPath = path;
     }
@@ -602,7 +602,7 @@ export class CustomerController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(loginParam.emailId);
+    //console.log(loginParam.emailId);
     const resultData = await this.customerService.findOne({
       where: { email: loginParam.emailId },
     });

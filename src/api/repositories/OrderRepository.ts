@@ -15,7 +15,7 @@ export class OrderRepository extends Repository<Order> {
     query.orderBy('year', 'ASC');
     query.addOrderBy('month', 'ASC');
     query.limit('12');
-    console.log({ salesList: query.getQuery() });
+    //console.log({ salesList: query.getQuery() });
     return query.getRawMany();
   }
 
@@ -24,7 +24,7 @@ export class OrderRepository extends Repository<Order> {
     query.select(['order.total as total']);
     query.where('DATE(order.createdDate) = :todayDate', { todayDate });
 
-    console.log({ findAllTodayOrder: query.getQuery() });
+    //console.log({ findAllTodayOrder: query.getQuery() });
 
     return query.getRawMany();
   }
@@ -34,7 +34,7 @@ export class OrderRepository extends Repository<Order> {
     query.select(['COUNT(order.orderId) as orderCount']);
     query.where('DATE(order.createdDate) = :todayDate', { todayDate });
 
-    console.log({ findAllTodayOrderCount: query.getQuery() });
+    //console.log({ findAllTodayOrderCount: query.getQuery() });
 
     return query.getRawOne();
   }

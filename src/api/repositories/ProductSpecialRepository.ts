@@ -20,7 +20,7 @@ export class ProductSpecialRepository extends Repository<ProductSpecial> {
     query.orderBy('productSpecial.priority', 'ASC');
     query.addOrderBy('productSpecial.price', 'ASC');
     query.limit('1');
-    console.log({ findSpecialPrice: query.getQuery() });
+    //console.log({ findSpecialPrice: query.getQuery() });
     return query.getRawOne();
   }
 }

@@ -181,9 +181,9 @@ export class ProductController {
         '123##$$)(***&',
         (err, decoded) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           }
-          console.log('lll', decoded.id);
+          //console.log('lll', decoded.id);
           customerId = decoded.id;
         }
       );

@@ -70,8 +70,8 @@ export class UserController {
     @Body({ validate: true }) loginParam: LoginRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(loginParam.username);
-    console.log(loginParam.password);
+    //console.log(loginParam.username);
+    //console.log(loginParam.password);
     const user = await this.userService.findOne({
       where: {
         username: loginParam.username,
@@ -88,7 +88,7 @@ export class UserController {
           newToken.userId = user.userId;
           newToken.token = token;
           const tokenSave = await this.accessTokenService.create(newToken);
-          console.log(tokenSave);
+          //console.log(tokenSave);
         }
         const successResponse: any = {
           status: 1,
@@ -144,7 +144,7 @@ export class UserController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    console.log(keyword);
+    //console.log(keyword);
     const relation = ['usergroup'];
     const WhereConditions = [];
     const user = await this.userService.list(
@@ -211,7 +211,7 @@ export class UserController {
     @Body({ validate: true }) createParam: CreateRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(createParam);
+    //console.log(createParam);
     const userGroupExistWhereCondition = [
       {
         name: 'id',
@@ -237,7 +237,7 @@ export class UserController {
         username: createParam.username,
       },
     });
-    console.log(user);
+    //console.log(user);
     if (user) {
       const errorResponse: any = {
         status: 0,
@@ -246,7 +246,7 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     // return this.userLoginService.find();
-    console.log(createParam.password);
+    //console.log(createParam.password);
     const newUserPassword = await User.hashPassword(createParam.password);
     const newUserParams = new User();
     newUserParams.username = createParam.username;
@@ -304,7 +304,7 @@ export class UserController {
     @Body({ validate: true }) createParam: updateUserRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(createParam);
+    //console.log(createParam);
     const userGroupExistWhereCondition = [
       {
         name: 'id',
@@ -326,7 +326,7 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     // return this.userLoginService.find();
-    console.log(createParam.password);
+    //console.log(createParam.password);
     const newUserPassword = await User.hashPassword(createParam.password);
     const newUserParams = new User();
     newUserParams.username = createParam.username;
@@ -374,9 +374,9 @@ export class UserController {
     @Param('id') id: number,
     @Res() response: any
   ): Promise<any> {
-    console.log(id);
+    //console.log(id);
     const userDelete = await this.userService.delete(id);
-    console.log(userDelete);
+    //console.log(userDelete);
     if (userDelete) {
       const successResponse: any = {
         status: 1,
@@ -415,7 +415,7 @@ export class UserController {
     @Body({ validate: true }) forgotPassword: ForgotPassword,
     @Res() response: any
   ): Promise<any> {
-    console.log('emailId' + forgotPassword.email);
+    //console.log('emailId' + forgotPassword.email);
 
     const user = await this.userService.findOne({
       where: {
@@ -430,10 +430,10 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     const tempPassword: any = Math.random().toString().substr(2, 5);
-    console.log(tempPassword);
+    //console.log(tempPassword);
     const password = await User.hashPassword(tempPassword);
     user.password = password;
-    console.log(password);
+    //console.log(password);
 
     await this.userService.create(user);
 
@@ -490,7 +490,7 @@ export class UserController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(request.user.userId);
+    //console.log(request.user.userId);
     const user = await this.userService.findOne({
       where: {
         userId: request.user.userId,
@@ -550,8 +550,8 @@ export class UserController {
   @Get('/logout')
   @Authorized()
   public async logout(@Req() request: any, @Res() response: any): Promise<any> {
-    console.log('logout');
-    console.log(request.user.userId);
+    //console.log('logout');
+    //console.log(request.user.userId);
     const user = await this.accessTokenService.findOne({
       where: {
         userId: request.user.userId,
@@ -565,7 +565,7 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     const deleteToken = await this.accessTokenService.delete(user);
-    console.log('token' + deleteToken);
+    //console.log('token' + deleteToken);
     if (!deleteToken) {
       const successResponse: any = {
         status: 1,

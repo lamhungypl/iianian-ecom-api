@@ -85,7 +85,7 @@ export class ManufacturerController {
       } else {
         val = await this.imageService.imageUpload(path + name, base64Data);
       }
-      console.log(val);
+      //console.log(val);
       const newManufacturer: any = new Manufacturer();
       newManufacturer.name = manufacturer.name;
       newManufacturer.image = name;
@@ -284,7 +284,7 @@ export class ManufacturerController {
       } else {
         val = await this.imageService.imageUpload(path + name, base64Data);
       }
-      console.log(val);
+      //console.log(val);
       manufacturer.image = name;
       manufacturer.imagePath = path;
     }

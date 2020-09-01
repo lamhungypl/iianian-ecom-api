@@ -40,7 +40,7 @@ export class User extends BaseModel {
     user: User,
     password: string
   ): Promise<boolean> {
-    console.log(password);
+    //console.log(password);
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, user.password, (err, res) => {
         resolve(res === true);

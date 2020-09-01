@@ -32,15 +32,15 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     const responseObject = {} as any;
 
     // if its an array of ValidationError
-    // console.log(error);
-    // console.log(Array.isArray(error));
+    // //console.log(error);
+    // //console.log(Array.isArray(error));
     if (
       error &&
       Array.isArray(error.errors) &&
       error.errors.every(element => element instanceof ValidationError)
     ) {
       res.status(422);
-      console.log('Inside');
+      //console.log('Inside');
       responseObject.message =
         "You have an error in your request's body. Check 'errors' field for more details!";
       // responseObject.errors = error;

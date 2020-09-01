@@ -31,7 +31,7 @@ export class S3Service {
         if (err) {
           reject(err);
         }
-        console.log(data);
+        //console.log(data);
         resolve(data);
       });
     });
@@ -61,7 +61,7 @@ export class S3Service {
 
   // delete folder
   public deleteFolder(folderName: string = ''): Promise<any> {
-    console.log(folderName);
+    //console.log(folderName);
     AWS.config.update({
       accessKeyId: aws_setup.AWS_ACCESS_KEY_ID,
       secretAccessKey: aws_setup.AWS_SECRET_ACCESS_KEY,
@@ -77,7 +77,7 @@ export class S3Service {
         if (err) {
           reject(err);
         }
-        console.log(data);
+        //console.log(data);
         const objects = data.Contents.map(object => ({ Key: object.Key }));
         return s3.deleteObjects(
           {
@@ -116,7 +116,7 @@ export class S3Service {
           reject(err);
         }
         resolve(data);
-        console.log(data);
+        //console.log(data);
       });
     });
   }
@@ -137,14 +137,14 @@ export class S3Service {
       Bucket: aws_setup.AWS_BUCKET, // your bucket name,
       Key: imgPath + imgName, // path to the object you're looking for
     };
-    console.log(getParams);
+    //console.log(getParams);
 
     return new Promise((resolve, reject) => {
       s3.getObject(getParams, (err: any, data: any) => {
         if (err) {
           reject(err);
         }
-        console.log(data);
+        //console.log(data);
         const gm = require('gm').subClass({ imageMagick: true });
         return gm(data.Body)
           .resize(widthString, heightString)
@@ -152,7 +152,7 @@ export class S3Service {
             if (error) {
               throw error;
             } else {
-              console.log('Buffer' + Buffer.isBuffer(buffer));
+              //console.log('Buffer' + Buffer.isBuffer(buffer));
               resolve(buffer);
             }
           });
@@ -211,7 +211,7 @@ export class S3Service {
           reject(err);
         }
         resolve(data);
-        console.log(data);
+        //console.log(data);
       });
     });
   }

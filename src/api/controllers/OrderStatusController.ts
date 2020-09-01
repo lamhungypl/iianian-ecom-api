@@ -120,7 +120,7 @@ export class OrderStatusController {
     orderStatus.colorCode = orderStatusParams.colorCode;
     orderStatus.isActive = orderStatusParams.status;
     const orderStatusSave = await this.orderStatusService.create(orderStatus);
-    console.log('orderStatus' + orderStatusSave);
+    //console.log('orderStatus' + orderStatusSave);
     if (orderStatusSave !== undefined) {
       const successResponse: any = {
         status: 1,

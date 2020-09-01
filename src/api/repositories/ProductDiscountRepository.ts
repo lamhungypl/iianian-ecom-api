@@ -20,7 +20,7 @@ export class ProductDiscountRepository extends Repository<ProductDiscount> {
     query.orderBy('productDiscount.priority', 'ASC');
     query.addOrderBy('productDiscount.price', 'ASC');
     query.limit('1');
-    console.log({ findDiscountPrice: query.getQuery() });
+    //console.log({ findDiscountPrice: query.getQuery() });
     return query.getRawOne();
   }
 }

@@ -66,9 +66,9 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('working');
-    console.log('S3 folderName:- ' + folderName);
-    console.log('S3 Limit:- ' + limit);
+    //console.log('working');
+    //console.log('S3 folderName:- ' + folderName);
+    //console.log('S3 Limit:- ' + limit);
 
     let val: any;
 
@@ -78,7 +78,7 @@ export class MediaController {
       val = await this.imageService.listFolders(limit, folderName);
     }
 
-    console.log(val);
+    //console.log(val);
 
     if (val) {
       const successResponse: any = {
@@ -117,8 +117,8 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('working');
-    console.log('S3 folderName:- ' + folderNameValidation.folderName);
+    //console.log('working');
+    //console.log('S3 folderName:- ' + folderNameValidation.folderName);
 
     let val: any;
     if (env.imageserver === 's3') {
@@ -166,12 +166,12 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('working');
-    console.log('S3 folderName:- ' + folderNameValidation.folderName);
+    //console.log('working');
+    //console.log('S3 folderName:- ' + folderNameValidation.folderName);
     const val: any = await this.s3Service.deleteFolder(
       folderNameValidation.folderName
     );
-    console.log(val);
+    //console.log(val);
 
     if (val) {
       const successResponse: any = {
@@ -209,15 +209,15 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('working');
-    console.log('S3 fileName:- ' + fileName);
+    //console.log('working');
+    //console.log('S3 fileName:- ' + fileName);
     let val: any;
     if (env.imageserver === 's3') {
       val = await this.s3Service.deleteFile(fileName);
     } else {
       val = await this.imageService.deleteFile(fileName);
     }
-    console.log(val);
+    //console.log(val);
 
     if (val) {
       const successResponse: any = {
@@ -286,7 +286,7 @@ export class MediaController {
         base64Data
       );
     }
-    console.log(val);
+    //console.log(val);
     const successResponse: any = {
       status: 1,
       message: 'Image successfully uploaded',
@@ -329,16 +329,16 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(`Dim: ${width} x ${height}`);
+    //console.log(`Dim: ${width} x ${height}`);
     const widthString = width;
     const heightString = height;
     const imgPath = path;
     const imgName = name;
-    console.log('Dim' + width + height);
-    console.log('Path' + imgPath);
-    console.log('filename' + imgName);
+    //console.log('Dim' + width + height);
+    //console.log('Path' + imgPath);
+    //console.log('filename' + imgName);
     const ext = imgName.split('.');
-    console.log('ext ' + ext[1]);
+    //console.log('ext ' + ext[1]);
     if (ext[1] === 'jpg' || ext[1] === 'jpeg' || ext[1] === 'png') {
       let val: any;
       if (env.imageserver === 's3') {
@@ -397,15 +397,15 @@ export class MediaController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log('working');
-    console.log('S3 folderName:- ' + folderName);
+    //console.log('working');
+    //console.log('S3 folderName:- ' + folderName);
     let val: any;
     if (env.imageserver === 's3') {
       val = await this.s3Service.getFolder(folderName);
     } else {
       val = await this.imageService.getFolder(folderName);
     }
-    console.log(val);
+    //console.log(val);
 
     if (val) {
       const successResponse: any = {

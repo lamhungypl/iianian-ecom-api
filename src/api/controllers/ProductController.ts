@@ -118,7 +118,7 @@ export class ProductController {
         value: (status && parseInt(status)) || 1,
       },
     ];
-    console.log({ WhereConditions });
+    //console.log({ WhereConditions });
     const productLists: any = await this.productService.list(
       limit,
       offset,
@@ -328,7 +328,7 @@ export class ProductController {
     @Body({ validate: true }) product: AddProductRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(product);
+    //console.log(product);
     // let productOptions = [];
     // let optionValue = [];
     const newProduct: any = new Product();
@@ -529,7 +529,7 @@ export class ProductController {
     @Body({ validate: true }) product: UpdateProductRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(product);
+    //console.log(product);
     const updateProduct: any = await this.productService.findOne({
       where: {
         productId: product.productId,

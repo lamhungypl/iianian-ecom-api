@@ -115,10 +115,10 @@ export class CustomerController {
       newCustomer.avatarPath = path;
       s3.upload(params, (err, data) => {
         if (data) {
-          console.log('image upload successfully');
-          console.log(data);
+          //console.log('image upload successfully');
+          //console.log(data);
         } else {
-          console.log('error while uploading image');
+          //console.log('error while uploading image');
         }
       });
     }
@@ -372,7 +372,7 @@ export class CustomerController {
     @Body({ validate: true }) customerParam: UpdateCustomer,
     @Res() response: any
   ): Promise<any> {
-    console.log(customerParam);
+    //console.log(customerParam);
     const customer = await this.customerService.findOne({
       where: {
         id,
@@ -406,10 +406,10 @@ export class CustomerController {
         };
         s3.upload(params, (err, data) => {
           if (data) {
-            console.log('image upload successfully');
-            console.log(data);
+            //console.log('image upload successfully');
+            //console.log(data);
           } else {
-            console.log('error while uploading image');
+            //console.log('error while uploading image');
           }
         });
         customer.avatar = name;

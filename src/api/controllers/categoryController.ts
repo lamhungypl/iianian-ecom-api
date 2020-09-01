@@ -66,7 +66,7 @@ export class CategoryController {
     @Body({ validate: true }) category: AddCategory,
     @Res() response: any
   ): Promise<Category> {
-    console.log(category.name);
+    //console.log(category.name);
     const newCategory = new Category();
     newCategory.name = category.name;
     newCategory.image = category.image;
@@ -81,7 +81,7 @@ export class CategoryController {
       where: { categoryId: category.parentInt },
       order: { level: 'ASC' },
     });
-    console.log({ getAllPath });
+    //console.log({ getAllPath });
     let level = 0;
     for (const path of getAllPath) {
       const CategoryPathLoop: any = new CategoryPath();
@@ -89,7 +89,7 @@ export class CategoryController {
       CategoryPathLoop.pathId = path.pathId;
       CategoryPathLoop.level = level;
       const vv = await this.categoryPathService.create(CategoryPathLoop);
-      console.log('vv' + vv);
+      //console.log('vv' + vv);
       level++;
     }
 
@@ -189,7 +189,7 @@ export class CategoryController {
       where: { categoryId: category.parentInt },
       order: { level: 'ASC' },
     });
-    console.log(getAllPath);
+    //console.log(getAllPath);
     let level = 0;
     for (const path of getAllPath) {
       const CategoryPathLoop: any = new CategoryPath();
@@ -280,7 +280,7 @@ export class CategoryController {
       await this.categoryPathService.delete(path.categoryPathId);
     }
     const deleteCategory = await this.categoryService.delete(categoryId);
-    console.log('category' + deleteCategory);
+    //console.log('category' + deleteCategory);
     if (!deleteCategory) {
       const successResponse: any = {
         status: 1,
@@ -327,7 +327,7 @@ export class CategoryController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    console.log(keyword);
+    //console.log(keyword);
     const select = ['categoryId', 'name', 'parentInt', 'sortOrder'];
 
     const search = [
@@ -422,7 +422,7 @@ export class CategoryController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<Category> {
-    console.log(keyword);
+    //console.log(keyword);
     const select = [
       'categoryId',
       'name',

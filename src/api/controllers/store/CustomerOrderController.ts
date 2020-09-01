@@ -399,7 +399,7 @@ export class CustomerOrderController {
           ],
         })
         .then(val => {
-          console.log(val);
+          //console.log(val);
           const productVal = val.map(async (value: any) => {
             const productDetail = await this.productService.findOne({
               where: { productId: value.productId },

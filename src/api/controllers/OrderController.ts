@@ -223,7 +223,7 @@ export class OrderController {
           ],
         })
         .then(val => {
-          console.log(val);
+          //console.log(val);
           const productVal = val.map(async (value: any) => {
             const productDetail = await this.productService.findOne({
               where: { productId: value.productId },
@@ -316,7 +316,7 @@ export class OrderController {
           'zoneId',
         ],
       });
-      console.log(customer);
+      //console.log(customer);
       temp.customerDetail = customer;
       return temp;
     });
@@ -350,7 +350,7 @@ export class OrderController {
   @Authorized()
   public async salesList(@Res() response: any): Promise<any> {
     const orderList = await this.orderService.salesList();
-    console.log(orderList);
+    //console.log(orderList);
     const promises = orderList.map(async (result: any) => {
       const monthNames = [
         '',
@@ -451,7 +451,7 @@ export class OrderController {
       (nowDate.getMonth() + 1) +
       '-' +
       nowDate.getDate();
-    console.log(todaydate);
+    //console.log(todaydate);
     let total = 0;
     const order = await this.orderService.findAlltodayOrder(todaydate);
     let n = 0;
@@ -544,7 +544,7 @@ export class OrderController {
     const updateOrder = await this.orderService.findOrder(
       orderChangeStatus.orderId
     );
-    console.log(updateOrder);
+    //console.log(updateOrder);
     if (!updateOrder) {
       const errorResponse: any = {
         status: 0,
@@ -554,10 +554,10 @@ export class OrderController {
     }
 
     await this.orderLogService.create(updateOrder);
-    console.log(updateOrder);
+    //console.log(updateOrder);
 
     updateOrder.orderStatusId = orderChangeStatus.orderStatusId;
-    console.log(updateOrder.orderStatusId);
+    //console.log(updateOrder.orderStatusId);
 
     const orderSave = await this.orderService.create(updateOrder);
     if (orderSave) {

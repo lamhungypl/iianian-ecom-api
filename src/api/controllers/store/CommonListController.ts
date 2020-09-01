@@ -288,7 +288,7 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(manufacturerId);
+    //console.log(manufacturerId);
     const select = [
       'product.productId',
       'product.sku',
@@ -429,7 +429,7 @@ export class CommonListController {
         const userUniqueId: any = Object.keys(userId).map((key: any) => {
           return [key, userId[key]];
         });
-        console.log(userUniqueId[0][1]);
+        //console.log(userUniqueId[0][1]);
         const wishStatus = await this.customerWishlistService.findOne({
           where: {
             productId: result.productId,

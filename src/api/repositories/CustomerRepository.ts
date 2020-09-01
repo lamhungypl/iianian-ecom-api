@@ -10,7 +10,7 @@ export class CustomerRepository extends Repository<Customer> {
     );
     query.select(['COUNT(customer.id) as customerCount']);
     query.where('DATE(customer.createdDate) = :todayDate', { todayDate });
-    console.log({ TodayCustomerCount: query.getQuery() });
+    //console.log({ TodayCustomerCount: query.getQuery() });
     return query.getRawOne();
   }
 }

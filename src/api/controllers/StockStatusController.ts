@@ -161,7 +161,7 @@ export class StockStatusController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    console.log(keyword);
+    //console.log(keyword);
     const select = ['stockStatusId', 'name', 'isActive'];
     const search = [
       {

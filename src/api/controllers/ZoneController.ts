@@ -281,7 +281,7 @@ export class ZoneController {
     }
 
     const deleteZone = await this.zoneService.delete(zone);
-    console.log('zone' + deleteZone);
+    //console.log('zone' + deleteZone);
     if (deleteZone) {
       const successResponse: any = {
         status: 1,

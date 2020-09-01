@@ -44,7 +44,7 @@ export class SettingController {
       relation,
       WhereConditions
     );
-    console.log('settings' + settings);
+    //console.log('settings' + settings);
     const successResponse: any = {
       status: 1,
       message: 'Successfully get settings',
@@ -127,9 +127,9 @@ export class SettingController {
     @Body({ validate: true }) settings: CreateSettingRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(settings.metaTagKeywords);
+    //console.log(settings.metaTagKeywords);
     const settingValue: any = await this.settingService.findOne();
-    console.log(settingValue);
+    //console.log(settingValue);
     if (settingValue === undefined) {
       const newSettings: any = new Settings();
       newSettings.url = settings.url;

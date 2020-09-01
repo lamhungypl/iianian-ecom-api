@@ -28,7 +28,7 @@ export class UserService {
     keyword: string,
     count: number | boolean
   ): Promise<any> {
-    console.log(keyword);
+    //console.log(keyword);
     const condition: any = {};
 
     if (select && select.length > 0) {

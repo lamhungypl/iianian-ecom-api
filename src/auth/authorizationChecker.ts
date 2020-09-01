@@ -22,13 +22,13 @@ export function authorizationChecker(
     // either promise that resolves a boolean value
     const userId = await authService.parseBasicAuthFromRequest(action.request);
     // log.info(userId.toString());
-    console.log({ userId });
+    //console.log({ userId });
     if (userId === undefined) {
       log.warn('No credentials given');
       return false;
     }
 
-    console.log({ roles });
+    //console.log({ roles });
 
     if (roles[0] === 'customer') {
       action.request.user = await authService.validateCustomer(userId);

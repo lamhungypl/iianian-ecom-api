@@ -10,7 +10,7 @@ export class RatingRepository extends Repository<ProductRating> {
       .addSelect(['SUM(rating.rating) as RatingSum'])
       .where('rating.productId = :productId', { productId: id })
       .getRawOne();
-    console.log({ ratingConsolidate: consolidate.getQuery() });
+    //console.log({ ratingConsolidate: consolidate.getQuery() });
     return consolidate;
   }
 }

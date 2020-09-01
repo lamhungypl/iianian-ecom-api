@@ -164,7 +164,7 @@ export class AddressController {
     address.addressType = addressParam.addressType;
 
     const addressSave = await this.addressService.create(address);
-    console.log('addressSave' + addressSave);
+    //console.log('addressSave' + addressSave);
     if (addressSave) {
       const successResponse: any = {
         status: 1,
@@ -319,9 +319,9 @@ export class AddressController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(id);
+    //console.log(id);
     const customer = await this.customerService.findOne({ where: { id } });
-    console.log({ customer });
+    //console.log({ customer });
     if (customer.length === 0) {
       const errorResponse: any = {
         status: 0,

@@ -198,7 +198,7 @@ export class PageController {
     @Body({ validate: true }) pageParam: UpdatePage,
     @Res() response: any
   ): Promise<any> {
-    console.log(pageParam);
+    //console.log(pageParam);
     const page = await this.pageService.findOne({
       where: {
         pageId: pageParam.pageId,

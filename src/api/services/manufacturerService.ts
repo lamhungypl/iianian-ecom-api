@@ -74,7 +74,7 @@ export class ManufacturerService {
       return this.manufacturerRepository.count(condition);
     }
 
-    console.log(condition);
+    //console.log(condition);
     return this.manufacturerRepository.find(condition);
   }
 }
