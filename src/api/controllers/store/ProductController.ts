@@ -115,7 +115,7 @@ export class ProductController {
         .then(val => {
           const category = val.map(async (value: any) => {
             const categoryNames = await this.categoryService.findOne({
-              category_id: value.categoryId,
+              categoryId: value.categoryId,
             });
             const JsonData = JSON.stringify(categoryNames);
             const ParseData = JSON.parse(JsonData);
