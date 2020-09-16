@@ -854,7 +854,7 @@ export class ProductController {
         ],
         where: { productId: result.product },
       });
-      const temp: any = result;
+      // const temp: any = result;
       const productImage = await this.productImageService.findAll({
         select: ['productId', 'image', 'containerName'],
         where: {
@@ -862,9 +862,9 @@ export class ProductController {
           defaultImage: 1,
         },
       });
-      temp.product = product;
-      temp.productImage = productImage;
-      return temp;
+      // temp.product = product;
+      // temp.productImage = productImage;
+      return { ...result, product, productImage };
     });
 
     const value = await Promise.all(promise);
@@ -906,16 +906,16 @@ export class ProductController {
         select: ['invoiceNo', 'invoicePrefix', 'orderId', 'orderStatusId'],
         where: { orderId: result.orderId },
       });
-      const temp: any = result;
-      temp.order = order;
-      const product = await this.productImageService.findAll({
+      // const temp: any = result;
+      // temp.order = order;
+      const productImage = await this.productImageService.findAll({
         where: {
           productId: result.productId,
           defaultImage: 1,
         },
       });
-      temp.productImage = product;
-      return temp;
+      // temp.productImage = product;
+      return { ...result, order, productImage };
     });
     const results = await Promise.all(promises);
     const successResponse: any = {
