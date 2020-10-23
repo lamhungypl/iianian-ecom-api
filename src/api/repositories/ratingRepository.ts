@@ -1,8 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { ProductRating } from '../models/ProductRating';
+import { BaseRepository } from './base/BaseRepository';
 
 @EntityRepository(ProductRating)
-export class RatingRepository extends Repository<ProductRating> {
+export class RatingRepository extends BaseRepository<ProductRating> {
   public async ratingConsolidate(id: number): Promise<any> {
     const consolidate = await this.manager
       .createQueryBuilder(ProductRating, 'rating')

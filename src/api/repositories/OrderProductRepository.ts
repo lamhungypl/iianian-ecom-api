@@ -1,8 +1,9 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { OrderProduct } from '../models/OrderProduct';
+import { BaseRepository } from './base/BaseRepository';
 
 @EntityRepository(OrderProduct)
-export class OrderProductRepository extends Repository<OrderProduct> {
+export class OrderProductRepository extends BaseRepository<OrderProduct> {
   public async List(limit: number): Promise<any> {
     const query: any = await this.manager.createQueryBuilder(
       OrderProduct,
