@@ -86,7 +86,7 @@ export class CustomerController {
     @Res() response: any
   ): Promise<any> {
     const avatar = customerParam.avatar;
-    const newCustomer: any = new Customer();
+    const newCustomer = new Customer();
     const resultUser = await this.customerService.findOne({
       where: { email: customerParam.email, deleteFlag: 0 },
     });
@@ -179,7 +179,7 @@ export class CustomerController {
 
   // Customer List API
   /**
-   * @api {get} /api/customer/customerlist Customer List API
+   * @api {get} /api/customer/customer-list Customer List API
    * @apiGroup Customer
    * @apiHeader {String} Authorization
    * @apiParam (Request body) {Number} limit limit
@@ -208,7 +208,7 @@ export class CustomerController {
    *      }
    *      "status": "1"
    * }
-   * @apiSampleRequest /api/customer/customerlist
+   * @apiSampleRequest /api/customer/customer-list
    * @apiErrorExample {json} customer error
    * HTTP/1.1 500 Internal Server Error
    */
