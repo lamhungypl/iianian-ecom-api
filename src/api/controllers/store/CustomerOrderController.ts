@@ -27,6 +27,8 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { OrderStatusService } from '../../services/orderStatusService';
 import { CountryService } from '../../services/countryService';
+import { pickBy } from 'lodash';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/orders')
 export class CustomerOrderController {
@@ -271,41 +273,53 @@ export class CustomerOrderController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const search = [
-      {
-        name: 'customerId',
-        op: 'where',
-        value: request.user.id,
-      },
-    ];
-    const whereConditions = 0;
-    const select = [
-      'orderId',
-      'customerId',
-      'currencyId',
-      'orderStatus',
-      'total',
-      'createdDate',
-      'orderPrefixId',
-    ];
-    const relation = ['orderStatus'];
-    const OrderData = await this.orderService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      relation,
-      count
-    );
+    // const search = [
+    //   {
+    //     name: 'customerId',
+    //     op: 'where',
+    //     value: request.user.id,
+    //   },
+    // ];
+
+    // const select = [
+    //   'orderId',
+    //   'customerId',
+    //   'currencyId',
+    //   'orderStatus',
+    //   'total',
+    //   'createdDate',
+    //   'orderPrefixId',
+    // ];
+    // const relation = ['orderStatus'];
+
+    const options: FindManyOptions<Order> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'orderId',
+        'customerId',
+        'currencyId',
+        'orderStatus',
+        'total',
+        'createdDate',
+        'orderPrefixId',
+      ],
+      where: { customerId: request.user.id },
+      relations: ['orderStatus'],
+    };
+
     if (count) {
-      const Response: any = {
+      const orderCount = await this.orderService.count(options);
+
+      const res = {
         status: 1,
         message: 'Successfully get Count. ',
-        data: OrderData,
+        data: orderCount,
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
+    const OrderData = await this.orderService.list(options);
+
     const promises = OrderData.map(async (results: any) => {
       const Id = results.orderId;
       const countValue = await this.orderProductService.findAndCount({
@@ -348,12 +362,12 @@ export class CustomerOrderController {
   @Get('/order-detail')
   @Authorized('customer')
   public async orderDetail(
-    @QueryParam('orderId') orderid: number,
+    @QueryParam('orderId') orderId: number,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const orderData = await this.orderService.find({
-      where: { orderId: orderid, customerId: request.user.id },
+    const orderData = await this.orderService.list({
+      where: { orderId: orderId, customerId: request.user.id },
       select: [
         'orderId',
         'orderStatusId',
@@ -386,7 +400,7 @@ export class CustomerOrderController {
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
         .find({
-          where: { orderId: orderid },
+          where: { orderId: orderId },
           select: [
             'orderProductId',
             'orderId',

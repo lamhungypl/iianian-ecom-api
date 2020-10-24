@@ -490,8 +490,8 @@ export class CustomerController {
       return response.status(400).send(errorResponse);
     }
 
-    const order = await this.orderService.find({ where: { customerId: Id } });
-    const productLists = await order.map(async (result: any) => {
+    const order = await this.orderService.list({ where: { customerId: Id } });
+    const productLists = order.map(async (result: any) => {
       const product = await this.orderProductService.find({
         where: { orderId: result.orderId },
         select: [

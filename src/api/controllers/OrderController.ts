@@ -19,6 +19,10 @@ import { OrderStatusService } from '../services/orderStatusService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductImageService } from '../services/ProductImageService';
+import { FindManyOptions, Like } from 'typeorm';
+import { Order } from '../models/Order';
+import { pickBy } from 'lodash';
+import { Response } from 'express';
 
 @JsonController('/order')
 export class OrderController {
@@ -66,7 +70,7 @@ export class OrderController {
    * @apiErrorExample {json} order error
    * HTTP/1.1 500 Internal Server Error
    */
-  @Get('/orderlist')
+  @Get('/order-list')
   @Authorized()
   public async orderList(
     @QueryParam('limit') limit: number,
@@ -74,69 +78,49 @@ export class OrderController {
     @QueryParam('orderId') orderId: string,
     @QueryParam('orderStatusId') orderStatusId: string,
     @QueryParam('customerName') customerName: string,
-    @QueryParam('totalAmount') totalAmount: string,
     @QueryParam('dateAdded') dateAdded: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<any> {
-    const search = [
-      {
-        name: 'orderPrefixId',
-        op: 'like',
-        value: orderId,
-      },
-      {
-        name: 'orderStatusId',
-        op: 'like',
-        value: orderStatusId,
-      },
-      {
-        name: 'shippingFirstname',
-        op: 'like',
-        value: customerName,
-      },
-      {
-        name: 'total',
-        op: 'like',
-        value: totalAmount,
-      },
-      {
-        name: 'createdDate',
-        op: 'like',
-        value: dateAdded,
-      },
-    ];
-    const WhereConditions = [];
-    const orderList = await this.orderService.list(
-      limit,
-      offset,
-      0,
-      search,
-      WhereConditions,
-      0,
-      count
-    );
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<Order> = {
+      take: limit,
+      skip: offset,
+      where: pickBy(
+        {
+          orderId: orderId || undefined,
+          orderStatusId: orderStatusId || undefined,
+          shippingFirstname:
+            (customerName && Like(`%${customerName}%`)) || undefined,
+          createdDate: (dateAdded && Like(`%${dateAdded}%`)) || undefined,
+        },
+        value => value != null
+      ),
+    };
+    console.log({ options });
     if (count) {
-      const Response: any = {
+      const orderCount = await this.orderService.count(options);
+      const res = {
         status: 1,
         message: 'Successfully got count.',
-        data: orderList,
+        data: orderCount,
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
-    const orderStatus = orderList.map(async (value: any) => {
+    const orderList = await this.orderService.list(options);
+
+    const orderStatus = orderList.map(async value => {
       // OrderList API
 
       const status = await this.orderStatusService.findOne({
         where: { orderStatusId: value.orderStatusId },
         select: ['orderStatusId', 'name', 'colorCode'],
       });
-      const temp: any = value;
+      const temp = value;
       temp.orderStatus = status;
       return temp;
     });
     const results = await Promise.all(orderStatus);
-    const successResponse: any = {
+    const successResponse = {
       status: 1,
       message: 'Successfully got the complete order list.',
       data: results,
@@ -169,12 +153,12 @@ export class OrderController {
   @Get('/order-detail')
   @Authorized()
   public async orderDetail(
-    @QueryParam('orderId') orderid: number,
+    @QueryParam('orderId') orderId: number,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const orderData = await this.orderService.find({
-      where: { orderId: orderid },
+    const orderData = await this.orderService.list({
+      where: { orderId: orderId },
       select: [
         'orderId',
         'orderStatusId',
@@ -210,7 +194,7 @@ export class OrderController {
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
         .find({
-          where: { orderId: orderid },
+          where: { orderId: orderId },
           select: [
             'orderProductId',
             'orderId',
@@ -402,7 +386,7 @@ export class OrderController {
   @Authorized()
   public async totalOrderAmount(@Res() response: any): Promise<any> {
     let total = 0;
-    const order = await this.orderService.findAll();
+    const order = await this.orderService.list({});
     let n = 0;
     for (n; n < order.length; n++) {
       total += +order[n].total;
@@ -452,21 +436,17 @@ export class OrderController {
       '-' +
       nowDate.getDate();
     //console.log(todaydate);
-    let total = 0;
-    const order = await this.orderService.findAlltodayOrder(todaydate);
-    let n = 0;
-    for (n; n < order.length; n++) {
-      total += +order[n].total;
-    }
-    if (order) {
+
+    try {
+      const orderTotal = await this.orderService.findAllTodayOrder(todaydate);
       const successResponse: any = {
         status: 1,
         message: 'Successfully get today order Amount',
-        data: total,
+        data: orderTotal,
       };
 
       return response.status(200).send(successResponse);
-    } else {
+    } catch (error) {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get today order amount',
@@ -541,7 +521,7 @@ export class OrderController {
     @Body({ validate: true }) orderChangeStatus: UpdateOrderChangeStatus,
     @Res() response: any
   ): Promise<any> {
-    const updateOrder = await this.orderService.findOrder(
+    const updateOrder = await this.orderService.findOneById(
       orderChangeStatus.orderId
     );
     //console.log(updateOrder);

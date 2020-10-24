@@ -1,6 +1,7 @@
 import {
   FindManyOptions,
   FindOneOptions,
+  ObjectID,
   Repository,
   UpdateResult,
 } from 'typeorm';
@@ -12,7 +13,11 @@ export interface BaseServiceImpl<T> {
 
   update(id: number | string, newModel: T): Promise<UpdateResult>;
 
-  findOne(options?: FindOneOptions<T>): Promise<T>;
+  findOne(options?: FindOneOptions<T>): Promise<T | undefined>;
+  findOneById(
+    id?: string | number | Date | ObjectID,
+    options?: FindOneOptions<T>
+  ): Promise<T | undefined>;
 
   delete(id: number | string): Promise<number>;
 
@@ -36,6 +41,12 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
 
   public findOne(options?: FindOneOptions<T>) {
     return this.repository.findOne(options);
+  }
+  public findOneById(
+    id?: string | number | Date | ObjectID,
+    options?: FindOneOptions<T>
+  ) {
+    return this.repository.findOne(id, options);
   }
 
   public async delete(id: number | string) {

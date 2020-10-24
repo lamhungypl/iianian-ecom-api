@@ -902,7 +902,7 @@ export class ProductController {
     const limit = 3;
     const orderList = await this.orderProductService.List(limit);
     const promises = orderList.map(async (result: any) => {
-      const order = await this.orderService.findOrder({
+      const order = await this.orderService.list({
         select: ['invoiceNo', 'invoicePrefix', 'orderId', 'orderStatusId'],
         where: { orderId: result.orderId },
       });
