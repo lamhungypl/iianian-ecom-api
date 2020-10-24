@@ -26,6 +26,9 @@ import { ProductImageService } from '../services/ProductImageService';
 import { ProductService } from '../services/ProductService';
 import { OrderProductService } from '../services/OrderProductService';
 import { EmailTemplateService } from '../services/emailTemplateService';
+import { Response } from 'express';
+import { FindManyOptions, Like } from 'typeorm';
+import pickBy from 'lodash/pickBy';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -209,62 +212,59 @@ export class CustomerController {
    * @apiErrorExample {json} customer error
    * HTTP/1.1 500 Internal Server Error
    */
-  @Get('/customerlist')
+  @Get('/customer-list')
   @Authorized()
   public async customerList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('name') name: string,
-    @QueryParam('status') status: string,
-    @QueryParam('email') email: string,
-    @QueryParam('customerGroup') customerGroup: string,
+    @QueryParam('name') name = '',
+    @QueryParam('status') status: number,
+    @QueryParam('email') email = '',
+    @QueryParam('customerGroup') customerGroup: number,
     @QueryParam('date') date: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<any> {
-    const search = [
-      {
-        name: 'firstName',
-        op: 'like',
-        value: name,
-      },
-      {
-        name: 'email',
-        op: 'like',
-        value: email,
-      },
-      {
-        name: 'createdDate',
-        op: 'like',
-        value: date,
-      },
-      {
-        name: 'customerGroupId',
-        op: 'like',
-        value: customerGroup,
-      },
-      {
-        name: 'isActive',
-        op: 'like',
-        value: (status && parseInt(status)) || 1,
-      },
-    ];
-    const WhereConditions = [
-      {
-        name: 'deleteFlag',
-        value: 0,
-      },
-    ];
-    const customerList = await this.customerService.list(
-      limit,
-      offset,
-      search,
-      WhereConditions,
-      0,
-      count
-    );
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<Customer> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'id',
+        'username',
+        'firstName',
+        'lastName',
+        'email',
+        'address',
+        'mobileNumber',
+        'avatar',
+        'avatarPath',
+        'password',
+      ],
+      where: pickBy(
+        {
+          firstName: (name && Like(`%${name}%`)) || undefined,
+          email: (email && Like(`%${email}%`)) || undefined,
+          createdDate: (date && Like(`%${date}%`)) || undefined,
+          customerGroupId: customerGroup || undefined,
+          isActive: status,
+          deleteFlag: 0,
+        },
+        value => value != null
+      ),
+    };
+    console.log({ options });
+    if (count) {
+      const customerCount = await this.customerService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got Customer list count',
+        data: customerCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const customerList = await this.customerService.list(options);
 
-    const successResponse: any = {
+    const successResponse = {
       status: 1,
       message: 'Successfully got Customer list.',
       data: customerList,
@@ -534,13 +534,13 @@ export class CustomerController {
     });
 
     const finalResult = await Promise.all(productLists);
-    customer.productList = finalResult;
+    // customer.productList = finalResult;
     // customer.productCount = finalResult.length;
     if (finalResult) {
       const successResponse: any = {
         status: 1,
         message: 'successfully got Customer details. ',
-        data: customer,
+        data: { ...customer, productList: finalResult },
       };
       return response.status(200).send(successResponse);
     } else {
@@ -576,21 +576,14 @@ export class CustomerController {
   @Get('/recent-customerlist')
   @Authorized()
   public async recentCustomerList(@Res() response: any): Promise<any> {
-    const order = 1;
-    const WhereConditions = [
-      {
-        name: 'deleteFlag',
-        value: 0,
+    const customerList = await this.customerService.list({
+      where: {
+        deleteFlag: 0,
       },
-    ];
-    const customerList = await this.customerService.list(
-      0,
-      0,
-      0,
-      WhereConditions,
-      order,
-      0
-    );
+      order: {
+        createdDate: 1,
+      },
+    });
     const successResponse: any = {
       status: 1,
       message: 'Successfully got Customer list.',

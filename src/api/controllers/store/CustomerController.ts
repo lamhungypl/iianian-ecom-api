@@ -171,12 +171,12 @@ export class CustomerController {
     );
     const emailContent = await this.emailTemplateService.findOne(2);
     const message = emailContent.content
-      .replace('{name}', updateUserData.firstName)
+      .replace('{name}', resultData.firstName)
       .replace('{xxxxxx}', tempPassword);
     emailContent.content = message;
     const sendMailRes = MAILService.passwordForgotMail(
       message,
-      updateUserData.email,
+      resultData.email,
       emailContent.subject
     );
     if (sendMailRes) {

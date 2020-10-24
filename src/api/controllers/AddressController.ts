@@ -322,7 +322,7 @@ export class AddressController {
     //console.log(id);
     const customer = await this.customerService.findOne({ where: { id } });
     //console.log({ customer });
-    if (customer.length === 0) {
+    if (!customer) {
       const errorResponse: any = {
         status: 0,
         message: ' invalid customer Id',
