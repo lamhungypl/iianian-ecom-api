@@ -34,6 +34,7 @@ export class ErrorHandlerMiddleware implements ExpressErrorMiddlewareInterface {
     // if its an array of ValidationError
     // //console.log(error);
     // //console.log(Array.isArray(error));
+    console.log({ error });
     if (
       error &&
       Array.isArray(error.errors) &&

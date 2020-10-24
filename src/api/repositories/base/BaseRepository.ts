@@ -1,4 +1,4 @@
-import { BaseModel } from 'src/api/models/BaseModel';
+import { BaseModel } from '../../models/BaseModel';
 import { EntityRepository, Repository } from 'typeorm';
 
 @EntityRepository()
