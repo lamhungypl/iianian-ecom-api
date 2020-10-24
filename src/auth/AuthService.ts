@@ -43,14 +43,14 @@ export class AuthService {
   }
 
   public async decryptToken(encryptString: string): Promise<number> {
-    return new Promise<number>((subresolve, subreject) => {
+    return new Promise<number>((resolve, reject) => {
       jwt.verify(encryptString, '123##$$)(***&', (err, decoded) => {
         if (err) {
           //console.log(err);
-          return subresolve(undefined);
+          return resolve(undefined);
         }
         //console.log(decoded);
-        return subresolve(decoded.id);
+        return resolve(decoded['id']);
       });
     });
   }
