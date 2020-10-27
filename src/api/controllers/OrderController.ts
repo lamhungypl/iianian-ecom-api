@@ -19,9 +19,9 @@ import { OrderStatusService } from '../services/orderStatusService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductImageService } from '../services/ProductImageService';
-import { FindManyOptions, Like } from 'typeorm';
+import { FindManyOptions, Like, MoreThan } from 'typeorm';
 import { Order } from '../models/Order';
-import { pickBy } from 'lodash';
+import { pickBy, toNumber } from 'lodash';
 import { Response } from 'express';
 
 @JsonController('/order')
@@ -80,6 +80,7 @@ export class OrderController {
     @QueryParam('customerName') customerName: string,
     @QueryParam('dateAdded') dateAdded: string,
     @QueryParam('count') count: number | boolean,
+    @QueryParam('totalAmount', { type: 'string' }) totalAmount = '',
     @Res() response: Response
   ) {
     const options: FindManyOptions<Order> = {
@@ -87,16 +88,16 @@ export class OrderController {
       skip: offset,
       where: pickBy(
         {
-          orderId: orderId || undefined,
+          orderPrefixId: (orderId && Like(`%${orderId}%`)) || undefined,
           orderStatusId: orderStatusId || undefined,
           shippingFirstname:
             (customerName && Like(`%${customerName}%`)) || undefined,
           createdDate: (dateAdded && Like(`%${dateAdded}%`)) || undefined,
+          total: (totalAmount && MoreThan(toNumber(totalAmount))) || undefined,
         },
         value => value != null
       ),
     };
-    console.log({ options });
     if (count) {
       const orderCount = await this.orderService.count(options);
       const res = {

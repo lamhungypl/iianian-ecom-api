@@ -59,6 +59,8 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
   }
 
   public list(options: FindManyOptions<T>) {
+    console.log({ options });
+
     return this.repository.find(options);
   }
   public count(options: FindManyOptions<T>) {
