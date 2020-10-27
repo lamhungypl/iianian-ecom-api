@@ -492,7 +492,7 @@ export class CustomerController {
 
     const order = await this.orderService.list({ where: { customerId: Id } });
     const productLists = order.map(async (result: any) => {
-      const product = await this.orderProductService.find({
+      const orderProduct = await this.orderProductService.find({
         where: { orderId: result.orderId },
         select: [
           'productId',
@@ -503,34 +503,29 @@ export class CustomerController {
           'createdDate',
         ],
       });
-      const productPromises = await product.map(async (value: any) => {
-        const productsDetails: any = value;
-        const products = await this.productService.find({
-          where: { productId: value.productId },
+      const productPromises = await orderProduct.map(async (product: any) => {
+        const products = await this.productService.findOne({
+          where: { productId: product.productId },
         });
 
-        const productImages = await products.map(async (values: any) => {
-          const productImagesResult: any = values;
-          const Image = await this.productImageService.findOne({
-            select: [
-              'productId',
-              'productImageId',
-              'image',
-              'containerName',
-              'defaultImage',
-            ],
-            where: { productId: values.productId, defaultImage: 1 },
-          });
-          productImagesResult.productImages = Image;
-          return productImagesResult;
+        const productImages = await this.productImageService.findOne({
+          select: [
+            'productId',
+            'productImageId',
+            'image',
+            'containerName',
+            'defaultImage',
+          ],
+          where: { productId: product.productId, defaultImage: 1 },
         });
-        const images = await Promise.all(productImages);
-        productsDetails.productDetails = images;
-        return productsDetails;
+
+        return {
+          ...classToPlain(products),
+          productImages: classToPlain(productImages),
+        };
       });
       const productsListWithImages = await Promise.all(productPromises);
-      const temp: any = await productsListWithImages;
-      return temp;
+      return productsListWithImages;
     });
 
     const finalResult = await Promise.all(productLists);

@@ -12,7 +12,10 @@ import { BannerService } from '../../services/bannerService';
 import { MAILService } from '../../../auth/mail.services';
 import { classToPlain } from 'class-transformer';
 import { CategoryService } from '../../services/categoryService';
-import { ProductService } from '../../services/ProductService';
+import {
+  FindManyProductOptions,
+  ProductService,
+} from '../../services/ProductService';
 import arrayToTree from 'array-to-tree';
 import { ProductRelated } from '../../models/ProductRelated';
 import { ProductRelatedService } from '../../services/ProductRelatedService';
@@ -29,6 +32,9 @@ import { LanguageService } from '../../services/languageService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
+import { pickBy } from 'lodash';
+import { Like } from 'typeorm';
+import { Product } from '../../models/ProductModel';
 
 @JsonController('/list')
 export class CommonListController {
@@ -288,85 +294,35 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    //console.log(manufacturerId);
-    const select = [
-      'product.productId',
-      'product.sku',
-      'product.name',
-      'product.quantity',
-      'product.description',
-      'product.price',
-      'product.isActive AS isActive',
-      'product.manufacturerId AS manufacturerId',
-      'product.location AS location',
-      'product.minimumQuantity AS minimumQuantity',
-      'product.subtractStock',
-      'product.wishListStatus',
-      'product.stockStatusId',
-      'product.shipping',
-      'product.sortOrder',
-      'product.condition',
-      'product.dateAvailable',
-      'product.amount',
-      'product.metaTagTitle',
-      'product.metaTagDescription',
-      'product.metaTagKeyword',
-      'product.discount',
-      'product.rating',
-    ];
+    const options: FindManyProductOptions = {
+      take: limit,
+      skip: offset,
 
-    const searchConditions = [
-      {
-        name: 'product.isActive',
-        op: 'where',
-        value: 1,
-      },
-      {
-        name: 'product.manufacturerId',
-        op: 'and',
-        value: manufacturerId,
-      },
-      {
-        name: 'product.name',
-        op: 'and',
-        value: keyword,
-      },
-      {
-        name: 'product.condition',
-        op: 'andWhere',
-        value: condition,
-      },
-    ];
+      where: pickBy(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+          manufacturerId:
+            (manufacturerId && Like(`%${manufacturerId}%`)) || undefined,
+          condition: (condition && Like(`%${condition}%`)) || undefined,
+          isActive: 1,
+        },
+        value => value != null
+      ),
+    };
 
-    const whereConditions: any = [
-      {
-        name: 'product.productId',
-        op: 'inraw',
-        value: categoryId,
-      },
-    ];
-
-    const productList: any = await this.productService.productList(
-      limit,
-      offset,
-      select,
-      searchConditions,
-      whereConditions,
-      categoryId,
-      priceFrom,
-      priceTo,
-      price,
-      count
-    );
     if (count) {
-      const Response: any = {
+      const productCount = await this.productService.productCount(options);
+      const res = {
         status: 1,
         message: 'Successfully got Products count',
-        data: productList,
+        data: productCount,
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
-    const promises = productList.map(async (result: any) => {
+    const productList: Product[] = await this.productService.productList(
+      options
+    );
+    const promises = productList.map(async (result: Product) => {
       const productToCategory = await this.productToCategoryService
         .findAll({
           select: ['categoryId', 'productId'],

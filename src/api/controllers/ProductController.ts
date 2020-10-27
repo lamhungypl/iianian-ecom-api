@@ -12,7 +12,10 @@ import {
   Param,
   Put,
 } from 'routing-controllers';
-import { ProductService } from '../services/ProductService';
+import {
+  FindManyProductOptions,
+  ProductService,
+} from '../services/ProductService';
 import { ProductToCategoryService } from '../services/ProductToCategoryService';
 import { ProductImageService } from '../services/ProductImageService';
 import { Product } from '../models/ProductModel';
@@ -34,6 +37,9 @@ import { ProductViewLogService } from '../services/ProductViewLogService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import moment = require('moment');
+import { Like } from 'typeorm';
+import { pickBy } from 'lodash';
+import { Response } from 'express';
 
 @JsonController('/product')
 export class ProductController {
@@ -82,62 +88,54 @@ export class ProductController {
     @QueryParam('keyword') keyword: string,
     @QueryParam('sku') sku: string,
     @QueryParam('status') status: string,
-    @QueryParam('price') price: number,
+    // @QueryParam('price') price: number,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<Product> {
-    const select = [
-      'productId',
-      'sku',
-      'name',
-      'quantity',
-      'price',
-      'image',
-      'imagePath',
-      'isFeatured',
-      'todayDeals',
-      'isActive',
-    ];
-
+    @Res() response: Response
+  ) {
     const relation = ['productToCategory', 'relatedproduct'];
 
-    const WhereConditions = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
-      },
-      {
-        name: 'sku',
-        op: 'like',
-        value: sku || '',
-      },
-      {
-        name: 'isActive',
-        op: 'like',
-        value: (status && parseInt(status)) || 1,
-      },
-    ];
-    //console.log({ WhereConditions });
-    const productLists: any = await this.productService.list(
-      limit,
-      offset,
-      select,
-      relation,
-      WhereConditions,
-      0,
-      price,
-      count
-    );
+    const options: FindManyProductOptions = {
+      take: limit,
+      skip: offset,
+      select: [
+        'productId',
+        'sku',
+        'name',
+        'quantity',
+        'price',
+        'image',
+        'imagePath',
+        'isFeatured',
+        'todayDeals',
+        'isActive',
+      ],
+      relations: relation,
+      where: pickBy(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+          sku: (sku && Like(`%${sku}%`)) || undefined,
+
+          isActive: (status && parseInt(status)) || 1,
+        },
+        value => value != null
+      ),
+    };
+
     if (count) {
+      const productCount = await this.productService.productCount(options);
+
       const successRes: any = {
         status: 1,
         message: 'Successfully got count ',
-        data: productLists,
+        data: productCount,
       };
       return response.status(200).send(successRes);
     }
-    const productList = productLists.map(async (value: any) => {
+    const productLists: Product[] = await this.productService.productList(
+      options
+    );
+
+    const productList = productLists.map(async (value: Product) => {
       const defaultValue = await this.productImageService.findOne({
         where: {
           productId: value.productId,
@@ -172,7 +170,7 @@ export class ProductController {
     });
     const results = await Promise.all(productList);
 
-    const successResponse: any = {
+    const successResponse = {
       status: 1,
       message: 'Successfully got the complete product list. ',
       data: classToPlain(results),
@@ -701,115 +699,73 @@ export class ProductController {
   @Authorized()
   public async productDetail(
     @Param('id') id: number,
-    @Res() response: any
-  ): Promise<any> {
-    const select = [
-      'productId',
-      'sku',
-      'upc',
-      'name',
-      'description',
-      'location',
-      'minimumQuantity',
-      'quantity',
-      'subtractStock',
-      'metaTagTitle',
-      'manufacturerId',
-      'stockStatusId',
-      'shipping',
-      'dateAvailable',
-      'sortOrder',
-      'price',
-      'condition',
-      'isActive',
-    ];
-
-    const relation = ['productImage'];
-
-    const WhereConditions = [
-      {
-        name: 'productId',
-        op: 'where',
-        value: id,
-      },
-    ];
-    const productDetail: any = await this.productService.list(
-      0,
-      0,
-      select,
-      relation,
-      WhereConditions,
-      0,
-      0,
-      0
-    );
-    const productDetails: any = classToPlain(productDetail);
-    const promises = productDetails.map(async (result: any) => {
-      const productToCategory = await this.productToCategoryService
-        .findAll({
-          select: ['categoryId', 'productId'],
-          where: { productId: result.productId },
-        })
-        .then(val => {
-          const category = val.map(async (value: any) => {
-            const categoryNames = await this.categoryService.findOne({
-              categoryId: value.categoryId,
-            });
-            const JsonData = JSON.stringify(categoryNames);
-            const ParseData = JSON.parse(JsonData);
-            const temp: any = value;
-            temp.categoryName = ParseData.name;
-            return temp;
-          });
-          const results = Promise.all(category);
-          return results;
-        });
-      const relatedProductData = await this.productRelatedService
-        .findAll({ where: { productId: result.productId } })
-        .then(val => {
-          const relatedProduct = val.map(async (value: any) => {
-            const productId = value.relatedProductId;
-            const product = await this.productService.findOne({
-              select: ['productId', 'name'],
-              where: { productId },
-              relations: ['productImage'],
-            });
-            return classToPlain(product);
-          });
-          const resultData = Promise.all(relatedProduct);
-          return resultData;
-        });
-
-      const productSpecialData = await this.productSpecialService.findAll({
-        select: [
-          'productSpecialId',
-          'priority',
-          'price',
-          'dateStart',
-          'dateEnd',
-        ],
-        where: { productId: result.productId },
-      });
-      const productDiscountData = await this.productDiscountService.findAll({
-        select: [
-          'productDiscountId',
-          'quantity',
-          'priority',
-          'price',
-          'dateStart',
-          'dateEnd',
-        ],
-        where: { productId: result.productId },
-      });
-      const dd: any = result;
-      dd.Category = productToCategory;
-      dd.relatedProductDetail = relatedProductData;
-      dd.productSpecialPrice = productSpecialData;
-      dd.productDiscountData = productDiscountData;
-      return dd;
+    @Res() response: Response
+  ) {
+    const productDetail: any = await this.productService.findOneById(id, {
+      relations: ['productImage'],
     });
-    // wait until all promises resolve
-    const finalResult = await Promise.all(promises);
+    const productDetails = classToPlain(productDetail);
+
+    const productToCategory = await this.productToCategoryService
+      .findAll({
+        select: ['categoryId', 'productId'],
+        where: { productId: productDetails.productId },
+      })
+      .then(val => {
+        const category = val.map(async (value: any) => {
+          const categoryNames = await this.categoryService.findOne({
+            categoryId: value.categoryId,
+          });
+          const JsonData = JSON.stringify(categoryNames);
+          const ParseData = JSON.parse(JsonData);
+          const temp: any = value;
+          temp.categoryName = ParseData.name;
+          return temp;
+        });
+        const results = Promise.all(category);
+        return results;
+      });
+    const relatedProductData = await this.productRelatedService
+      .findAll({ where: { productId: productDetails.productId } })
+      .then(val => {
+        const relatedProduct = val.map(async (value: any) => {
+          const productId = value.relatedProductId;
+          const product = await this.productService.findOne({
+            select: ['productId', 'name'],
+            where: { productId },
+            relations: ['productImage'],
+          });
+          return classToPlain(product);
+        });
+        const resultData = Promise.all(relatedProduct);
+        return resultData;
+      });
+
+    const productSpecialData = await this.productSpecialService.findAll({
+      select: ['productSpecialId', 'priority', 'price', 'dateStart', 'dateEnd'],
+      where: { productId: productDetails.productId },
+    });
+
+    const productDiscountData = await this.productDiscountService.findAll({
+      select: [
+        'productDiscountId',
+        'quantity',
+        'priority',
+        'price',
+        'dateStart',
+        'dateEnd',
+      ],
+      where: { productId: productDetails.productId },
+    });
+
+    const finalResult = {
+      ...productDetails,
+      Category: productToCategory,
+      relatedProducts: relatedProductData,
+      productSpecial: productSpecialData,
+      productDiscount: productDiscountData,
+    };
+
     const successResponse: any = {
       status: 1,
       message: 'Successfully get productDetail',

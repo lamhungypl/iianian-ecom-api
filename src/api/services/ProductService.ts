@@ -1,147 +1,94 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Product } from '../models/ProductModel';
 import { ProductRepository } from '../repositories/ProductRepository';
-import { Like } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
+import { BaseService } from './base/BaseService';
+import { get } from 'lodash';
+import { OrderProduct } from '../models/OrderProduct';
+
+export interface FindManyProductOptions extends FindManyOptions<Product> {
+  categoryId?: string;
+  priceOrder?: 1 | 'ASC' | 'DESC' | -1;
+}
 
 @Service()
-export class ProductService {
+export class ProductService extends BaseService<Product, ProductRepository> {
   constructor(
-    @OrmRepository() private productRepository: ProductRepository,
-    @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // find product
-  public find(product: any): Promise<any> {
-    return this.productRepository.find(product);
+    @Logger(__filename) private log: LoggerInterface,
+    @InjectRepository(ProductRepository)
+    repository: ProductRepository
+  ) {
+    super(repository);
   }
 
-  // find one product
-  public findOne(findCondition: any): Promise<any> {
-    return this.productRepository.findOne(findCondition);
-  }
-
-  // product list
-  public list(
-    limit: number,
-    offset: number,
-    select: any = [],
-    relation: any = [],
-    whereConditions: any = [],
-    search: any = [],
-    price: number,
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-
-    if (relation && relation.length > 0) {
-      condition.relations = relation;
-    }
-
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        const operator: string = item.op;
-        if (operator === 'where' && item.value !== '') {
-          condition.where[item.name] = item.value;
-        } else if (operator === 'like' && item.value !== '') {
-          condition.where[item.name] = Like('%' + item.value + '%');
-        }
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((item: any) => {
-        const operator: string = item.op;
-        if (operator === 'like' && item.value !== '') {
-          condition.where[item.name] = Like('%' + item.value + '%');
-        }
-      });
-    }
-
-    if (price && price === 1) {
-      condition.order = {
-        price: 'ASC',
-      };
-    }
-
-    if (price && price === 2) {
-      condition.order = {
-        price: 'DESC',
-      };
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-    this.log.info('condition product list', { condition });
-    if (count) {
-      return this.productRepository.count(condition);
-    }
-    return this.productRepository.find(condition);
-  }
-
-  // create product
-  public async create(product: Product): Promise<Product> {
-    const newProduct = await this.productRepository.save(product);
-    return newProduct;
-  }
-
-  // update product
-  public update(id: any, product: Product): Promise<Product> {
-    this.log.info('Update a product');
-    product.productId = id;
-    return this.productRepository.save(product);
-  }
-
-  // delete product
-  public async delete(id: number): Promise<any> {
-    this.log.info('Delete a product');
-    const newProduct = await this.productRepository.delete(id);
-    return newProduct;
-  }
-
-  // product list
   public async productList(
-    limit: number,
-    offset: number,
-    select: any = [],
-    searchConditions: any = [],
-    whereConditions: any = [],
-    categoryId: any = [],
-    priceFrom: string,
-    priceTo: string,
-    price: number,
-    count: number | boolean
-  ): Promise<any> {
-    return await this.productRepository.productList(
-      limit,
-      offset,
-      select,
-      searchConditions,
-      whereConditions,
-      categoryId,
-      priceFrom,
-      priceTo,
-      price,
-      count
+    options: FindManyProductOptions
+  ): Promise<Product[]> {
+    const { categoryId, priceOrder, ...optionsFind } = options;
+
+    const products = await this.repository.find({
+      ...optionsFind,
+      join: {
+        alias: 'product',
+        innerJoinAndSelect: {
+          productToCategory: 'product.productId',
+        },
+      },
+      order: {
+        name: 'ASC',
+        price: priceOrder,
+      },
+    });
+
+    return products;
+  }
+
+  public async productCount(options: FindManyProductOptions): Promise<number> {
+    const { categoryId, priceOrder, ...optionsFind } = options;
+
+    const products = await this.repository.count({
+      ...optionsFind,
+      // join: {
+      //   alias: 'product',
+      //   innerJoinAndSelect: {
+      //     productToCategory: 'product.productId',
+      //   },
+      // },
+      // order: {
+      //   name: 'ASC',
+      //   price: priceOrder,
+      // },
+    });
+
+    return products;
+  }
+
+  public async recentProductSelling(limit: number): Promise<Product[]> {
+    const query = this.repository.manager.createQueryBuilder(
+      OrderProduct,
+      'orderProduct'
     );
+    query.select([
+      'COUNT(orderProduct.order_id) as orderCount',
+      'orderProduct.product_id as product',
+    ]);
+    query.groupBy('product');
+    query.orderBy('orderCount', 'DESC');
+    query.limit(limit);
+
+    return query.getRawMany();
   }
 
-  // Recent selling product
-  public async recentProductSelling(limit: number): Promise<any> {
-    return await this.productRepository.recentProductSelling(limit);
-  }
-
-  // Maximum Product price
   public async productMaxPrice(maximum: any): Promise<any> {
-    return await this.productRepository.productMaxPrice(maximum);
+    const query = this.repository.manager.createQueryBuilder(
+      Product,
+      'product'
+    );
+    query.select(maximum);
+    //console.log({ productMaxPrice: query.getQuery() });
+
+    return query.getRawOne();
   }
 }

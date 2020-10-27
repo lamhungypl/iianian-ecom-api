@@ -63,8 +63,8 @@ export class CustomerOrderController {
    * @apiParam (Request body) {String} shippingCountry Shipping Country
    * @apiParam (Request body) {String} shippingZone Shipping Zone
    * @apiParam (Request body) {String} shippingAddressFormat Shipping Address Format
-   * @apiparam (Request body) {Number} phoneNumber Customer Phone Number
-   * @apiparam (Request body) {String} emailId Customer Email Id
+   * @apiParam (Request body) {Number} phoneNumber Customer Phone Number
+   * @apiParam (Request body) {String} emailId Customer Email Id
    * @apiParamExample {json} Input
    * {
    *      "productDetail" :[
@@ -155,27 +155,32 @@ export class CustomerOrderController {
       productDetails.quantity = orderProduct[i].quantity;
       productDetails.total = +orderProduct[i].quantity * +orderProduct[i].price;
       productDetails.model = orderProduct[i].model;
-      const productInformatiom = await this.orderProductService.createData(
+      const productInformation = await this.orderProductService.createData(
         productDetails
       );
-      const productImageData = await this.productService.findOne(
-        productInformatiom.productId
+      const productData = await this.productService.findOneById(
+        productInformation.productId
       );
       const productImageDetail = await this.productImageService.findOne({
-        where: { productId: productInformatiom.productId },
+        where: { productId: productInformation.productId },
       });
-      productImageData.productInformatiomData = productInformatiom;
-      productImageData.productImage = productImageDetail;
+      // productData.productInformationData = productInformation;
+      // productData.productImage = productImageDetail;
       totalProductAmount = await this.orderProductService.findData(
         orderProduct[i].productId,
         orderData.orderId,
-        productInformatiom.orderProductId
+        productInformation.orderProductId
       );
       for (n = 0; n < totalProductAmount.length; n++) {
         totalAmount += +totalProductAmount[n].total;
       }
-      productImageData.productOption = [];
-      productDetailData.push(productImageData);
+      // productData.productOption = [];
+      productDetailData.push({
+        ...productData,
+        productInformationData: productInformation,
+        productImage: productImageDetail,
+        productOption: [],
+      });
     }
 
     newOrder.total = totalAmount;
