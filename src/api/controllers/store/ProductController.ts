@@ -30,6 +30,7 @@ import { ProductRatingService } from '../../services/RatingService';
 import { pickBy } from 'lodash';
 import { FindManyOptions, Like } from 'typeorm';
 import { Product } from '../../models/ProductModel';
+import { Category } from 'src/api/models/categoryModel';
 
 @JsonController('/product-store')
 export class ProductController {
@@ -105,7 +106,9 @@ export class ProductController {
       .then(val => {
         const category = val.map(async (value: any) => {
           const categoryNames = await this.categoryService.findOne({
-            categoryId: value.categoryId,
+            where: {
+              categoryId: value.categoryId,
+            },
           });
           const JsonData = JSON.stringify(categoryNames);
           const ParseData = JSON.parse(JsonData);
@@ -475,23 +478,13 @@ export class ProductController {
     @QueryParam('CategoryId') CategoryId: number,
     @Res() response: any
   ): Promise<any> {
-    const select = ['categoryId', 'name', 'parentInt', 'sortOrder'];
-    const search = [];
-    const WhereConditions = [
-      {
-        name: 'categoryId',
-        value: CategoryId,
+    const options: FindManyOptions<Category> = {
+      select: ['categoryId', 'name', 'parentInt', 'sortOrder'],
+      where: {
+        categoryId: CategoryId,
       },
-    ];
-    const category: any = await this.categoryService.list(
-      0,
-      0,
-      select,
-      search,
-      WhereConditions,
-      0,
-      0
-    );
+    };
+    const category: Category[] = await this.categoryService.list(options);
     const promise = category.map(async (result: any) => {
       const temp: any = result;
       const categoryLevel: any = await this.categoryPathService
@@ -503,7 +496,9 @@ export class ProductController {
         .then(values => {
           const categories = values.map(async (val: any) => {
             const categoryNames = await this.categoryService.findOne({
-              categoryId: val.pathId,
+              where: {
+                categoryId: val.pathId,
+              },
             });
             const JsonData = JSON.stringify(categoryNames);
             const ParseData = JSON.parse(JsonData);

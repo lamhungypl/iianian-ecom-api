@@ -32,9 +32,10 @@ import { LanguageService } from '../../services/languageService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
-import { pickBy } from 'lodash';
+import { orderBy, pickBy } from 'lodash';
 import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
 import { Product } from '../../models/ProductModel';
+import { Category } from 'src/api/models/categoryModel';
 
 @JsonController('/list')
 export class CommonListController {
@@ -158,43 +159,45 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'categoryId',
-      'name',
-      'image',
-      'imagePath',
-      'parentInt',
-      'sortOrder',
-      'metaTagTitle',
-      'metaTagDescription',
-      'metaTagKeyword',
-    ];
-
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Category> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'categoryId',
+        'name',
+        'image',
+        'imagePath',
+        'parentInt',
+        'sortOrder',
+        'metaTagTitle',
+        'metaTagDescription',
+        'metaTagKeyword',
+      ],
+      where: pickBy<
+        | FindConditions<Category>
+        | FindConditions<Category>[]
+        | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+      order: {
+        name: (sortOrder === -1 && 'DESC') || 'ASC',
       },
-    ];
-    const WhereConditions = [];
-    const categoryData = await this.categoryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      sortOrder,
-      count
-    );
+    };
+
     if (count) {
+      const categoryDataCount = await this.categoryService.count(options);
       const successResponse: any = {
         status: 1,
         message: 'Successfully get All category List',
-        data: categoryData,
+        data: categoryDataCount,
       };
       return response.status(200).send(successResponse);
     } else {
+      const categoryData = await this.categoryService.list(options);
       const categoryList = arrayToTree(categoryData, {
         parentProperty: 'parentInt',
         customID: 'categoryId',
@@ -351,7 +354,9 @@ export class CommonListController {
         .then(val => {
           const category = val.map(async (value: any) => {
             const categoryNames = await this.categoryService.findOne({
-              categoryId: value.categoryId,
+              where: {
+                categoryId: value.categoryId,
+              },
             });
             const JsonData = JSON.stringify(categoryNames);
             const ParseData = JSON.parse(JsonData);

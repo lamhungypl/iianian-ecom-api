@@ -20,6 +20,8 @@ import { CategoryPath } from '../models/CategoryPath';
 import arrayToTree from 'array-to-tree';
 import { DeleteCategoryRequest } from './requests/deleteCategoryRequest';
 import { CategoryPathService } from '../services/CategoryPathService';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
+import { pickBy } from 'lodash';
 
 @JsonController()
 export class CategoryController {
@@ -249,12 +251,12 @@ export class CategoryController {
     @Res() response: any,
     @Req() request: any
   ): Promise<Category> {
-    const categoryId = await this.categoryService.findOne({
+    const categoryTarget = await this.categoryService.findOne({
       where: {
         categoryId: category.categoryId,
       },
     });
-    if (!categoryId) {
+    if (!categoryTarget) {
       const errorResponse: any = {
         status: 0,
         message: 'Invalid categoryId',
@@ -279,7 +281,9 @@ export class CategoryController {
     for (const path of categoryPath) {
       await this.categoryPathService.delete(path.categoryPathId);
     }
-    const deleteCategory = await this.categoryService.delete(categoryId);
+    const deleteCategory = await this.categoryService.delete(
+      categoryTarget.categoryId
+    );
     //console.log('category' + deleteCategory);
     if (!deleteCategory) {
       const successResponse: any = {
@@ -338,23 +342,33 @@ export class CategoryController {
       },
     ];
     const WhereConditions = [];
-    const category: any = await this.categoryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      sortOrder,
-      count
-    );
+
+    const options: FindManyOptions<Category> = {
+      take: limit,
+      skip: offset,
+      select: ['categoryId', 'name', 'parentInt', 'sortOrder'],
+      where: pickBy<
+        | FindConditions<Category>[]
+        | FindConditions<Category>
+        | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+    };
+
     if (count) {
+      const categoryCount = await this.categoryService.count(options);
       const successResponse: any = {
         status: 1,
         message: 'successfully got the complete category list. ',
-        data: category,
+        data: categoryCount,
       };
       return response.status(200).send(successResponse);
     }
+    const category: Category[] = await this.categoryService.list(options);
     const promise = category.map(async (result: any) => {
       const temp: any = result;
       const categoryLevel: any = await this.categoryPathService
@@ -366,7 +380,9 @@ export class CategoryController {
         .then(values => {
           const categories = values.map(async (val: any) => {
             const categoryNames = await this.categoryService.findOne({
-              categoryId: val.pathId,
+              where: {
+                categoryId: val.pathId,
+              },
             });
             const JsonData = JSON.stringify(categoryNames);
             const ParseData = JSON.parse(JsonData);
@@ -422,44 +438,45 @@ export class CategoryController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<Category> {
-    //console.log(keyword);
-    const select = [
-      'categoryId',
-      'name',
-      'image',
-      'imagePath',
-      'parentInt',
-      'sortOrder',
-      'metaTagTitle',
-      'metaTagDescription',
-      'metaTagKeyword',
-    ];
-
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Category> = {
+      take: limit || undefined,
+      skip: offset || undefined,
+      select: [
+        'categoryId',
+        'name',
+        'image',
+        'imagePath',
+        'parentInt',
+        'sortOrder',
+        'metaTagTitle',
+        'metaTagDescription',
+        'metaTagKeyword',
+      ],
+      where: pickBy<
+        | FindConditions<Category>[]
+        | FindConditions<Category>
+        | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+      order: {
+        name: (sortOrder === -1 && 'DESC') || 'ASC',
       },
-    ];
-    const WhereConditions = [];
-    const category: any = await this.categoryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      sortOrder,
-      count
-    );
+    };
+
     if (count) {
+      const categoryCount = await this.categoryService.count(options);
       const successResponse: any = {
         status: 1,
         message: 'Successfully get category List count',
-        data: category,
+        data: categoryCount,
       };
       return response.status(200).send(successResponse);
     } else {
+      const category: Category[] = await this.categoryService.list(options);
       const categoryList = arrayToTree(category, {
         parentProperty: 'parentInt',
         customID: 'categoryId',
