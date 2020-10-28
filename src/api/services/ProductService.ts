@@ -26,41 +26,19 @@ export class ProductService extends BaseService<Product, ProductRepository> {
   public async productList(
     options: FindManyProductOptions
   ): Promise<Product[]> {
-    const { categoryId, priceOrder, ...optionsFind } = options;
+    // const { categoryId, priceOrder, ...optionsFind } = options;
 
-    const products = await this.repository.find({
-      ...optionsFind,
-      join: {
-        alias: 'product',
-        innerJoinAndSelect: {
-          productToCategory: 'product.productId',
-        },
-      },
-      order: {
-        name: 'ASC',
-        price: priceOrder,
-      },
-    });
+    const products = await this.repository.find(options);
 
     return products;
   }
 
-  public async productCount(options: FindManyProductOptions): Promise<number> {
-    const { categoryId, priceOrder, ...optionsFind } = options;
+  public async productCount(
+    options: FindManyOptions<Product>
+  ): Promise<number> {
+    // const { categoryId, priceOrder, ...optionsFind } = options;
 
-    const products = await this.repository.count({
-      ...optionsFind,
-      // join: {
-      //   alias: 'product',
-      //   innerJoinAndSelect: {
-      //     productToCategory: 'product.productId',
-      //   },
-      // },
-      // order: {
-      //   name: 'ASC',
-      //   price: priceOrder,
-      // },
-    });
+    const products = await this.repository.count(options);
 
     return products;
   }

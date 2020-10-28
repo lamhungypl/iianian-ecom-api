@@ -13,7 +13,7 @@ import { MAILService } from '../../../auth/mail.services';
 import { classToPlain } from 'class-transformer';
 import { CategoryService } from '../../services/categoryService';
 import {
-  FindManyProductOptions,
+  // FindManyProductOptions,
   ProductService,
 } from '../../services/ProductService';
 import arrayToTree from 'array-to-tree';
@@ -33,7 +33,7 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
 import { pickBy } from 'lodash';
-import { Like } from 'typeorm';
+import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 
 @JsonController('/list')
@@ -294,20 +294,40 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const options: FindManyProductOptions = {
+    const products = await this.productService.repository.manager
+      .createQueryBuilder(Product, 'product')
+      .leftJoinAndSelect('product.productToCategory', 'productToCategory')
+      .where('productToCategory.categoryId = :categoryId', { categoryId })
+      .getMany();
+
+    const relation = ['productToCategory', 'relatedproduct'];
+
+    const options: FindManyOptions<Product> = {
       take: limit,
       skip: offset,
-
-      where: pickBy(
+      relations: relation,
+      where: pickBy<
+        | FindConditions<Product>[]
+        | FindConditions<Product>
+        | { [key: string]: any }
+      >(
         {
           name: (keyword && Like(`%${keyword}%`)) || undefined,
           manufacturerId:
             (manufacturerId && Like(`%${manufacturerId}%`)) || undefined,
           condition: (condition && Like(`%${condition}%`)) || undefined,
           isActive: 1,
+          // categoryId: categoryId || undefined,
+          // 'productToCategory.categoryId': categoryId,
         },
         value => value != null
       ),
+      // join: {
+      //   alias: 'product',
+      //   leftJoinAndSelect: {
+      //     productToCategory: 'product.productToCategory',
+      //   },
+      // },
     };
 
     if (count) {
@@ -322,7 +342,7 @@ export class CommonListController {
     const productList: Product[] = await this.productService.productList(
       options
     );
-    const promises = productList.map(async (result: Product) => {
+    const promises = products.map(async (result: Product) => {
       const productToCategory = await this.productToCategoryService
         .findAll({
           select: ['categoryId', 'productId'],

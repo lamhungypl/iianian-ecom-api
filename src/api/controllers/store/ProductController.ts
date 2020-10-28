@@ -12,7 +12,7 @@ import {
 import { classToPlain } from 'class-transformer';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
 import {
-  FindManyProductOptions,
+  // FindManyProductOptions,
   ProductService,
 } from '../../services/ProductService';
 import { CategoryService } from '../../services/categoryService';
@@ -28,7 +28,8 @@ import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { CategoryPathService } from '../../services/CategoryPathService';
 import { ProductRatingService } from '../../services/RatingService';
 import { pickBy } from 'lodash';
-import { Like } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
+import { Product } from '../../models/ProductModel';
 
 @JsonController('/product-store')
 export class ProductController {
@@ -282,7 +283,7 @@ export class ProductController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const options: FindManyProductOptions = {
+    const options: FindManyOptions<Product> = {
       take: limit,
       skip: offset,
       select: [
@@ -383,7 +384,7 @@ export class ProductController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const options: FindManyProductOptions = {
+    const options: FindManyOptions<Product> = {
       take: limit,
       skip: offset,
       select: [

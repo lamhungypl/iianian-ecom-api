@@ -13,7 +13,7 @@ import {
   Put,
 } from 'routing-controllers';
 import {
-  FindManyProductOptions,
+  // FindManyProductOptions,
   ProductService,
 } from '../services/ProductService';
 import { ProductToCategoryService } from '../services/ProductToCategoryService';
@@ -37,7 +37,7 @@ import { ProductViewLogService } from '../services/ProductViewLogService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import moment = require('moment');
-import { Like } from 'typeorm';
+import { FindManyOptions, Like } from 'typeorm';
 import { pickBy } from 'lodash';
 import { Response } from 'express';
 
@@ -94,7 +94,7 @@ export class ProductController {
   ) {
     const relation = ['productToCategory', 'relatedproduct'];
 
-    const options: FindManyProductOptions = {
+    const options: FindManyOptions<Product> = {
       take: limit,
       skip: offset,
       select: [

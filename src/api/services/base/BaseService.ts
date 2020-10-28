@@ -27,7 +27,7 @@ export interface BaseServiceImpl<T> {
 
 export class BaseService<T extends BaseModel, R extends Repository<T>>
   implements BaseServiceImpl<T> {
-  protected readonly repository: R;
+  public readonly repository: R;
   constructor(repository: R) {
     this.repository = repository;
   }
