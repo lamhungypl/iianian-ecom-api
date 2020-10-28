@@ -1,3 +1,5 @@
+import { Response } from 'express';
+import { pickBy } from 'lodash';
 import 'reflect-metadata';
 import {
   Get,
@@ -12,6 +14,7 @@ import {
   QueryParam,
   Param,
 } from 'routing-controllers';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import { OrderStatus } from '../models/orderStatus';
 import { OrderStatusService } from '../services/orderStatusService';
 import { CreateOrderStatus } from './requests/createOrderStatusRequest';
@@ -164,7 +167,7 @@ export class OrderStatusController {
     @QueryParam('offset') offset: number,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
+    @Res() response: Response
   ): Promise<any> {
     const select = ['orderStatusId', 'name', 'colorCode', 'isActive'];
     const search = [
@@ -174,15 +177,30 @@ export class OrderStatusController {
         value: keyword,
       },
     ];
-    const WhereConditions = [];
-    const orderStatusList = await this.orderStatusService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<OrderStatus> = {
+      take: limit,
+      skip: offset,
+      select: ['orderStatusId', 'name', 'colorCode', 'isActive'],
+      where: pickBy<
+        | FindConditions<OrderStatus>[]
+        | FindConditions<OrderStatus>
+        | { [key: string]: any }
+      >(
+        { name: (keyword && Like(`%${keyword}%`)) || undefined },
+        value => value != null
+      ),
+    };
+    if (count) {
+      const orderStatusCount = await this.orderStatusService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got the complete order status list.',
+        data: orderStatusCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const orderStatusList = await this.orderStatusService.list(options);
     if (orderStatusList) {
       const successResponse: any = {
         status: 1,
@@ -238,7 +256,9 @@ export class OrderStatusController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteOrderStatus = await this.orderStatusService.delete(orderStatus);
+    const deleteOrderStatus = await this.orderStatusService.delete(
+      orderStatus.orderStatusId
+    );
     if (deleteOrderStatus) {
       const successResponse: any = {
         status: 1,
