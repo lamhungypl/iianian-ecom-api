@@ -4964,6 +4964,53 @@ define({
     },
     {
       type: 'get',
+      url: '/api/order/order-excel-list',
+      title: 'Order Excel',
+      group: 'Order',
+      parameter: {
+        fields: {
+          'Request body': [
+            {
+              group: 'Request body',
+              type: 'String',
+              optional: false,
+              field: 'orderId',
+              description: '<p>orderId</p>',
+            },
+          ],
+        },
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n     "message": "Successfully download the Order Excel List..!!",\n     "status": "1",\n     "data": {},\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/order/order-excel-list',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'Order Excel List error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/OrderController.ts',
+      groupTitle: 'Order',
+      name: 'GetApiOrderOrderExcelList',
+    },
+    {
+      type: 'get',
       url: '/api/order/orderlist',
       title: 'Order List API',
       group: 'Order',

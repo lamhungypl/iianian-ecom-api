@@ -24,6 +24,7 @@ import { Order } from '../models/Order';
 import { pickBy, toNumber } from 'lodash';
 import { Response } from 'express';
 
+import * as fs from 'fs';
 @JsonController('/order')
 export class OrderController {
   constructor(
@@ -555,5 +556,127 @@ export class OrderController {
       };
       return response.status(400).send(errorResponse);
     }
+  }
+  // Order Details Excel Document download
+  /**
+   * @api {get} /api/order/order-excel-list Order Excel
+   * @apiGroup Order
+   * @apiParam (Request body) {String} orderId orderId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Order Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/order/order-excel-list
+   * @apiErrorExample {json} Order Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/order-excel-list')
+  public async excelOrderView(
+    @QueryParam('orderId') orderId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Order Detail Sheet');
+    const rows = [];
+    const orderid = orderId.split(',');
+    for (const id of orderid) {
+      const dataId = await this.orderService.list({ where: { orderId: id } });
+      if (dataId.length === 0) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid orderId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Order Id', key: 'orderPrefixId', size: 16, width: 15 },
+      {
+        header: 'Customer Name',
+        key: 'shippingFirstname',
+        size: 16,
+        width: 15,
+      },
+      { header: 'Email', key: 'email', size: 16, width: 15 },
+      { header: 'Mobile Number', key: 'telephone', size: 16, width: 15 },
+      { header: 'Total Amount', key: 'total', size: 16, width: 15 },
+      { header: 'Created Date', key: 'createdDate', size: 16, width: 15 },
+      { header: 'Updated Date', key: 'modifiedDate', size: 16, width: 15 },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('G1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of orderid) {
+      const dataId = await this.orderService.findOneById(id);
+      rows.push([
+        dataId.orderPrefixId,
+        dataId.shippingFirstname + ' ' + dataId.shippingLastname,
+        dataId.email,
+        dataId.telephone,
+        dataId.total,
+        dataId.createdDate,
+        dataId.modifiedDate,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './OrderExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
   }
 }
