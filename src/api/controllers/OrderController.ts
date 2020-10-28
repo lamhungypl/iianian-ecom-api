@@ -8,6 +8,8 @@ import {
   Req,
   Post,
   Body,
+  Delete,
+  Param,
 } from 'routing-controllers';
 import { OrderService } from '../services/OrderService';
 import { CustomerService } from '../services/CustomerService';
@@ -25,6 +27,8 @@ import { pickBy, toNumber } from 'lodash';
 import { Response } from 'express';
 
 import * as fs from 'fs';
+import { DeleteOrderRequest } from './requests/DeleteOrderRequest';
+
 @JsonController('/order')
 export class OrderController {
   constructor(
@@ -678,5 +682,109 @@ export class OrderController {
         }
       });
     });
+  }
+  // Delete Order API
+  /**
+   * @api {delete} /api/order/delete-order/:id Delete Single Order API
+   * @apiGroup Order
+   * @apiHeader {String} Authorization
+   * @apiParamExample {json} Input
+   * {
+   *      "id" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted Order.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/order/delete-order/:id
+   * @apiErrorExample {json} orderDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Delete('/delete-order/:id')
+  @Authorized()
+  public async deleteOrder(
+    @Param('id') orderid: number,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const orderData = await this.orderService.list({
+      where: { orderId: orderid },
+    });
+    if (orderData.length === 0) {
+      const errorResponse: any = {
+        status: 0,
+        message: 'Invalid orderId',
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const deleteOrder = await this.orderService.delete(orderid);
+    if (deleteOrder) {
+      const successResponse: any = {
+        status: 1,
+        message: 'Order Deleted Successfully',
+      };
+      return response.status(200).send(successResponse);
+    } else {
+      const errorResponse: any = {
+        status: 0,
+        message: 'unable to delete Order',
+      };
+      return response.status(400).send(errorResponse);
+    }
+  }
+
+  // Delete Multiple Order API
+  /**
+   * @api {post} /api/order/delete-order Delete Order API
+   * @apiGroup Order
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {number} orderId orderId
+   * @apiParamExample {json} Input
+   * {
+   * "orderId" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted Order.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/order/delete-order
+   * @apiErrorExample {json} orderDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Post('/delete-order')
+  @Authorized()
+  public async deleteMultipleOrder(
+    @Body({ validate: true }) orderDelete: DeleteOrderRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const orderIdNo = orderDelete.orderId.toString();
+    const orderid = orderIdNo.split(',');
+    for (const id of orderid) {
+      const orderData = await this.orderService.list({
+        where: { orderId: id },
+      });
+      if (orderData.length === 0) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose a order for delete',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+
+    for (const id of orderid) {
+      const deleteOrderId = parseInt(id, 10);
+      await this.orderService.delete(deleteOrderId);
+    }
+    const successResponse: any = {
+      status: 1,
+      message: 'Order Deleted Successfully',
+    };
+    return response.status(200).send(successResponse);
   }
 }

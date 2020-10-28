@@ -4896,6 +4896,62 @@ define({
       name: 'PutApiManufacturerUpdateManufacturerId',
     },
     {
+      type: 'delete',
+      url: '/api/order/delete-order/:id',
+      title: 'Delete Single Order API',
+      group: 'Order',
+      header: {
+        fields: {
+          Header: [
+            {
+              group: 'Header',
+              type: 'String',
+              optional: false,
+              field: 'Authorization',
+              description: '',
+            },
+          ],
+        },
+      },
+      parameter: {
+        examples: [
+          {
+            title: 'Input',
+            content: '{\n     "id" : "",\n}',
+            type: 'json',
+          },
+        ],
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n"message": "Successfully deleted Order.",\n"status": "1"\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/order/delete-order/:id',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'orderDelete error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/OrderController.ts',
+      groupTitle: 'Order',
+      name: 'DeleteApiOrderDeleteOrderId',
+    },
+    {
       type: 'get',
       url: '/api/order/order-detail',
       title: 'Order Detail API',
@@ -5305,6 +5361,73 @@ define({
       filename: 'src/api/controllers/OrderController.ts',
       groupTitle: 'Order',
       name: 'GetApiOrderTotalOrderAmount',
+    },
+    {
+      type: 'post',
+      url: '/api/order/delete-order',
+      title: 'Delete Order API',
+      group: 'Order',
+      header: {
+        fields: {
+          Header: [
+            {
+              group: 'Header',
+              type: 'String',
+              optional: false,
+              field: 'Authorization',
+              description: '',
+            },
+          ],
+        },
+      },
+      parameter: {
+        fields: {
+          'Request body': [
+            {
+              group: 'Request body',
+              type: 'number',
+              optional: false,
+              field: 'orderId',
+              description: '<p>orderId</p>',
+            },
+          ],
+        },
+        examples: [
+          {
+            title: 'Input',
+            content: '{\n"orderId" : "",\n}',
+            type: 'json',
+          },
+        ],
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n"message": "Successfully deleted Order.",\n"status": "1"\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/order/delete-order',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'orderDelete error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/OrderController.ts',
+      groupTitle: 'Order',
+      name: 'PostApiOrderDeleteOrder',
     },
     {
       type: 'post',
