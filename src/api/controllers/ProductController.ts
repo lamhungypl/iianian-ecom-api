@@ -36,10 +36,11 @@ import { UpdateTodayDealsParam } from './requests/UpdateTodayDealsParam';
 import { ProductViewLogService } from '../services/ProductViewLogService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
-import moment = require('moment');
+import moment from 'moment';
 import { FindManyOptions, Like } from 'typeorm';
 import { pickBy } from 'lodash';
 import { Response } from 'express';
+import fs from 'fs';
 
 @JsonController('/product')
 export class ProductController {
@@ -1063,4 +1064,276 @@ export class ProductController {
       return response.status(200).send(successResponse);
     }
   }
+  // Product Details Excel Document download
+  /**
+   * @api {get} /api/product/product-excel-list Product Excel
+   * @apiGroup Product
+   * @apiParam (Request body) {String} productId productId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Product Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/product/product-excel-list
+   * @apiErrorExample {json} product Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/product-excel-list')
+  @Authorized()
+  public async excelProductView(
+    @QueryParam('productId') productId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Product Detail Sheet');
+    const rows = [];
+    const productid = productId.split(',');
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid productId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Product Id', key: 'productId', size: 16, width: 15 },
+      { header: 'Product Name', key: 'name', size: 16, width: 15 },
+      { header: 'Description', key: 'description', size: 16, width: 30 },
+      { header: 'Price', key: 'price', size: 16, width: 15 },
+      { header: 'SKU', key: 'sku', size: 16, width: 15 },
+      { header: 'UPC', key: 'upc', size: 16, width: 15 },
+      { header: 'Quantity', key: 'quantity', size: 16, width: 15 },
+      {
+        header: 'Minimum Quantity',
+        key: 'minimumQuantity',
+        size: 16,
+        width: 19,
+      },
+      { header: 'Subtract Stock', key: 'subtractstock', size: 16, width: 15 },
+      { header: 'Manufacture Id', key: 'manufactureId', size: 16, width: 15 },
+      { header: 'Meta Tag Title', key: 'metaTagTitle', size: 16, width: 15 },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('G1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('H1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('I1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('J1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('K1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      const productDescription = dataId.description;
+      const dataDescription = productDescription.replace(
+        /(&nbsp;|(<([^>]+)>))/gi,
+        ''
+      );
+      rows.push([
+        dataId.productId,
+        dataId.name,
+        dataDescription.trim(),
+        dataId.price,
+        dataId.sku,
+        dataId.upc,
+        dataId.quantity,
+        dataId.minimumQuantity,
+        dataId.subtractStock,
+        dataId.manufacturerId,
+        dataId.metaTagTitle,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './ProductExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
+  }
+
+  // // Delete Multiple Product API
+
+  // /**
+  //  * @api {post} /api/product/delete-product Delete Product API
+  //  * @apiGroup Product
+  //  * @apiHeader {String} Authorization
+  //  * @apiParam (Request body) {number} productId productId
+  //  * @apiParamExample {json} Input
+  //  * {
+  //  * "productId" : "",
+  //  * }
+  //  * @apiSuccessExample {json} Success
+  //  * HTTP/1.1 200 OK
+  //  * {
+  //  * "message": "Successfully deleted Product.",
+  //  * "status": "1"
+  //  * }
+  //  * @apiSampleRequest /api/product/delete-product
+  //  * @apiErrorExample {json} productDelete error
+  //  * HTTP/1.1 500 Internal Server Error
+  //  */
+  // @Post('/delete-product')
+  // @Authorized()
+  // public async deleteMultipleProduct(@Body({validate: true}) productDelete: DeleteProductRequest , @Res() response: any, @Req() request: any): Promise<Product> {
+
+  //     const productIdNo = productDelete.productId.toString();
+  //     const productid = productIdNo.split(',');
+  //     for ( const id of productid ) {
+  //         const dataId = await this.productService.findOneById(id);
+  //         if (dataId === undefined) {
+  //             const errorResponse: any = {
+  //                 status: 0,
+  //                 message: 'Please choose a product for delete',
+  //             };
+  //             return response.status(400).send(errorResponse);
+  //         }
+  //     }
+  //     for ( const id of productid ) {
+  //         const orderProductId = await this.orderProductService.findOne({where: { productId: id }});
+  //         if (orderProductId) {
+  //             const errorResponse: any = {
+  //                 status: 0,
+  //                 message: 'That product is ordered',
+  //             };
+  //             return response.status(400).send(errorResponse);
+  //         }
+  //     }
+  //     for ( const id of productid ) {
+  //         const deleteProductId = parseInt(id, 10);
+  //         await this.productService.delete(deleteProductId);
+  //     }
+  //     const successResponse: any = {
+  //         status: 1,
+  //         message: 'Successfully deleted Product',
+  //     };
+  //     return response.status(200).send(successResponse);
+  // }
+  //   // Delete Product API
+  // /**
+  //  * @api {delete} /api/product/delete-product/:id Delete Single Product API
+  //  * @apiGroup Product
+  //  * @apiHeader {String} Authorization
+  //  * @apiParamExample {json} Input
+  //  * {
+  //  *      "id" : "",
+  //  * }
+  //  * @apiSuccessExample {json} Success
+  //  * HTTP/1.1 200 OK
+  //  * {
+  //  * "message": "Successfully deleted Product.",
+  //  * "status": "1"
+  //  * }
+  //  * @apiSampleRequest /api/product/delete-product/:id
+  //  * @apiErrorExample {json} productDelete error
+  //  * HTTP/1.1 500 Internal Server Error
+  //  */
+  // @Delete('/delete-product/:id')
+  // @Authorized()
+  // public async deleteProduct(@Param('id') productid: number , @Res() response: any, @Req() request: any): Promise<Product> {
+  //     const product = await this.productService.findOne(productid);
+  //     if (product === undefined) {
+  //         const errorResponse: any = {
+  //             status: 0,
+  //             message: 'Invalid productId',
+  //         };
+  //         return response.status(400).send(errorResponse);
+  //     }
+  //     const orderProductId = await this.orderProductService.findOne({where: { productId: productid }});
+  //     if (orderProductId) {
+  //         const errorResponse: any = {
+  //             status: 0,
+  //             message: 'That product is ordered',
+  //         };
+  //         return response.status(400).send(errorResponse);
+  //     }
+  //     const deleteProduct = await this.productService.delete(productid);
+
+  //     if (deleteProduct) {
+  //         const successResponse: any = {
+  //             status: 1,
+  //             message: 'Successfully deleted Product',
+  //         };
+  //         return response.status(200).send(successResponse);
+  //     } else {
+  //         const errorResponse: any = {
+  //             status: 0,
+  //             message: 'unable to delete product',
+  //         };
+  //         return response.status(400).send(errorResponse);
+  //     }
+  // }
 }
