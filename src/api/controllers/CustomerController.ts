@@ -27,8 +27,11 @@ import { ProductService } from '../services/ProductService';
 import { OrderProductService } from '../services/OrderProductService';
 import { EmailTemplateService } from '../services/emailTemplateService';
 import { Response } from 'express';
-import { FindManyOptions, Like } from 'typeorm';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import pickBy from 'lodash/pickBy';
+import parseInt from 'lodash/parseInt';
+import * as fs from 'fs';
+import { DeleteCustomerRequest } from './requests/DeleteCustomerRequest';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -217,10 +220,10 @@ export class CustomerController {
   public async customerList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('name') name = '',
-    @QueryParam('status') status: number,
-    @QueryParam('email') email = '',
-    @QueryParam('customerGroup') customerGroup: number,
+    @QueryParam('name', { type: 'string' }) name: string,
+    @QueryParam('status', { type: 'string' }) status: string,
+    @QueryParam('email', { type: 'sting' }) email: string,
+    @QueryParam('customerGroup', { type: 'string' }) customerGroup: string,
     @QueryParam('date') date: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: Response
@@ -240,13 +243,22 @@ export class CustomerController {
         'avatarPath',
         'password',
       ],
-      where: pickBy(
+      where: pickBy<
+        | FindConditions<Customer>
+        | FindConditions<Customer>[]
+        | { [key: string]: any }
+      >(
         {
           firstName: (name && Like(`%${name}%`)) || undefined,
           email: (email && Like(`%${email}%`)) || undefined,
           createdDate: (date && Like(`%${date}%`)) || undefined,
-          customerGroupId: customerGroup || undefined,
-          isActive: status,
+          customerGroupId:
+            (Number.isInteger(parseInt(customerGroup)) &&
+              parseInt(customerGroup)) ||
+            undefined,
+          isActive:
+            (Number.isInteger(parseInt(status)) && parseInt(customerGroup)) ||
+            1,
           deleteFlag: 0,
         },
         value => value != null
@@ -624,5 +636,175 @@ export class CustomerController {
       data: customerCount,
     };
     return response.status(200).send(successResponse);
+  }
+  // Delete Multiple Customer API
+  /**
+   * @api {post} /api/product/delete-customer Delete Multiple Customer API
+   * @apiGroup Customer
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {number} customerId customerId
+   * @apiParamExample {json} Input
+   * {
+   * "customerId" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted customer.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/customer/delete-customer
+   * @apiErrorExample {json} customerDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Post('/delete-customer')
+  @Authorized()
+  public async deleteMultipleCustomer(
+    @Body({ validate: true }) deleteCustomerId: DeleteCustomerRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const customers = deleteCustomerId.customerId.toString();
+    const customer: any = customers.split(',');
+    console.log(customer);
+    const data: any = customer.map(async (id: any) => {
+      const dataId = await this.customerService.findOne(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose customer for delete',
+        };
+        return response.status(400).send(errorResponse);
+      } else {
+        dataId.deleteFlag = 1;
+        return await this.customerService.create(dataId);
+      }
+    });
+    const deleteCustomer = await Promise.all(data);
+    if (deleteCustomer) {
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully deleted customer',
+      };
+      return response.status(200).send(successResponse);
+    }
+  }
+
+  // Customer Details Excel Document Download
+  /**
+   * @api {get} /api/customer/customer-excel-list Customer Excel
+   * @apiGroup Customer
+   * @apiParam (Request body) {String} customerId customerId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Customer Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/customer/customer-excel-list
+   * @apiErrorExample {json} Customer Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/customer-excel-list')
+  public async excelCustomerView(
+    @QueryParam('customerId') customerId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Order Detail Sheet');
+    const rows = [];
+    const customerid = customerId.split(',');
+    for (const id of customerid) {
+      const dataId = await this.customerService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid customerId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Customer Id', key: 'id', size: 16, width: 15 },
+      { header: 'Customer Name', key: 'first_name', size: 16, width: 15 },
+      { header: 'User Name', key: 'username', size: 16, width: 24 },
+      { header: 'Email Id', key: 'email', size: 16, width: 15 },
+      { header: 'Mobile Number', key: 'mobileNumber', size: 16, width: 15 },
+      {
+        header: 'Date Of Registration',
+        key: 'createdDate',
+        size: 16,
+        width: 15,
+      },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of customerid) {
+      const dataId = await this.customerService.findOneById(id);
+      if (dataId.lastName === null) {
+        dataId.lastName = '';
+      }
+      rows.push([
+        dataId.id,
+        dataId.firstName + ' ' + dataId.lastName,
+        dataId.username,
+        dataId.email,
+        dataId.mobileNumber,
+        dataId.createdDate,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './CustomerExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
   }
 }
