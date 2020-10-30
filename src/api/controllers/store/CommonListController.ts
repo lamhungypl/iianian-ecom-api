@@ -37,6 +37,7 @@ import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
 import { Country } from '../../models/country';
+import { Zone } from 'src/api/models/zone';
 
 @JsonController('/list')
 export class CommonListController {
@@ -684,32 +685,27 @@ export class CommonListController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = ['zoneId', 'countryId', 'code', 'name', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Zone> = {
+      select: ['zoneId', 'countryId', 'code', 'name', 'isActive'],
+      relations: ['country'],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
       },
-      {
-        name: 'isActive',
-        op: 'where',
-        value: 1,
-      },
-    ];
+    };
 
-    const WhereConditions = [];
-    const relation = ['country'];
+    if (count) {
+      const zoneCount: number = await this.zoneService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get all zone List',
+        data: zoneCount,
+      };
+      return response.status(200).send(successResponse);
+    }
 
-    const zoneList = await this.zoneService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      relation,
-      count
-    );
+    const zoneList: Zone[] = await this.zoneService.list(options);
+
     if (zoneList) {
       const successResponse: any = {
         status: 1,

@@ -9,7 +9,7 @@ import { BaseService } from './base/BaseService';
 @Service()
 export class CountryService extends BaseService<Country, CountryRepository> {
   constructor(
-    @InjectRepository() repository: CountryRepository,
+    @InjectRepository(CountryRepository) repository: CountryRepository,
     @Logger(__filename) private log: LoggerInterface
   ) {
     super(repository);

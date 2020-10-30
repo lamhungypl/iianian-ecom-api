@@ -17,6 +17,7 @@ import { CountryService } from '../services/countryService';
 import { Zone } from '../models/zone';
 import { CreateZone } from './requests/createZoneRequest';
 import { classToPlain } from 'class-transformer';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/zone')
 export class ZoneController {
@@ -200,31 +201,29 @@ export class ZoneController {
   public async zonelist(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = ['zoneId', 'countryId', 'code', 'name', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Zone> = {
+      select: ['zoneId', 'countryId', 'code', 'name', 'isActive'],
+      relations: ['country'],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
+    };
 
-    const WhereConditions = [];
-    const relation = ['country'];
+    if (count) {
+      const zoneCount: number = await this.zoneService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get all zone List',
+        data: zoneCount,
+      };
+      return response.status(200).send(successResponse);
+    }
 
-    const zoneList = await this.zoneService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      relation,
-      count
-    );
+    const zoneList: Zone[] = await this.zoneService.list(options);
     if (zoneList) {
       const successResponse: any = {
         status: 1,
@@ -267,7 +266,7 @@ export class ZoneController {
     @Res() response: any,
     @Req() request: any
   ): Promise<any> {
-    const zone = await this.zoneService.findOne({
+    const zone: Zone = await this.zoneService.findOne({
       where: {
         zoneId: id,
       },
@@ -280,7 +279,7 @@ export class ZoneController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteZone = await this.zoneService.delete(zone);
+    const deleteZone = await this.zoneService.delete(zone.zoneId);
     //console.log('zone' + deleteZone);
     if (deleteZone) {
       const successResponse: any = {

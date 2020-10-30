@@ -12,7 +12,7 @@ export class UserGroupService extends BaseService<
   UserGroupRepository
 > {
   constructor(
-    @InjectRepository() repository: UserGroupRepository,
+    @InjectRepository(UserGroupRepository) repository: UserGroupRepository,
     @Logger(__filename) private log: LoggerInterface
   ) {
     super(repository);
