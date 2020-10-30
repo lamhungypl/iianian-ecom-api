@@ -179,26 +179,6 @@ export class ProductController {
     return response.status(200).send(successResponse);
   }
 
-  // Delete Product API
-  /**
-   * @api {delete} /api/product/delete-product/:id Delete Product API
-   * @apiGroup Product
-   * @apiHeader {String} Authorization
-   * @apiParam (Request body) {number} productId productId
-   * @apiParamExample {json} Input
-   * {
-   * "productId" : "",
-   * }
-   * @apiSuccessExample {json} Success
-   * HTTP/1.1 200 OK
-   * {
-   * "message": "Successfully deleted Product.",
-   * "status": "1"
-   * }
-   * @apiSampleRequest /api/product/delete-product/:id
-   * @apiErrorExample {json} productDelete error
-   * HTTP/1.1 500 Internal Server Error
-   */
   @Delete('/delete-product/:id')
   @Authorized()
   public async deleteProduct(
@@ -1227,25 +1207,6 @@ export class ProductController {
 
   // // Delete Multiple Product API
 
-  // /**
-  //  * @api {post} /api/product/delete-product Delete Product API
-  //  * @apiGroup Product
-  //  * @apiHeader {String} Authorization
-  //  * @apiParam (Request body) {number} productId productId
-  //  * @apiParamExample {json} Input
-  //  * {
-  //  * "productId" : "",
-  //  * }
-  //  * @apiSuccessExample {json} Success
-  //  * HTTP/1.1 200 OK
-  //  * {
-  //  * "message": "Successfully deleted Product.",
-  //  * "status": "1"
-  //  * }
-  //  * @apiSampleRequest /api/product/delete-product
-  //  * @apiErrorExample {json} productDelete error
-  //  * HTTP/1.1 500 Internal Server Error
-  //  */
   // @Post('/delete-product')
   // @Authorized()
   // public async deleteMultipleProduct(@Body({validate: true}) productDelete: DeleteProductRequest , @Res() response: any, @Req() request: any): Promise<Product> {
@@ -1282,25 +1243,7 @@ export class ProductController {
   //     };
   //     return response.status(200).send(successResponse);
   // }
-  //   // Delete Product API
-  // /**
-  //  * @api {delete} /api/product/delete-product/:id Delete Single Product API
-  //  * @apiGroup Product
-  //  * @apiHeader {String} Authorization
-  //  * @apiParamExample {json} Input
-  //  * {
-  //  *      "id" : "",
-  //  * }
-  //  * @apiSuccessExample {json} Success
-  //  * HTTP/1.1 200 OK
-  //  * {
-  //  * "message": "Successfully deleted Product.",
-  //  * "status": "1"
-  //  * }
-  //  * @apiSampleRequest /api/product/delete-product/:id
-  //  * @apiErrorExample {json} productDelete error
-  //  * HTTP/1.1 500 Internal Server Error
-  //  */
+
   // @Delete('/delete-product/:id')
   // @Authorized()
   // public async deleteProduct(@Param('id') productid: number , @Res() response: any, @Req() request: any): Promise<Product> {

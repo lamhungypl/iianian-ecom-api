@@ -3446,6 +3446,53 @@ define({
     },
     {
       type: 'get',
+      url: '/api/customer/customer-excel-list',
+      title: 'Customer Excel',
+      group: 'Customer',
+      parameter: {
+        fields: {
+          'Request body': [
+            {
+              group: 'Request body',
+              type: 'String',
+              optional: false,
+              field: 'customerId',
+              description: '<p>customerId</p>',
+            },
+          ],
+        },
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n     "message": "Successfully download the Customer Excel List..!!",\n     "status": "1",\n     "data": {},\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/customer/customer-excel-list',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'Customer Excel List error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/CustomerController.ts',
+      groupTitle: 'Customer',
+      name: 'GetApiCustomerCustomerExcelList',
+    },
+    {
+      type: 'get',
       url: '/api/customer/customer-list',
       title: 'Customer List API',
       group: 'Customer',
@@ -3777,6 +3824,73 @@ define({
       filename: 'src/api/controllers/CustomerController.ts',
       groupTitle: 'Customer',
       name: 'PostApiCustomerAddCustomer',
+    },
+    {
+      type: 'post',
+      url: '/api/product/delete-customer',
+      title: 'Delete Multiple Customer API',
+      group: 'Customer',
+      header: {
+        fields: {
+          Header: [
+            {
+              group: 'Header',
+              type: 'String',
+              optional: false,
+              field: 'Authorization',
+              description: '',
+            },
+          ],
+        },
+      },
+      parameter: {
+        fields: {
+          'Request body': [
+            {
+              group: 'Request body',
+              type: 'number',
+              optional: false,
+              field: 'customerId',
+              description: '<p>customerId</p>',
+            },
+          ],
+        },
+        examples: [
+          {
+            title: 'Input',
+            content: '{\n"customerId" : "",\n}',
+            type: 'json',
+          },
+        ],
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n"message": "Successfully deleted customer.",\n"status": "1"\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/customer/delete-customer',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'customerDelete error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/CustomerController.ts',
+      groupTitle: 'Customer',
+      name: 'PostApiProductDeleteCustomer',
     },
     {
       type: 'put',
@@ -6153,73 +6267,6 @@ define({
       name: 'PutApiPageUpdatePageId',
     },
     {
-      type: 'delete',
-      url: '/api/product/delete-product/:id',
-      title: 'Delete Product API',
-      group: 'Product',
-      header: {
-        fields: {
-          Header: [
-            {
-              group: 'Header',
-              type: 'String',
-              optional: false,
-              field: 'Authorization',
-              description: '',
-            },
-          ],
-        },
-      },
-      parameter: {
-        fields: {
-          'Request body': [
-            {
-              group: 'Request body',
-              type: 'number',
-              optional: false,
-              field: 'productId',
-              description: '<p>productId</p>',
-            },
-          ],
-        },
-        examples: [
-          {
-            title: 'Input',
-            content: '{\n"productId" : "",\n}',
-            type: 'json',
-          },
-        ],
-      },
-      success: {
-        examples: [
-          {
-            title: 'Success',
-            content:
-              'HTTP/1.1 200 OK\n{\n"message": "Successfully deleted Product.",\n"status": "1"\n}',
-            type: 'json',
-          },
-        ],
-      },
-      sampleRequest: [
-        {
-          url: 'http://localhost:8000/api/product/delete-product/:id',
-        },
-      ],
-      error: {
-        examples: [
-          {
-            title: 'productDelete error',
-            content: 'HTTP/1.1 500 Internal Server Error',
-            type: 'json',
-          },
-        ],
-      },
-      version: '0.0.0',
-      filename: 'src/api/controllers/ProductController.ts',
-      groupTitle: 'Product',
-      name: 'DeleteApiProductDeleteProductId',
-    },
-    {
       type: 'get',
       url: '/api/product/customerProductView-list/:id',
       title: 'Customer product View List',
@@ -6339,6 +6386,53 @@ define({
       filename: 'src/api/controllers/ProductController.ts',
       groupTitle: 'Product',
       name: 'GetApiProductProductDetailId',
+    },
+    {
+      type: 'get',
+      url: '/api/product/product-excel-list',
+      title: 'Product Excel',
+      group: 'Product',
+      parameter: {
+        fields: {
+          'Request body': [
+            {
+              group: 'Request body',
+              type: 'String',
+              optional: false,
+              field: 'productId',
+              description: '<p>productId</p>',
+            },
+          ],
+        },
+      },
+      success: {
+        examples: [
+          {
+            title: 'Success',
+            content:
+              'HTTP/1.1 200 OK\n{\n     "message": "Successfully download the Product Excel List..!!",\n     "status": "1",\n     "data": {},\n}',
+            type: 'json',
+          },
+        ],
+      },
+      sampleRequest: [
+        {
+          url: 'http://localhost:8000/api/product/product-excel-list',
+        },
+      ],
+      error: {
+        examples: [
+          {
+            title: 'product Excel List error',
+            content: 'HTTP/1.1 500 Internal Server Error',
+            type: 'json',
+          },
+        ],
+      },
+      version: '0.0.0',
+      filename: 'src/api/controllers/ProductController.ts',
+      groupTitle: 'Product',
+      name: 'GetApiProductProductExcelList',
     },
     {
       type: 'get',

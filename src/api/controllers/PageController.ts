@@ -16,6 +16,10 @@ import { Page } from '../models/page';
 import { CreatePage } from './requests/createPageRequest';
 import { PageService } from '../services/pageService';
 import { UpdatePage } from './requests/updatePageRequest';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
+import pickBy from 'lodash/pickBy';
+import { parseInt } from 'lodash';
+import { Response } from 'express';
 
 @JsonController('/page')
 export class PageController {
@@ -117,33 +121,39 @@ export class PageController {
     @QueryParam('offset') offset: number,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
+    @QueryParam('status') status: string,
+    @Res() response: Response
   ): Promise<any> {
-    const select = [
-      'pageId',
-      'title',
-      'content',
-      'isActive',
-      'metaTagTitle',
-      'metaTagContent',
-      'metaTagKeyword',
-    ];
-    const search = [
-      {
-        name: 'title',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-    const WhereConditions = [];
-    const pageList = await this.pageService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Page> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'pageId',
+        'title',
+        'content',
+        'isActive',
+        'metaTagTitle',
+        'metaTagContent',
+        'metaTagKeyword',
+      ],
+      where: pickBy<FindConditions<Page> | FindConditions<Page>[]>(
+        {
+          title: (keyword && Like(`%${keyword}%`)) || undefined,
+          isActive: (status && parseInt(status)) || 0,
+        },
+        value => value != null
+      ),
+    };
+    if (count) {
+      const pageListCount = await this.pageService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got the complete list of pages. ',
+        data: pageListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const pageList = await this.pageService.list(options);
     if (pageList) {
       const successResponse: any = {
         status: 1,
@@ -260,7 +270,7 @@ export class PageController {
     @Res() response: any,
     @Req() request: any
   ): Promise<any> {
-    const page = await this.pageService.findOne({
+    const page: Page = await this.pageService.findOne({
       where: {
         pageId: id,
       },
@@ -272,7 +282,7 @@ export class PageController {
       };
       return response.status(400).send(errorResponse);
     }
-    const deletePage = await this.pageService.delete(page);
+    const deletePage = await this.pageService.delete(page.pageId);
     if (deletePage) {
       const successResponse: any = {
         status: 1,

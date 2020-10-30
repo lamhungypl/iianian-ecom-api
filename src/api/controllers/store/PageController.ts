@@ -1,3 +1,4 @@
+import { pickBy } from 'lodash';
 import 'reflect-metadata';
 import {
   Get,
@@ -6,6 +7,8 @@ import {
   JsonController,
   Res,
 } from 'routing-controllers';
+import { Page } from 'src/api/models/page';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import { PageService } from '../../services/pageService';
 
 @JsonController('/pages')
@@ -47,31 +50,29 @@ export class PageController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'pageId',
-      'title',
-      'content',
-      'isActive',
-      'metaTagTitle',
-      'metaTagContent',
-      'metaTagKeyword',
-    ];
-    const search = [
-      {
-        name: 'title',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-    const WhereConditions = [];
-    const pageList = await this.pageService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Page> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'pageId',
+        'title',
+        'content',
+        'isActive',
+        'metaTagTitle',
+        'metaTagContent',
+        'metaTagKeyword',
+      ],
+      where: pickBy<
+        FindConditions<Page> | FindConditions<Page>[] | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+    };
+
+    const pageList = await this.pageService.list(options);
     if (pageList) {
       const successResponse: any = {
         status: 1,
@@ -113,25 +114,24 @@ export class PageController {
     @Param('id') id: number,
     @Res() response: any
   ): Promise<any> {
-    const page = await this.pageService.findOne({
+    const page: Page = await this.pageService.findOne({
       where: {
         pageId: id,
       },
     });
-    if (!page) {
-      const errorResponse: any = {
-        status: 0,
-        message: 'invalid page id',
-      };
-      return response.status(400).send(errorResponse);
-    }
+    // if (!page) {
+    //   const errorResponse: any = {
+    //     status: 0,
+    //     message: 'invalid page id',
+    //   };
+    //   return response.status(400).send(errorResponse);
+    // }
 
-    const pageDetails = await this.pageService.findOne(page);
-    if (pageDetails) {
+    if (page) {
       const successResponse: any = {
         status: 1,
         message: 'Successfully get page Details',
-        data: pageDetails,
+        data: page,
       };
       return response.status(200).send(successResponse);
     } else {
