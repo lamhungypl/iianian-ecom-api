@@ -16,6 +16,7 @@ import { CreateCountry } from './requests/createCountryRequest';
 import { Country } from '../models/country';
 import { CountryService } from '../services/countryService';
 import { UpdateCountry } from './requests/updateCountryRequest';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/country')
 export class CountryController {
@@ -197,34 +198,36 @@ export class CountryController {
   public async countryList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'countryId',
-      'name',
-      'isoCode2',
-      'isoCode3',
-      'postcodeRequired',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Country> = {
+      select: [
+        'countryId',
+        'name',
+        'isoCode2',
+        'isoCode3',
+        'postcodeRequired',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
-    const WhereConditions = [];
-    const countryList = await this.countryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+
+    if (count) {
+      const countryListCount = await this.countryService.count(options);
+
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got country List count',
+        data: countryListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const countryList = await this.countryService.list(options);
     if (countryList) {
       const successResponse: any = {
         status: 1,

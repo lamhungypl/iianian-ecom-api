@@ -141,7 +141,7 @@ export class CustomerOrderController {
     newOrder.invoicePrefix = setting.invoicePrefix;
     newOrder.paymentAddressFormat = checkoutParam.shippingAddressFormat;
     const orderData = await this.orderService.create(newOrder);
-    const countryName = await this.countryService.findOne(
+    const countryName = await this.countryService.findOneById(
       orderData.shippingCountry
     );
     orderData.shippingCountry = countryName.name;

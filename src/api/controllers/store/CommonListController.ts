@@ -36,6 +36,7 @@ import { orderBy, pickBy } from 'lodash';
 import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
+import { Country } from '../../models/country';
 
 @JsonController('/list')
 export class CommonListController {
@@ -552,39 +553,36 @@ export class CommonListController {
   public async countryList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'countryId',
-      'name',
-      'isoCode2',
-      'isoCode3',
-      'postcodeRequired',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Country> = {
+      select: [
+        'countryId',
+        'name',
+        'isoCode2',
+        'isoCode3',
+        'postcodeRequired',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
       },
-      {
-        name: 'isActive',
-        op: 'where',
-        value: 1,
-      },
-    ];
-    const WhereConditions = [];
-    const countryList = await this.countryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+
+    if (count) {
+      const countryCount: number = await this.countryService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got the count of countries.',
+        data: countryCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const countryList = await this.countryService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got the list of countries.',
