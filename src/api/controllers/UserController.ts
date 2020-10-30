@@ -36,6 +36,7 @@ import { S3Service } from '../services/S3Service';
 // import { UserService } from '../services/_UserService';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { UserGroup } from '../models/UserGroup';
 
 @JsonController('/auth')
 export class UserController {
@@ -240,20 +241,13 @@ export class UserController {
     @Body({ validate: true }) createParam: CreateRequest,
     @Res() response: Response
   ) {
-    //console.log(createParam);
-    const userGroupExistWhereCondition = [
-      {
-        name: 'id',
-        value: createParam.userGroupId,
+    const options: FindManyOptions<UserGroup> = {
+      where: {
+        groupId: createParam.userGroupId,
       },
-    ];
-    const userGroupExistRecord = await this.userGroupService.list(
-      0,
-      0,
-      [],
-      userGroupExistWhereCondition,
-      0
-    );
+    };
+
+    const userGroupExistRecord = await this.userGroupService.list(options);
     if (userGroupExistRecord.length === 0) {
       const errorResponse: any = {
         status: 0,
@@ -339,20 +333,12 @@ export class UserController {
     @Body({ validate: true }) createParam: updateUserRequest,
     @Res() response: Response
   ) {
-    //console.log(createParam);
-    const userGroupExistWhereCondition = [
-      {
-        name: 'id',
-        value: createParam.userGroupId,
+    const options: FindManyOptions<UserGroup> = {
+      where: {
+        groupId: createParam.userGroupId,
       },
-    ];
-    const userGroupExistRecord = await this.userGroupService.list(
-      0,
-      0,
-      [],
-      userGroupExistWhereCondition,
-      0
-    );
+    };
+    const userGroupExistRecord = await this.userGroupService.list(options);
     if (userGroupExistRecord.length === 0) {
       const errorResponse: any = {
         status: 0,
