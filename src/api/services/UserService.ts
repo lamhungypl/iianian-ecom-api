@@ -1,89 +1,18 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
+
 import { User } from '../models/User';
 import { UserRepository } from '../repositories/UserRepository';
-import { Like } from 'typeorm';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class UserService {
+export class UserService extends BaseService<User, UserRepository> {
   constructor(
-    @OrmRepository() private userLoginRepository: UserRepository,
-    @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // find user
-  public findOne(findCondition: any): Promise<any> {
-    this.log.info('Find all users');
-    return this.userLoginRepository.findOne(findCondition);
-  }
-
-  // user list
-  public list(
-    limit: number = 0,
-    offset: number = 0,
-    select: any = [],
-    relation: any = [],
-    whereConditions: any = [],
-    keyword: string,
-    count: number | boolean
-  ): Promise<any> {
-    //console.log(keyword);
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-
-    if (relation && relation.length > 0) {
-      condition.relations = relation;
-    }
-
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-    if (keyword) {
-      condition.where = {
-        firstName: Like('%' + keyword + '%'),
-      };
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-
-    this.log.info('list user  ', { condition });
-
-    if (count) {
-      return this.userLoginRepository.count(condition);
-    }
-
-    return this.userLoginRepository.find(condition);
-  }
-
-  // create user
-  public async create(user: User): Promise<User> {
-    this.log.info('Create a new user => ', user.toString());
-    const newUser = await this.userLoginRepository.save(user);
-    return newUser;
-  }
-
-  // update user
-  public update(id: any, user: User): Promise<User> {
-    this.log.info('Update a user');
-    user.userId = id;
-    return this.userLoginRepository.save(user);
-  }
-
-  // delete user
-  public async delete(id: number): Promise<any> {
-    this.log.info('Delete a user');
-    const newUser = await this.userLoginRepository.delete(id);
-    return newUser;
+    @Logger(__filename) private log: LoggerInterface,
+    @InjectRepository(UserRepository)
+    repository: UserRepository
+  ) {
+    super(repository);
   }
 }

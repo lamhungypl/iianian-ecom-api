@@ -264,7 +264,7 @@ export class CustomerController {
         value => value != null
       ),
     };
-    console.log({ options });
+
     if (count) {
       const customerCount = await this.customerService.count(options);
       const successResponse = {
@@ -281,6 +281,7 @@ export class CustomerController {
       message: 'Successfully got Customer list.',
       data: customerList,
     };
+
     return response.status(200).send(successResponse);
   }
 

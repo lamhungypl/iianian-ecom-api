@@ -24,7 +24,7 @@ import { CreateUser as CreateRequest } from './requests/createUserRequest';
 import { UpdateUserRequest as updateUserRequest } from './requests/UpdateUserRequest';
 import { User } from '../models/User';
 import { AccessToken } from '../models/accessTokenModel';
-// import { UserService } from '../services/UserService';
+import { UserService } from '../services/UserService';
 import { UserGroupService } from '../services/UserGroupService';
 import { ChangePassword } from './requests/ChangePasswordRequest';
 import { EditProfileRequest } from './requests/editProfileRequest';
@@ -33,8 +33,9 @@ import { EmailTemplateService } from '../services/emailTemplateService';
 import { MAILService } from '../../auth/mail.services';
 import { ImageService } from '../services/ImageService';
 import { S3Service } from '../services/S3Service';
-import { UserService } from '../services/_UserService';
-import { Like } from 'typeorm';
+// import { UserService } from '../services/_UserService';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/auth')
 export class UserController {
@@ -145,19 +146,21 @@ export class UserController {
   @Get('/userlist')
   @Authorized()
   public async findAll(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: Response
   ) {
-    //console.log(keyword);
-    const relation = ['usergroup'];
-    const WhereConditions = [];
+    const options: FindManyOptions<User> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
 
-    const users = await this.userService.list({
-      take: limit,
-      skip: offset,
       select: [
         'userId',
         'username',
@@ -170,36 +173,34 @@ export class UserController {
         'avatarPath',
         'password',
       ],
-      where: {
-        firstName: Like(`%${keyword}%`),
-      },
-      relations: relation,
-    });
-    // const user = await this.userService.list(
-    //   limit,
-    //   offset,
-    //   [
-    //     'userId',
-    //     'username',
-    //     'firstName',
-    //     'lastName',
-    //     'email',
-    //     'address',
-    //     'phoneNumber',
-    //     'avatar',
-    //     'avatarPath',
-    //     'password',
-    //   ],
-    //   relation,
-    //   WhereConditions,
-    //   keyword,
-    //   count
-    // );
+      where: pickBy<FindConditions<User> | { [key: string]: any }>(
+        {
+          firstName: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+      relations: ['usergroup'],
+    };
+    // console.log({ limit, offset, keyword, count });
+    if (count) {
+      const usersCount = await this.userService.count(options);
+
+      const successResponse: any = {
+        status: 1,
+        data: usersCount,
+        message: 'Successfully get All user List',
+      };
+      return response.status(200).send(successResponse);
+    }
+    const users = await this.userService.list(options);
+
     const successResponse: any = {
       status: 1,
-      data: classToPlain(users),
+      data: users,
       message: 'Successfully get All user List',
     };
+    console.log({ successResponse });
+
     return response.status(200).send(successResponse);
   }
 
