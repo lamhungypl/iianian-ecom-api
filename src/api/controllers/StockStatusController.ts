@@ -15,6 +15,7 @@ import {
 import { CreateStockStatus } from './requests/createStockStatusRequest';
 import { StockStatus } from '../models/stockStatus';
 import { StockStatusService } from '../services/stockStatusService';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/stock-status')
 export class StockStatusController {
@@ -161,24 +162,24 @@ export class StockStatusController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    //console.log(keyword);
-    const select = ['stockStatusId', 'name', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<StockStatus> = {
+      take: limit,
+      skip: offset,
+      select: ['stockStatusId', 'name', 'isActive'],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
-    const WhereConditions = [];
-    const stockStatusList = await this.stockStatusService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+    if (count) {
+      const stockStatusCount = await this.stockStatusService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got all stockStatus List',
+        data: stockStatusCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const stockStatusList = await this.stockStatusService.list(options);
     if (stockStatusList) {
       const successResponse: any = {
         status: 1,
@@ -234,7 +235,9 @@ export class StockStatusController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteStockStatus = await this.stockStatusService.delete(stockStatus);
+    const deleteStockStatus = await this.stockStatusService.delete(
+      stockStatus.stockStatusId
+    );
     if (deleteStockStatus) {
       const successResponse: any = {
         status: 1,
