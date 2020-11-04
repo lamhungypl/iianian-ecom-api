@@ -1,6 +1,9 @@
 import 'reflect-metadata';
 import { Get, JsonController, Res, QueryParam } from 'routing-controllers';
+import { FindManyOptions, Like } from 'typeorm';
+import { Manufacturer } from '../../models/manufacturerModel';
 import { ManufacturerService } from '../../services/manufacturerService';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/manufacturers')
 export class ManufacturerController {
@@ -33,8 +36,8 @@ export class ManufacturerController {
    */
   @Get('/manufacturerlist')
   public async manufacturerList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
@@ -60,14 +63,37 @@ export class ManufacturerController {
       },
     ];
     const WhereConditions = [];
-    const manufacturerList: any = await this.manufacturerService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Manufacturer> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'manufacturerId',
+        'name',
+        'image',
+        'imagePath',
+        'sortOrder',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
+      },
+    };
+    if (count) {
+      const manufacturerCount = await this.manufacturerService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get all manufacturer List',
+        data: manufacturerCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const manufacturerList = await this.manufacturerService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully get all manufacturer List',
