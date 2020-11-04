@@ -38,6 +38,7 @@ import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
 import { Country } from '../../models/country';
 import { Zone } from 'src/api/models/zone';
+import { Banner } from 'src/api/models/banner';
 
 @JsonController('/list')
 export class CommonListController {
@@ -107,14 +108,35 @@ export class CommonListController {
       },
     ];
     const WhereConditions = [];
-    const bannerList: any = await this.bannerService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Banner> = {
+      take: limit,
+      skip: offset,
+
+      select: [
+        'bannerId',
+        'title',
+        'image',
+        'imagePath',
+        'content',
+        'link',
+        'position',
+      ],
+      where: {
+        title: Like(`%${keyword}%`),
+      },
+    };
+    if (count) {
+      const bannerListCount = await this.bannerService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got banner list count',
+        data: bannerListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const bannerList: any = await this.bannerService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got banner list',
