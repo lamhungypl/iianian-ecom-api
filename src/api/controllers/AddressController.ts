@@ -16,6 +16,7 @@ import { AddressService } from '../services/AddressService';
 import { Address } from '../models/Address';
 import { CreateAddress } from './requests/CreateAddressRequest';
 import { CustomerService } from '../services/CustomerService';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/address')
 export class AddressController {
@@ -209,12 +210,21 @@ export class AddressController {
     @Res() response: any
   ): Promise<any> {
     const WhereConditions = [];
-    const addressList = await this.addressService.list(
-      limit,
-      offset,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Address> = {
+      take: limit,
+      skip: offset,
+    };
+    if (count) {
+      const addressListCount = await this.addressService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got complete address list.',
+        data: addressListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const addressList = await this.addressService.list(options);
     if (addressList) {
       const successResponse: any = {
         status: 1,
@@ -335,12 +345,24 @@ export class AddressController {
         value: id,
       },
     ];
-    const customerAddress = await this.addressService.list(
-      limit,
-      offset,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Address> = {
+      take: limit,
+      skip: offset,
+      where: {
+        customerId: id,
+      },
+    };
+    if (count) {
+      const customerAddressCount = await this.addressService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully Get the customer Address',
+        data: customerAddressCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const customerAddress = await this.addressService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully Get the customer Address',
