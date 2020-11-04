@@ -632,7 +632,7 @@ export class CommonListController {
     const informationData = await this.contactService.create(
       contactInformation
     );
-    const emailContent = await this.emailTemplateService.findOne(3);
+    const emailContent = await this.emailTemplateService.findOneById(3);
     const message = emailContent.content
       .replace('{name}', informationData.name)
       .replace('{email}', informationData.email)

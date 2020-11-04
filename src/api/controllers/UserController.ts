@@ -455,7 +455,7 @@ export class UserController {
 
     await this.userService.create(user);
 
-    const emailContent = await this.emailTemplateService.findOne(2);
+    const emailContent = await this.emailTemplateService.findOneById(2);
     const message = emailContent.content
       .replace('{name}', user.firstName)
       .replace('{xxxxxx}', tempPassword);

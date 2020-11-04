@@ -145,7 +145,7 @@ export class CustomerController {
 
       if (customerSave) {
         if (customerParam.mailStatus === 1) {
-          const emailContent = await this.emailTemplateService.findOne(4);
+          const emailContent = await this.emailTemplateService.findOneById(4);
           const message = emailContent.content
             .replace('{name}', customerParam.username)
             .replace('{email}', customerParam.email)

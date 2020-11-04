@@ -95,7 +95,7 @@ export class CustomerController {
     }
     if (registerParam.password === registerParam.confirmPassword) {
       const resultData = await this.customerService.create(newUser);
-      const emailContent = await this.emailTemplateService.findOne(1);
+      const emailContent = await this.emailTemplateService.findOneById(1);
       const message = emailContent.content.replace(
         '{name}',
         resultData.firstName
@@ -169,7 +169,7 @@ export class CustomerController {
       resultData.id,
       resultData
     );
-    const emailContent = await this.emailTemplateService.findOne(2);
+    const emailContent = await this.emailTemplateService.findOneById(2);
     const message = emailContent.content
       .replace('{name}', resultData.firstName)
       .replace('{xxxxxx}', tempPassword);
@@ -624,7 +624,7 @@ export class CustomerController {
       const token = jwt.sign({ id: newCustomer.id }, '123##$$)(***&', {
         expiresIn: 86400, // expires in 24 hours
       });
-      const emailContent = await this.emailTemplateService.findOne(1);
+      const emailContent = await this.emailTemplateService.findOneById(1);
       const message = emailContent.content.replace(
         '{name}',
         newCustomer.username

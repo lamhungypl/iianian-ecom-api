@@ -200,8 +200,8 @@ export class CustomerOrderController {
     newOrderTotal.orderId = orderData.orderId;
     newOrderTotal.value = totalAmount;
     await this.orderTotalService.createOrderTotalData(newOrderTotal);
-    const emailContent = await this.emailTemplateService.findOne(5);
-    const adminEmailContent = await this.emailTemplateService.findOne(6);
+    const emailContent = await this.emailTemplateService.findOneById(5);
+    const adminEmailContent = await this.emailTemplateService.findOneById(6);
     const today =
       ('0' + nowDate.getDate()).slice(-2) +
       '.' +
