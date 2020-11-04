@@ -570,7 +570,7 @@ export class UserController {
   public async logout(@Req() request: any, @Res() response: any): Promise<any> {
     //console.log('logout');
     //console.log(request.user.userId);
-    const user = await this.accessTokenService.findOne({
+    const user: AccessToken = await this.accessTokenService.findOne({
       where: {
         userId: request.user.userId,
       },
@@ -582,7 +582,7 @@ export class UserController {
       };
       return response.status(400).send(errorResponse);
     }
-    const deleteToken = await this.accessTokenService.delete(user);
+    const deleteToken = await this.accessTokenService.delete(user.id);
     //console.log('token' + deleteToken);
     if (!deleteToken) {
       const successResponse: any = {
