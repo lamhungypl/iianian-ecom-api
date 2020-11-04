@@ -1,4 +1,4 @@
-import { pickBy } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import 'reflect-metadata';
 import {
   Get,
@@ -44,15 +44,20 @@ export class PageController {
    */
   @Get('/pagelist')
   public async pageList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Page> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'pageId',
         'title',
@@ -71,7 +76,15 @@ export class PageController {
         value => value != null
       ),
     };
-
+    if (count) {
+      const pagesCount = await this.pageService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get pages List count',
+        data: pagesCount,
+      };
+      return response.status(200).send(successResponse);
+    }
     const pageList = await this.pageService.list(options);
     if (pageList) {
       const successResponse: any = {

@@ -38,7 +38,7 @@ import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import moment from 'moment';
 import { FindManyOptions, Like } from 'typeorm';
-import { pickBy } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
 import fs from 'fs';
 
@@ -84,8 +84,8 @@ export class ProductController {
   //don't need authorized when get product list
   // @Authorized()
   public async productList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sku') sku: string,
     @QueryParam('status') status: string,
@@ -96,8 +96,13 @@ export class ProductController {
     const relation = ['productToCategory', 'relatedproduct'];
 
     const options: FindManyOptions<Product> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'productId',
         'sku',

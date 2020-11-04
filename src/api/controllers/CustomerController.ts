@@ -32,6 +32,7 @@ import pickBy from 'lodash/pickBy';
 import parseInt from 'lodash/parseInt';
 import * as fs from 'fs';
 import { DeleteCustomerRequest } from './requests/DeleteCustomerRequest';
+import { isNumber } from 'lodash';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -218,8 +219,8 @@ export class CustomerController {
   @Get('/customer-list')
   @Authorized()
   public async customerList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('name', { type: 'string' }) name: string,
     @QueryParam('status', { type: 'string' }) status: string,
     @QueryParam('email', { type: 'sting' }) email: string,
@@ -229,8 +230,13 @@ export class CustomerController {
     @Res() response: Response
   ) {
     const options: FindManyOptions<Customer> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && parseInt(limit)) || undefined,
+          skip: (offset && parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'id',
         'username',

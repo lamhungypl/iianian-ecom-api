@@ -16,6 +16,7 @@ import { CreateStockStatus } from './requests/createStockStatusRequest';
 import { StockStatus } from '../models/stockStatus';
 import { StockStatusService } from '../services/stockStatusService';
 import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/stock-status')
 export class StockStatusController {
@@ -156,15 +157,20 @@ export class StockStatusController {
   @Get('/stock-status-list')
   @Authorized()
   public async stockStatusList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<StockStatus> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: ['stockStatusId', 'name', 'isActive'],
       where: {
         name: Like(`%${keyword}%`),

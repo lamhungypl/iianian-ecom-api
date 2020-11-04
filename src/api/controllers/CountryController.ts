@@ -17,6 +17,7 @@ import { Country } from '../models/country';
 import { CountryService } from '../services/countryService';
 import { UpdateCountry } from './requests/updateCountryRequest';
 import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/country')
 export class CountryController {
@@ -196,13 +197,20 @@ export class CountryController {
   @Get('/countrylist')
   @Authorized()
   public async countryList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Country> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'countryId',
         'name',

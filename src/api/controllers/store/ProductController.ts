@@ -27,7 +27,7 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { CategoryPathService } from '../../services/CategoryPathService';
 import { ProductRatingService } from '../../services/RatingService';
-import { pickBy } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import { FindManyOptions, Like } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
@@ -278,8 +278,8 @@ export class ProductController {
 
   @Get('/featureproduct-list')
   public async featureProductList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sku') sku: string,
     @QueryParam('count') count: number | boolean,
@@ -287,8 +287,13 @@ export class ProductController {
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Product> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'productId',
         'sku',
@@ -379,8 +384,8 @@ export class ProductController {
 
   @Get('/todayDeals-list')
   public async todayDealsList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sku') sku: string,
     @QueryParam('count') count: number | boolean,
@@ -388,8 +393,13 @@ export class ProductController {
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Product> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'productId',
         'sku',

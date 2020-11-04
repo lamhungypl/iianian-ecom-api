@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { pickBy } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import 'reflect-metadata';
 import {
   Get,
@@ -163,24 +163,20 @@ export class OrderStatusController {
   @Get('/order-status-list')
   @Authorized()
   public async orderStatusList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: Response
   ): Promise<any> {
-    const select = ['orderStatusId', 'name', 'colorCode', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-
     const options: FindManyOptions<OrderStatus> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: ['orderStatusId', 'name', 'colorCode', 'isActive'],
       where: pickBy<
         | FindConditions<OrderStatus>[]

@@ -23,7 +23,7 @@ import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductImageService } from '../services/ProductImageService';
 import { FindManyOptions, Like, MoreThan } from 'typeorm';
 import { Order } from '../models/Order';
-import { pickBy, toNumber } from 'lodash';
+import { isNumber, pickBy, toNumber, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
 
 import * as fs from 'fs';
@@ -78,8 +78,8 @@ export class OrderController {
   @Get('/order-list')
   @Authorized()
   public async orderList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('orderId') orderId: string,
     @QueryParam('orderStatusId') orderStatusId: string,
     @QueryParam('customerName') customerName: string,
@@ -89,8 +89,13 @@ export class OrderController {
     @Res() response: Response
   ) {
     const options: FindManyOptions<Order> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       where: pickBy(
         {
           orderPrefixId: (orderId && Like(`%${orderId}%`)) || undefined,

@@ -32,7 +32,7 @@ import { LanguageService } from '../../services/languageService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
-import { orderBy, pickBy } from 'lodash';
+import { isNumber, orderBy, pickBy, parseInt as _parseInt } from 'lodash';
 import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
@@ -153,17 +153,22 @@ export class CommonListController {
   // Category List Function
   @Get('/category-list')
   public async CategoryList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
-    @QueryParam('sortOrder') sortOrder: number,
+    @QueryParam('sortOrder') sortOrder: string,
     @QueryParam('count') count: number | boolean,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Category> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'categoryId',
         'name',
@@ -186,7 +191,7 @@ export class CommonListController {
         value => value != null
       ),
       order: {
-        name: (sortOrder === -1 && 'DESC') || 'ASC',
+        name: (sortOrder === '-1' && 'DESC') || 'ASC',
       },
     };
 
@@ -286,8 +291,8 @@ export class CommonListController {
    */
   @Get('/productlist')
   public async productList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('manufacturerId') manufacturerId: string,
     @QueryParam('categoryId') categoryId: string,
@@ -308,8 +313,13 @@ export class CommonListController {
     const relation = ['productToCategory', 'relatedproduct'];
 
     const options: FindManyOptions<Product> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       relations: relation,
       where: pickBy<
         | FindConditions<Product>[]
@@ -552,13 +562,20 @@ export class CommonListController {
    */
   @Get('/country-list')
   public async countryList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Country> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'countryId',
         'name',
@@ -679,13 +696,20 @@ export class CommonListController {
    */
   @Get('/zone-list')
   public async zonelist(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
     const options: FindManyOptions<Zone> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: ['zoneId', 'countryId', 'code', 'name', 'isActive'],
       relations: ['country'],
       where: {

@@ -18,7 +18,7 @@ import { PageService } from '../services/pageService';
 import { UpdatePage } from './requests/updatePageRequest';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import pickBy from 'lodash/pickBy';
-import { parseInt } from 'lodash';
+import { isNumber, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
 
 @JsonController('/page')
@@ -117,16 +117,21 @@ export class PageController {
   @Get('/pagelist')
   @Authorized()
   public async pageList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @QueryParam('status') status: string,
     @Res() response: Response
   ): Promise<any> {
     const options: FindManyOptions<Page> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'pageId',
         'title',
@@ -139,7 +144,7 @@ export class PageController {
       where: pickBy<FindConditions<Page> | FindConditions<Page>[]>(
         {
           title: (keyword && Like(`%${keyword}%`)) || undefined,
-          isActive: (status && parseInt(status)) || 0,
+          isActive: (status && _parseInt(status)) || 0,
         },
         value => value != null
       ),

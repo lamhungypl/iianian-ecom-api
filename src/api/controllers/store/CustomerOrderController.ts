@@ -27,7 +27,7 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { OrderStatusService } from '../../services/orderStatusService';
 import { CountryService } from '../../services/countryService';
-import { pickBy } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import { FindManyOptions } from 'typeorm';
 
 @JsonController('/orders')
@@ -272,8 +272,8 @@ export class CustomerOrderController {
   @Get('/order-list')
   @Authorized('customer')
   public async orderList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('count') count: number | boolean,
     @Req() request: any,
     @Res() response: any
@@ -298,8 +298,13 @@ export class CustomerOrderController {
     // const relation = ['orderStatus'];
 
     const options: FindManyOptions<Order> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'orderId',
         'customerId',

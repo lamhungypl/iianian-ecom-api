@@ -114,22 +114,6 @@ export class EmailTemplateController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'emailTemplateId',
-      'title',
-      'subject',
-      'content',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'title',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-    const WhereConditions = [];
-
     const options: FindManyOptions<EmailTemplate> = {
       ...pickBy<{ take?: number; skip?: number }>(
         {

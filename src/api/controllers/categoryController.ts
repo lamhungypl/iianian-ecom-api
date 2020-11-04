@@ -21,7 +21,7 @@ import arrayToTree from 'array-to-tree';
 import { DeleteCategoryRequest } from './requests/deleteCategoryRequest';
 import { CategoryPathService } from '../services/CategoryPathService';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
-import { pickBy } from 'lodash';
+import { pickBy, isNumber, parseInt as _parseInt } from 'lodash';
 
 @JsonController()
 export class CategoryController {
@@ -324,28 +324,21 @@ export class CategoryController {
   @Get('/categorylist')
   @Authorized()
   public async categorylist(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sortOrder') sortOrder: number,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    //console.log(keyword);
-    const select = ['categoryId', 'name', 'parentInt', 'sortOrder'];
-
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-    const WhereConditions = [];
-
     const options: FindManyOptions<Category> = {
-      take: limit,
-      skip: offset,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: ['categoryId', 'name', 'parentInt', 'sortOrder'],
       where: pickBy<
         | FindConditions<Category>[]
@@ -431,16 +424,21 @@ export class CategoryController {
   @Get('/category-list-intree')
   @Authorized()
   public async categoryListTree(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sortOrder') sortOrder: number,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<Category> {
     const options: FindManyOptions<Category> = {
-      take: limit || undefined,
-      skip: offset || undefined,
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
       select: [
         'categoryId',
         'name',
