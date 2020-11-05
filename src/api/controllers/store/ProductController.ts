@@ -99,7 +99,7 @@ export class ProductController {
     const productDetails = classToPlain(productDetail);
 
     const productToCategory = await this.productToCategoryService
-      .findAll({
+      .list({
         select: ['categoryId', 'productId'],
         where: { productId: productDetails.productId },
       })

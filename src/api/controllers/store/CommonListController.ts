@@ -382,7 +382,7 @@ export class CommonListController {
     );
     const promises = products.map(async (result: Product) => {
       const productToCategory = await this.productToCategoryService
-        .findAll({
+        .list({
           select: ['categoryId', 'productId'],
           where: { productId: result.productId },
         })
