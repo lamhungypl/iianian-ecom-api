@@ -79,7 +79,7 @@ export class CategoryController {
     newCategory.metaTagKeyword = category.metaTagKeyword;
     const categorySave = await this.categoryService.create(newCategory);
 
-    const getAllPath: any = await this.categoryPathService.find({
+    const getAllPath: any = await this.categoryPathService.list({
       where: { categoryId: category.parentInt },
       order: { level: 'ASC' },
     });
@@ -180,14 +180,14 @@ export class CategoryController {
     categoryId.metaTagKeyword = category.metaTagKeyword;
     const categorySave = await this.categoryService.create(categoryId);
 
-    const deleteCategory = await this.categoryPathService.find({
+    const deleteCategory = await this.categoryPathService.list({
       where: { categoryId: category.categoryId },
     });
     for (const val of deleteCategory) {
       await this.categoryPathService.delete(val.categoryPathId);
     }
 
-    const getAllPath: any = await this.categoryPathService.find({
+    const getAllPath: any = await this.categoryPathService.list({
       where: { categoryId: category.parentInt },
       order: { level: 'ASC' },
     });
@@ -275,7 +275,7 @@ export class CategoryController {
       };
       return response.status(400).send(errorresponse);
     }
-    const categoryPath: any = await this.categoryPathService.find({
+    const categoryPath: any = await this.categoryPathService.list({
       where: { categoryId: category.categoryId },
     });
     for (const path of categoryPath) {
@@ -365,7 +365,7 @@ export class CategoryController {
     const promise = category.map(async (result: any) => {
       const temp: any = result;
       const categoryLevel: any = await this.categoryPathService
-        .find({
+        .list({
           select: ['level', 'pathId'],
           where: { categoryId: result.categoryId },
           order: { level: 'ASC' },

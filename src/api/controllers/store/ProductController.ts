@@ -498,7 +498,7 @@ export class ProductController {
     const promise = category.map(async (result: any) => {
       const temp: any = result;
       const categoryLevel: any = await this.categoryPathService
-        .find({
+        .list({
           select: ['level', 'pathId'],
           where: { categoryId: result.categoryId },
           order: { level: 'ASC' },
