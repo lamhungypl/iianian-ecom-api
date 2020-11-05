@@ -18,6 +18,7 @@ import { LanguageService } from '../services/languageService';
 import { env } from '../../env';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/language')
 export class LanguageController {
@@ -157,14 +158,34 @@ export class LanguageController {
       },
     ];
     const WhereConditions = [];
-    const languageList = await this.languageService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Language> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'languageId',
+        'name',
+        'code',
+        'image',
+        'imagePath',
+        'sortOrder',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: (status && parseInt(status)) || 1,
+      },
+    };
+    if (count) {
+      const languageListCount = await this.languageService.count(options);
+
+      const successResponse: any = {
+        status: 1,
+        message: 'successfully got the complete language list.',
+        data: languageListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const languageList = await this.languageService.list(options);
     if (languageList) {
       const successResponse: any = {
         status: 1,
@@ -305,7 +326,9 @@ export class LanguageController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteLanguage = await this.languageService.delete(language);
+    const deleteLanguage = await this.languageService.delete(
+      language.languageId
+    );
     //console.log('language' + deleteLanguage);
     if (deleteLanguage) {
       const successResponse: any = {

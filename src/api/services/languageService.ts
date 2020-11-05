@@ -1,91 +1,17 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { LanguageRepository } from '../repositories/languageRepository';
 import { Like } from 'typeorm/index';
 import { Language } from '../models/language';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class LanguageService {
+export class LanguageService extends BaseService<Language, LanguageRepository> {
   constructor(
-    @OrmRepository() private languageRepository: LanguageRepository,
+    @InjectRepository() repository: LanguageRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create language
-  public async create(language: any): Promise<any> {
-    this.log.info('Create a new language ');
-    return this.languageRepository.save(language);
-  }
-
-  // find Condition
-  public findOne(language: any): Promise<any> {
-    this.log.info('findOne language ', language);
-    return this.languageRepository.findOne(language);
-  }
-
-  // update language
-  public update(id: any, language: Language): Promise<any> {
-    this.log.info('update language ', id, language);
-
-    language.languageId = id;
-    return this.languageRepository.save(language);
-  }
-
-  // language List
-  public list(
-    limit: any,
-    offset: any,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-
-    condition.order = {
-      sortOrder: 'ASC',
-    };
-    this.log.info('list language ', { condition });
-
-    if (count) {
-      return this.languageRepository.count(condition);
-    } else {
-      return this.languageRepository.find(condition);
-    }
-  }
-
-  // delete language
-  public async delete(id: number): Promise<any> {
-    this.log.info('delete language ', id);
-
-    return await this.languageRepository.delete(id);
+  ) {
+    super(repository);
   }
 }

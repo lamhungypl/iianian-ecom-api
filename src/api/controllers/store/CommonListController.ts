@@ -39,6 +39,7 @@ import { Category } from 'src/api/models/categoryModel';
 import { Country } from '../../models/country';
 import { Zone } from 'src/api/models/zone';
 import { Banner } from 'src/api/models/banner';
+import { Language } from 'src/api/models/language';
 
 @JsonController('/list')
 export class CommonListController {
@@ -825,14 +826,40 @@ export class CommonListController {
       },
     ];
     const WhereConditions = [];
-    const languageList = await this.languageService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Language> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'languageId',
+        'name',
+        'code',
+        'image',
+        'imagePath',
+        'isActive',
+        'sortOrder',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
+      },
+    };
+
+    if (count) {
+      const languageListCount: number = await this.languageService.count(
+        options
+      );
+      const successResponse = {
+        status: 1,
+        message: 'successfully got the complete language list count.',
+        data: languageListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const languageList: Language[] = await this.languageService.list(options);
+
     if (languageList) {
       const successResponse: any = {
         status: 1,
