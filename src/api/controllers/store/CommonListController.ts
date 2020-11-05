@@ -512,22 +512,24 @@ export class CommonListController {
         productId: productid,
       },
     ];
-    const relatedData = await this.productRelatedService.list(
-      0,
-      0,
-      0,
-      0,
-      whereConditions,
-      count
-    );
+    const options: FindManyOptions<ProductRelated> = {
+      where: {
+        productId: productid,
+      },
+    };
+
     if (count) {
+      const relatedDataCount: number = await this.productRelatedService.count(
+        options
+      );
       const Response: any = {
         status: 1,
         message: 'Related product list is successfully being shown. ',
-        data: relatedData,
+        data: relatedDataCount,
       };
       return response.status(200).send(Response);
     }
+    const relatedData = await this.productRelatedService.list(options);
     const promises = relatedData.map(async (results: any) => {
       const Id = results.relatedProductId;
       const product = await this.productService.findOne({

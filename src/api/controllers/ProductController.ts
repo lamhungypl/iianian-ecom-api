@@ -714,7 +714,7 @@ export class ProductController {
         return results;
       });
     const relatedProductData = await this.productRelatedService
-      .findAll({ where: { productId: productDetails.productId } })
+      .list({ where: { productId: productDetails.productId } })
       .then(val => {
         const relatedProduct = val.map(async (value: any) => {
           const productId = value.relatedProductId;
