@@ -31,6 +31,7 @@ import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import { FindManyOptions, Like } from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
+import { ProductRating } from 'src/api/models/ProductRating';
 
 @JsonController('/product-store')
 export class ProductController {
@@ -576,13 +577,34 @@ export class ProductController {
         value: productId,
       },
     ];
-    const rating: any = await this.productRatingService.list(
-      limit,
-      offset,
-      select,
-      relation,
-      WhereConditions,
-      count
+    const options: FindManyOptions<ProductRating> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'review',
+        'rating',
+        'createdDate',
+        'firstName',
+        'lastName',
+        'productId',
+      ],
+      where: {
+        productId,
+      },
+    };
+    if (count) {
+      const ratingCount: number = await this.productRatingService.count(
+        options
+      );
+      const successMessage = {
+        status: 1,
+        message: 'successfully got the product rating count',
+        data: ratingCount,
+      };
+      return response.status(200).send(successMessage);
+    }
+    const rating: ProductRating[] = await this.productRatingService.list(
+      options
     );
     if (rating) {
       const successResponse: any = {
