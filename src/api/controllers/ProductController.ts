@@ -844,7 +844,7 @@ export class ProductController {
     @Res() response: any
   ): Promise<any> {
     const limit = 3;
-    const orderList = await this.orderProductService.List(limit);
+    const orderList = await this.orderProductService.list({ take: limit });
     const promises = orderList.map(async (result: any) => {
       const order = await this.orderService.list({
         select: ['invoiceNo', 'invoicePrefix', 'orderId', 'orderStatusId'],

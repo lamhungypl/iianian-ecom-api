@@ -1,67 +1,21 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { FindManyOptions } from 'typeorm';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { OrderProduct } from '../models/OrderProduct';
 import { OrderProductRepository } from '../repositories/OrderProductRepository';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class OrderProductService {
+export class OrderProductService extends BaseService<
+  OrderProduct,
+  OrderProductRepository
+> {
   constructor(
-    @OrmRepository() private orderProductRepository: OrderProductRepository,
+    @InjectRepository(OrderProductRepository)
+    repository: OrderProductRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  public async createData(checkoutData: any): Promise<OrderProduct> {
-    this.log.info('create a order product data');
-    return this.orderProductRepository.save(checkoutData);
-  }
-
-  public async findData(
-    productId: number,
-    orderId: number,
-    orderProductId: number
-  ): Promise<any> {
-    this.log.info('find a order product data');
-    return this.orderProductRepository.find({
-      where: {
-        productId,
-        orderId,
-        orderProductId,
-      },
-    });
-  }
-
-  public find(order: any): Promise<any> {
-    return this.orderProductRepository.find(order);
-  }
-
-  // public list( limit: number, offset: number, select: any[], relation: any = [], count: number | boolean): Promise<any> {
-  //     const condition: any = {};
-  //     condition.where = {};
-  //     if (relation && relation.length > 0) {
-  //         condition.relations = ['productInformationDetail'];
-  //     }
-  //     if (limit && limit > 0) {
-  //         condition.take = limit;
-  //         condition.skip = offset;
-  //     }
-  //     condition.order = {
-  //         createdDate : 'DESC',
-  //     };
-  //     if (count) {
-  //         return this.orderProductRepository.count(condition);
-  //     } else {
-  //         return this.orderProductRepository.find(condition);
-  //     }
-  // }
-
-  // order list
-  public List(limit: number): Promise<any> {
-    return this.orderProductRepository.List(limit);
-  }
-
-  // order count
-  public findAndCount(where: any): Promise<any> {
-    return this.orderProductRepository.findAndCount(where);
+  ) {
+    super(repository);
   }
 }

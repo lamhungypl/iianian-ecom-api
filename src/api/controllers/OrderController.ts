@@ -205,7 +205,7 @@ export class OrderController {
     });
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
-        .find({
+        .list({
           where: { orderId: orderId },
           select: [
             'orderProductId',

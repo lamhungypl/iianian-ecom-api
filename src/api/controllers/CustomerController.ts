@@ -511,7 +511,7 @@ export class CustomerController {
 
     const order = await this.orderService.list({ where: { customerId: Id } });
     const productLists = order.map(async (result: any) => {
-      const orderProduct = await this.orderProductService.find({
+      const orderProduct = await this.orderProductService.list({
         where: { orderId: result.orderId },
         select: [
           'productId',

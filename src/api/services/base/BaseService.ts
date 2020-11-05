@@ -23,6 +23,7 @@ export interface BaseServiceImpl<T> {
 
   list(options: FindManyOptions<T>): Promise<T[]>;
   count(options: FindManyOptions<T>): Promise<number>;
+  findAndCount(options: FindManyOptions<T>): Promise<[T[], number]>;
 }
 
 export class BaseService<T extends BaseModel, R extends Repository<T>>
@@ -65,5 +66,9 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
   }
   public count(options: FindManyOptions<T>) {
     return this.repository.count(options);
+  }
+
+  public findAndCount(options?: FindManyOptions<T>) {
+    return this.repository.findAndCount(options);
   }
 }

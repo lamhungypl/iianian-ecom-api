@@ -155,7 +155,7 @@ export class CustomerOrderController {
       productDetails.quantity = orderProduct[i].quantity;
       productDetails.total = +orderProduct[i].quantity * +orderProduct[i].price;
       productDetails.model = orderProduct[i].model;
-      const productInformation = await this.orderProductService.createData(
+      const productInformation = await this.orderProductService.create(
         productDetails
       );
       const productData = await this.productService.findOneById(
@@ -166,11 +166,13 @@ export class CustomerOrderController {
       });
       // productData.productInformationData = productInformation;
       // productData.productImage = productImageDetail;
-      totalProductAmount = await this.orderProductService.findData(
-        orderProduct[i].productId,
-        orderData.orderId,
-        productInformation.orderProductId
-      );
+      totalProductAmount = await this.orderProductService.list({
+        where: {
+          productId: orderProduct[i].productId,
+          orderId: orderData.orderId,
+          orderProductId: productInformation.orderProductId,
+        },
+      });
       for (n = 0; n < totalProductAmount.length; n++) {
         totalAmount += +totalProductAmount[n].total;
       }
@@ -409,7 +411,7 @@ export class CustomerOrderController {
     });
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
-        .find({
+        .list({
           where: { orderId: orderId },
           select: [
             'orderProductId',
