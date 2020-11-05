@@ -16,6 +16,7 @@ import { CustomerWishlistService } from '../../services/CustomerWishlistService'
 import { ProductImageService } from '../../services/ProductImageService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -164,21 +165,27 @@ export class CustomerController {
         customerId: request.user.id,
       },
     ];
-    const wishlistData = await this.customerWishlistService.list(
-      limit,
-      offset,
-      select,
-      whereConditions,
-      count
-    );
+    const options: FindManyOptions<CustomerWishlist> = {
+      take: limit,
+      skip: offset,
+      select: ['wishlistProductId', 'productId'],
+      where: {
+        customerId: request.user.id,
+      },
+    };
     if (count) {
+      const wishlistCount: number = await this.customerWishlistService.count(
+        options
+      );
       const Response: any = {
         status: 1,
         message: 'Successfully get count',
-        data: wishlistData,
+        data: wishlistCount,
       };
       return response.status(200).send(Response);
     }
+    const wishlistData = await this.customerWishlistService.list(options);
+
     const promises = wishlistData.map(async (results: any) => {
       const productData = await this.productService.findOne({
         where: { productId: results.productId },
