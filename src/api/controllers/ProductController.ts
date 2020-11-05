@@ -799,7 +799,7 @@ export class ProductController {
         where: { productId: result.product },
       });
       // const temp: any = result;
-      const productImage = await this.productImageService.findAll({
+      const productImage = await this.productImageService.list({
         select: ['productId', 'image', 'containerName'],
         where: {
           productId: result.product,
@@ -852,7 +852,7 @@ export class ProductController {
       });
       // const temp: any = result;
       // temp.order = order;
-      const productImage = await this.productImageService.findAll({
+      const productImage = await this.productImageService.list({
         where: {
           productId: result.productId,
           defaultImage: 1,
