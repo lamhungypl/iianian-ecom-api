@@ -28,6 +28,7 @@ import { Response } from 'express';
 
 import * as fs from 'fs';
 import { DeleteOrderRequest } from './requests/DeleteOrderRequest';
+import { OrderLog } from '../models/OrderLog';
 
 @JsonController('/order')
 export class OrderController {
@@ -544,7 +545,7 @@ export class OrderController {
       return response.status(400).send(errorResponse);
     }
 
-    await this.orderLogService.create(updateOrder);
+    await this.orderLogService.create((updateOrder as unknown) as OrderLog);
     //console.log(updateOrder);
 
     updateOrder.orderStatusId = orderChangeStatus.orderStatusId;
