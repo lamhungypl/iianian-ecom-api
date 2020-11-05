@@ -729,7 +729,7 @@ export class ProductController {
         return resultData;
       });
 
-    const productSpecialData = await this.productSpecialService.findAll({
+    const productSpecialData = await this.productSpecialService.list({
       select: ['productSpecialId', 'priority', 'price', 'dateStart', 'dateEnd'],
       where: { productId: productDetails.productId },
     });

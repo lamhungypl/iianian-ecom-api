@@ -1,48 +1,40 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { ProductSpecial } from '../models/ProductSpecial';
 import { ProductSpecialRepository } from '../repositories/ProductSpecialRepository';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class ProductSpecialService {
+export class ProductSpecialService extends BaseService<
+  ProductSpecial,
+  ProductSpecialRepository
+> {
   constructor(
-    @OrmRepository() private productSpecialRepository: ProductSpecialRepository,
+    @InjectRepository(ProductSpecialRepository)
+    repository: ProductSpecialRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create a data
-  public async create(Data: any): Promise<ProductSpecial> {
-    this.log.info('create a data');
-    return this.productSpecialRepository.save(Data);
+  ) {
+    super(repository);
   }
-  // findone a data
-  public findOne(id: any): Promise<ProductSpecial> {
-    this.log.info('Find a data');
-    return this.productSpecialRepository.findOne(id);
-  }
-  // find a data
-  public findAll(productSpecial: any): Promise<ProductSpecial[]> {
-    this.log.info('Find a data');
-    return this.productSpecialRepository.find(productSpecial);
-  }
-  // delete product option
-  public async delete(id: any): Promise<any> {
-    this.log.info('Delete a product option value');
-    const deleteProductOptionValue = await this.productSpecialRepository.delete(
-      id
-    );
-    return deleteProductOptionValue;
-  }
-
-  // find special price
   public async findSpecialPrice(
     productId: number,
     todayDate: string
   ): Promise<any> {
-    return await this.productSpecialRepository.findSpecialPrice(
-      productId,
-      todayDate
+    const query = this.repository.manager.createQueryBuilder(
+      ProductSpecial,
+      'productSpecial'
     );
+    query.select(['productSpecial.price as price']);
+    query.where('productSpecial.product_id = ' + productId);
+    query.andWhere(
+      '(productSpecial.dateStart <= :todayDate AND productSpecial.dateEnd >= :todayDate)',
+      { todayDate }
+    );
+    query.orderBy('productSpecial.priority', 'ASC');
+    query.addOrderBy('productSpecial.price', 'ASC');
+    query.limit(1);
+    //console.log({ findSpecialPrice: query.getQuery() });
+    return query.getRawOne();
   }
 }
