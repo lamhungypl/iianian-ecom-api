@@ -734,7 +734,7 @@ export class ProductController {
       where: { productId: productDetails.productId },
     });
 
-    const productDiscountData = await this.productDiscountService.findAll({
+    const productDiscountData = await this.productDiscountService.list({
       select: [
         'productDiscountId',
         'quantity',

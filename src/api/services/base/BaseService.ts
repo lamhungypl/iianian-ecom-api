@@ -1,4 +1,5 @@
 import {
+  FindConditions,
   FindManyOptions,
   FindOneOptions,
   ObjectID,
@@ -50,9 +51,20 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
     return this.repository.findOne(id, options);
   }
 
-  public async delete(id: number | string) {
+  public async delete(
+    criteria:
+      | string
+      | string[]
+      | number
+      | number[]
+      | Date
+      | Date[]
+      | ObjectID
+      | ObjectID[]
+      | FindConditions<T>
+  ) {
     try {
-      await this.repository.delete(id);
+      await this.repository.delete(criteria);
       return 1;
     } catch (error) {
       return -1;
