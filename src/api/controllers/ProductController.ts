@@ -41,6 +41,7 @@ import { FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
 import fs from 'fs';
+import { ProductViewLog } from '../models/productViewLog';
 
 @JsonController('/product')
 export class ProductController {
@@ -960,30 +961,27 @@ export class ProductController {
     const select = [];
     const whereConditions = [];
     const search = [];
-    const viewLogs = await this.productViewLogService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      0,
-      count
-    );
+    const options: FindManyOptions<ProductViewLog> = {
+      take: limit,
+      skip: offset,
+    };
     if (count) {
+      const viewLogsCount = await this.productViewLogService.count(options);
       const successresponse: any = {
         status: 1,
         message: 'Successfully got view log count',
-        data: viewLogs,
+        data: viewLogsCount,
       };
       return response.status(200).send(successresponse);
-    } else {
-      const successResponse: any = {
-        status: 1,
-        message: 'Successfully got view log List',
-        data: viewLogs,
-      };
-      return response.status(200).send(successResponse);
     }
+    const viewLogs = await this.productViewLogService.list(options);
+
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got view log List',
+      data: viewLogs,
+    };
+    return response.status(200).send(successResponse);
   }
 
   // Customer product view list API
@@ -1024,30 +1022,34 @@ export class ProductController {
       },
     ];
     const search = [];
-    const customerProductview = await this.productViewLogService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      0,
-      count
-    );
+    const options: FindManyOptions<ProductViewLog> = {
+      take: limit,
+      skip: offset,
+      where: {
+        customerId: id,
+      },
+    };
+
     if (count) {
+      const viewLogCount: number = await this.productViewLogService.count(
+        options
+      );
+
       const successresponse: any = {
         status: 1,
         message: 'Successfully got view log count',
-        data: customerProductview,
+        data: viewLogCount,
       };
       return response.status(200).send(successresponse);
-    } else {
-      const successResponse: any = {
-        status: 1,
-        message: 'Successfully got view log List',
-        data: customerProductview,
-      };
-      return response.status(200).send(successResponse);
     }
+    const customerProductview = await this.productViewLogService.list(options);
+
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got view log List',
+      data: customerProductview,
+    };
+    return response.status(200).send(successResponse);
   }
   // Product Details Excel Document download
   /**
