@@ -454,7 +454,7 @@ export class OrderController {
       const successResponse: any = {
         status: 1,
         message: 'Successfully get today order Amount',
-        data: orderTotal,
+        data: orderTotal || 0,
       };
 
       return response.status(200).send(successResponse);

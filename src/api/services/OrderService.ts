@@ -21,7 +21,7 @@ export class OrderService extends BaseService<Order, OrderRepository> {
     const query = this.repository.manager.createQueryBuilder(Order, 'order');
     query.select([' SUM(order.total) as total']);
     query.where('DATE(order.createdDate) = :todayDate', { todayDate });
-    return query.getRawMany<number>();
+    return query.getOne();
   }
 
   public async salesList() {

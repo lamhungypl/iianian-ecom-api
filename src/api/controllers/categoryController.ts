@@ -327,7 +327,7 @@ export class CategoryController {
     @QueryParam('limit') limit: string,
     @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
-    @QueryParam('sortOrder') sortOrder: number,
+    @QueryParam('sortOrder') sortOrder: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
