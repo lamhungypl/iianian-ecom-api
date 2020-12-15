@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
-import { Factory, Seed } from 'typeorm-seeding';
+import { Factory, Seeder } from 'typeorm-seeding';
 import { Settings } from '../../api/models/setting';
-export class CreateSetting implements Seed {
+export class CreateSetting implements Seeder {
   public async seed(
     factory: Factory,
     connection: Connection
@@ -69,4 +69,5 @@ export class CreateSetting implements Seed {
     }
     return statusData;
   }
+  async run() {}
 }
