@@ -84,7 +84,7 @@ module.exports = {
       script: series(
         'nps banner.build',
         'nps config',
-        'nps lint',
+        // 'nps lint',
         'nps clean.dist',
         'nps transpile',
         'nps generateapidoc',
