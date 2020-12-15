@@ -25,9 +25,9 @@ define({
       version: '0.0.0',
       filename: 'src/public/apidoc/main.js',
       group:
-        '/Volumes/Edu/workplaces/nodeJS/Ecommerce/Project/api/src/public/apidoc/main.js',
+        '/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/apidoc/main.js',
       groupTitle:
-        '/Volumes/Edu/workplaces/nodeJS/Ecommerce/Project/api/src/public/apidoc/main.js',
+        '/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/apidoc/main.js',
       name: '',
     },
     {
@@ -55,9 +55,9 @@ define({
       version: '0.0.0',
       filename: 'src/public/main.js',
       group:
-        '/Volumes/Edu/workplaces/nodeJS/Ecommerce/Project/api/src/public/main.js',
+        '/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/main.js',
       groupTitle:
-        '/Volumes/Edu/workplaces/nodeJS/Ecommerce/Project/api/src/public/main.js',
+        '/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/main.js',
       name: '',
     },
     {
