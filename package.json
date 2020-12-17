@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nps",
     "test": "npm start test",
+    "postinstall": "npm start build",
     "build": "npm start build",
     "presetup": "npm install",
     "setup": "npm start config && npm start setup.script",
