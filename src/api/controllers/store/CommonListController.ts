@@ -370,10 +370,12 @@ export class CommonListController {
 
     if (count) {
       const productCount = await this.productService.productCount(options);
+      const maximumPrice: any = await this.productService.productMaxPrice();
+
       const res = {
         status: 1,
         message: 'Successfully got Products count',
-        data: productCount,
+        data: { productCount, maximumProductPrice: maximumPrice },
       };
       return response.status(200).send(res);
     }
@@ -463,16 +465,14 @@ export class CommonListController {
       return temp;
     });
     const finalResult = await Promise.all(promises);
-    const maximum: any = ['Max(product.price) As maximumProductPrice'];
-    const maximumPrice: any = await this.productService.productMaxPrice(
-      maximum
-    );
-    const productPrice: any = maximumPrice.maximumProductPrice;
+    // const maximum: any = ['Max(product.price) As maximumProductPrice'];
+    const maximumPrice: any = await this.productService.productMaxPrice();
+    // const productPrice: any = maximumPrice.maximumProductPrice;
     const successResponse: any = {
       status: 1,
       message: 'Successfully got the complete list of products.',
       data: {
-        maximumProductPrice: productPrice,
+        maximumProductPrice: maximumPrice,
         productList: finalResult,
       },
     };
@@ -518,43 +518,57 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    return new Promise(async () => {
-      const productList: any = await this.productService.list({
+    // TODO
+    if (count) {
+      const productCount = await this.productService.productCount({
         take: 10,
         skip: 0,
       });
+      const maximumPrice: any = await this.productService.productMaxPrice();
 
-      // const productList: any = await this.productService.list(
-      //   limit,
-      //   offset,
-      //   categoryId,
-      //   manufacturerId,
-      //   condition,
-      //   keyword,
-      //   priceFrom,
-      //   priceTo,
-      //   price
-      // );
-      const promises = productList.map(async (result: any) => {
-        const productImage = await this.productImageService.findOne({
-          select: ['productId', 'image', 'containerName', 'defaultImage'],
-          where: {
-            productId: result.productId,
-            defaultImage: 1,
-          },
-        });
-        const temp: any = result;
-        temp.Images = productImage;
-        return temp;
-      });
-      const finalResult = await Promise.all(promises);
-      const successResponse: any = {
+      const res = {
         status: 1,
-        message: 'Successfully got the complete list of products.',
-        data: finalResult,
+        message: 'Successfully got Products count',
+        data: { productCount, maximumProductPrice: maximumPrice },
       };
-      return response.status(200).send(successResponse);
+      return response.status(200).send(res);
+    }
+
+    const productList: any = await this.productService.list({
+      take: 10,
+      skip: 0,
     });
+
+    // const productList: any = await this.productService.list(
+    //   limit,
+    //   offset,
+    //   categoryId,
+    //   manufacturerId,
+    //   condition,
+    //   keyword,
+    //   priceFrom,
+    //   priceTo,
+    //   price
+    // );
+    const promises = productList.map(async (result: any) => {
+      const productImage = await this.productImageService.findOne({
+        select: ['productId', 'image', 'containerName', 'defaultImage'],
+        where: {
+          productId: result.productId,
+          defaultImage: 1,
+        },
+      });
+      const temp: any = result;
+      temp.Images = productImage;
+      return temp;
+    });
+    const finalResult = await Promise.all(promises);
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got the complete list of products.',
+      data: finalResult,
+    };
+    return response.status(200).send(successResponse);
   }
   // Related Product Showing API
   /**

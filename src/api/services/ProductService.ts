@@ -59,14 +59,12 @@ export class ProductService extends BaseService<Product, ProductRepository> {
     return query.getRawMany();
   }
 
-  public async productMaxPrice(maximum: any): Promise<any> {
-    const query = this.repository.manager.createQueryBuilder(
-      Product,
-      'product'
-    );
-    query.select(maximum);
-    //console.log({ productMaxPrice: query.getQuery() });
+  public async productMaxPrice(): Promise<any> {
+    const { maxPrice } = await this.repository
+      .createQueryBuilder('product')
+      .select('MAX(product.price)', 'maxPrice')
+      .getRawOne();
 
-    return query.getRawOne();
+    return maxPrice;
   }
 }
