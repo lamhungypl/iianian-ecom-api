@@ -8644,6 +8644,121 @@ define({ "api": [
   },
   {
     "type": "get",
+    "url": "/api/list/custom-product-list",
+    "title": "Custom Product List API",
+    "group": "Store_List",
+    "header": {
+      "fields": {
+        "Header": [
+          {
+            "group": "Header",
+            "type": "String",
+            "optional": false,
+            "field": "Authorization",
+            "description": ""
+          }
+        ]
+      }
+    },
+    "parameter": {
+      "fields": {
+        "Request body": [
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "limit",
+            "description": "<p>limit</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "offset",
+            "description": "<p>offset</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "manufacturerId",
+            "description": "<p>manufacturerId</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "categoryId",
+            "description": "<p>categoryId</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "priceFrom",
+            "description": "<p>price from you want to list</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "priceTo",
+            "description": "<p>price to you want to list</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "price",
+            "description": "<p>ASC OR DESC</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "Number",
+            "optional": false,
+            "field": "condition",
+            "description": "<p>1-&gt;new 2-&gt;used</p>"
+          },
+          {
+            "group": "Request body",
+            "type": "String",
+            "optional": false,
+            "field": "keyword",
+            "description": "<p>keyword</p>"
+          }
+        ]
+      }
+    },
+    "success": {
+      "examples": [
+        {
+          "title": "Success",
+          "content": "HTTP/1.1 200 OK\n{\n     \"status\": \"1\"\n     \"message\": \"Successfully get product list\",\n     \"data\":\"{}\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "sampleRequest": [
+      {
+        "url": "http://localhost:8000/api/list/custom-product-list"
+      }
+    ],
+    "error": {
+      "examples": [
+        {
+          "title": "productList error",
+          "content": "HTTP/1.1 500 Internal Server Error",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "src/api/controllers/store/CommonListController.ts",
+    "groupTitle": "Store_List",
+    "name": "GetApiListCustomProductList"
+  },
+  {
+    "type": "get",
     "url": "/api/list/language-list",
     "title": "Language List API",
     "group": "Store_List",

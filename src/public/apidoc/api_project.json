@@ -1,6 +1,6 @@
 {
-  "name": "ecommerce ",
-  "version": "1.0.0",
+  "name": "apidoc",
+  "version": "0.0.0",
   "description": "RESTFUL API Document",
   "title": "RESTFUL API Document",
   "url": "http://localhost:8000",
@@ -9,7 +9,7 @@
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2020-12-29T02:49:09.779Z",
+    "time": "2020-12-29T10:49:03.850Z",
     "url": "https://apidocjs.com",
     "version": "0.25.0"
   }
