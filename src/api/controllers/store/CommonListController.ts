@@ -478,7 +478,84 @@ export class CommonListController {
     };
     return response.status(200).send(successResponse);
   }
+  // Custom Product List API
+  /**
+   * @api {get} /api/list/custom-product-list Custom Product List API
+   * @apiGroup Store List
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {Number} limit limit
+   * @apiParam (Request body) {Number} offset offset
+   * @apiParam (Request body) {Number} manufacturerId manufacturerId
+   * @apiParam (Request body) {String} categoryId categoryId
+   * @apiParam (Request body) {Number} priceFrom price from you want to list
+   * @apiParam (Request body) {Number} priceTo price to you want to list
+   * @apiParam (Request body) {String} price ASC OR DESC
+   * @apiParam (Request body) {Number} condition  1->new 2->used
+   * @apiParam (Request body) {String} keyword keyword
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "status": "1"
+   *      "message": "Successfully get product list",
+   *      "data":"{}"
+   * }
+   * @apiSampleRequest /api/list/custom-product-list
+   * @apiErrorExample {json} productList error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Get('/custom-product-list')
+  public async customProductList(
+    @QueryParam('limit') limit: number,
+    @QueryParam('offset') offset: number,
+    @QueryParam('keyword') keyword: string,
+    @QueryParam('manufacturerId') manufacturerId: string,
+    @QueryParam('categoryId') categoryId: string,
+    @QueryParam('priceFrom') priceFrom: string,
+    @QueryParam('priceTo') priceTo: string,
+    @QueryParam('price') price: string,
+    @QueryParam('condition') condition: number,
+    @QueryParam('count') count: number | boolean,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    return new Promise(async () => {
+      const productList: any = await this.productService.list({
+        take: 10,
+        skip: 0,
+      });
 
+      // const productList: any = await this.productService.list(
+      //   limit,
+      //   offset,
+      //   categoryId,
+      //   manufacturerId,
+      //   condition,
+      //   keyword,
+      //   priceFrom,
+      //   priceTo,
+      //   price
+      // );
+      const promises = productList.map(async (result: any) => {
+        const productImage = await this.productImageService.findOne({
+          select: ['productId', 'image', 'containerName', 'defaultImage'],
+          where: {
+            productId: result.productId,
+            defaultImage: 1,
+          },
+        });
+        const temp: any = result;
+        temp.Images = productImage;
+        return temp;
+      });
+      const finalResult = await Promise.all(promises);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got the complete list of products.',
+        data: finalResult,
+      };
+      return response.status(200).send(successResponse);
+    });
+  }
   // Related Product Showing API
   /**
    * @api {get} /api/list/related-product-list Related Product List
