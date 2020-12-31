@@ -547,13 +547,19 @@ export class CommonListController {
         leftJoin: { productToCategory: 'product.productToCategory' },
       },
       where: (qb: SelectQueryBuilder<Product>) => {
-        qb.where({
-          // Filter Role fields
-          name: Like(`%${keyword}%`),
-          manufacturerId: manufacturerId,
-        }).andWhere('productToCategory.categoryId =:categoryId', {
-          categoryId,
-        });
+        qb.where(
+          pickBy({
+            // Filter Role fields
+            name: (keyword && Like(`%${keyword}%`)) || undefined,
+            manufacturerId: manufacturerId,
+          }),
+          value => value != null
+        );
+        if (categoryId) {
+          qb.andWhere('productToCategory.categoryId =:categoryId', {
+            categoryId,
+          });
+        }
       },
     };
     console.log('options', JSON.stringify(options));
