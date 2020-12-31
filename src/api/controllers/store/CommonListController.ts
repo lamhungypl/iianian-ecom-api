@@ -33,13 +33,21 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
 import { isNumber, orderBy, pickBy, parseInt as _parseInt } from 'lodash';
-import { FindConditions, FindManyOptions, Like, ObjectLiteral } from 'typeorm';
+import {
+  Brackets,
+  FindConditions,
+  FindManyOptions,
+  Like,
+  ObjectLiteral,
+  SelectQueryBuilder,
+} from 'typeorm';
 import { Product } from '../../models/ProductModel';
 import { Category } from 'src/api/models/categoryModel';
 import { Country } from '../../models/country';
 import { Zone } from 'src/api/models/zone';
 import { Banner } from 'src/api/models/banner';
 import { Language } from 'src/api/models/language';
+import { ProductToCategory } from 'src/api/models/ProductToCategory';
 
 @JsonController('/list')
 export class CommonListController {
@@ -519,11 +527,42 @@ export class CommonListController {
     @Res() response: any
   ): Promise<any> {
     // TODO
+
+    const options1: FindManyOptions<Product> = {
+      take: limit,
+      skip: offset,
+      relations: ['productToCategory'],
+      where: {
+        name: keyword,
+        manufacturerId: manufacturerId,
+        productToCategory: { categoryId },
+      },
+    };
+    const options: FindManyOptions<Product> = {
+      take: limit,
+      skip: offset,
+      // relations: ['productToCategory'],
+      join: {
+        alias: 'product',
+        leftJoin: { productToCategory: 'product.productToCategory' },
+      },
+      where: (qb: SelectQueryBuilder<Product>) => {
+        qb.where({
+          // Filter Role fields
+          name: Like(`%${keyword}%`),
+          manufacturerId: manufacturerId,
+        }).andWhere('productToCategory.categoryId =:categoryId', {
+          categoryId,
+        });
+      },
+    };
+    console.log('options', JSON.stringify(options));
+
+    const test = await this.productService.list(options);
+    console.log({ test });
+
     if (count) {
-      const productCount = await this.productService.productCount({
-        take: 10,
-        skip: 0,
-      });
+      const productCount = await this.productService.productCount(options);
       const maximumPrice: any = await this.productService.productMaxPrice();
 
       const res = {
@@ -550,7 +589,7 @@ export class CommonListController {
     //   priceTo,
     //   price
     // );
-    const promises = productList.map(async (result: any) => {
+    const promises = test.map(async (result: any) => {
       const productImage = await this.productImageService.findOne({
         select: ['productId', 'image', 'containerName', 'defaultImage'],
         where: {
