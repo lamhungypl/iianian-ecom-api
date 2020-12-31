@@ -38,7 +38,8 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
   }
 
   public update(id: number | string, newModel: T) {
-    return this.repository.update(id, newModel as any);
+    newModel[newModel.getIdField()] = id;
+    return this.repository.save(newModel as any);
   }
 
   public findOne(options?: FindOneOptions<T>) {
@@ -72,7 +73,7 @@ export class BaseService<T extends BaseModel, R extends Repository<T>>
   }
 
   public list(options: FindManyOptions<T>) {
-    console.log({ options });
+    console.log(JSON.stringify(options));
 
     return this.repository.find(options);
   }

@@ -16,6 +16,12 @@ import moment = require('moment/moment');
 
 @Entity('banner')
 export class Banner extends BaseModel {
+  public getId(): number {
+    return this.bannerId;
+  }
+  public getIdField(): string {
+    return 'bannerId';
+  }
   @PrimaryGeneratedColumn({ name: 'banner_id' })
   public bannerId: number;
 

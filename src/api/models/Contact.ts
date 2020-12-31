@@ -15,6 +15,12 @@ import { BaseModel } from './BaseModel';
 import moment = require('moment/moment');
 @Entity('contact')
 export class Contact extends BaseModel {
+  public getId(): number {
+    return this.id;
+  }
+  public getIdField(): string {
+    return 'id';
+  }
   @PrimaryGeneratedColumn()
   public id: number;
 

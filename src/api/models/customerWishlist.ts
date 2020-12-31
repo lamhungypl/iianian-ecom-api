@@ -21,6 +21,12 @@ import moment from 'moment';
 
 @Entity('customer_wishlist')
 export class CustomerWishlist extends BaseModel {
+  public getId(): number {
+    return this.wishlistProductId;
+  }
+  public getIdField(): string {
+    return 'wishlistProductId';
+  }
   @PrimaryGeneratedColumn({ name: 'id' })
   public wishlistProductId: number;
   @Exclude()

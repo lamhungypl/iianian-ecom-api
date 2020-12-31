@@ -18,9 +18,16 @@ import { OrderProduct } from './OrderProduct';
 import moment = require('moment');
 import { Exclude } from 'class-transformer';
 import { OrderStatus } from './orderStatus';
+import { BaseModel } from './BaseModel';
 
 @Entity('order')
-export class Order {
+export class Order extends BaseModel {
+  public getId(): number {
+    return this.orderId;
+  }
+  public getIdField(): string {
+    return 'orderId';
+  }
   @PrimaryGeneratedColumn({ name: 'order_id' })
   public orderId: number;
 

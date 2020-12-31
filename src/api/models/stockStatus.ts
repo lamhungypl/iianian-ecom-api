@@ -17,6 +17,12 @@ import moment = require('moment');
 
 @Entity('stock_status')
 export class StockStatus extends BaseModel {
+  public getId(): number {
+    return this.stockStatusId;
+  }
+  public getIdField(): string {
+    return 'stockStatusId';
+  }
   @PrimaryGeneratedColumn({ name: 'stock_status_id' })
   public stockStatusId: number;
 

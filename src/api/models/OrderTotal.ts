@@ -17,6 +17,12 @@ import moment from 'moment';
 
 @Entity('order_total')
 export class OrderTotal extends BaseModel {
+  public getId(): number {
+    return this.order_total_id;
+  }
+  public getIdField(): string {
+    return 'order_total_id';
+  }
   @PrimaryGeneratedColumn()
   public order_total_id: number;
 

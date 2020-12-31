@@ -22,6 +22,12 @@ import { Category } from './categoryModel';
 
 @Entity('product_to_category')
 export class ProductToCategory extends BaseModel {
+  public getId(): number {
+    return this.productToCategoryId;
+  }
+  public getIdField(): string {
+    return 'productToCategoryId';
+  }
   @PrimaryGeneratedColumn({ name: 'product_to_category_id' })
   @IsNotEmpty()
   public productToCategoryId: number;

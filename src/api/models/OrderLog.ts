@@ -12,6 +12,12 @@ import moment = require('moment');
 
 @Entity('order_log')
 export class OrderLog extends BaseModel {
+  public getId(): number {
+    return this.orderLogId;
+  }
+  public getIdField(): string {
+    return 'orderLogId';
+  }
   @PrimaryGeneratedColumn({ name: 'order_log_id' })
   public orderLogId: number;
 

@@ -10,6 +10,12 @@ import { BaseModel } from './BaseModel';
 import moment = require('moment');
 @Entity('currency')
 export class Currency extends BaseModel {
+  public getId(): number {
+    return this.currencyId;
+  }
+  public getIdField(): string {
+    return 'currencyId';
+  }
   @PrimaryGeneratedColumn({ name: 'currency_id' })
   public currencyId: number;
 

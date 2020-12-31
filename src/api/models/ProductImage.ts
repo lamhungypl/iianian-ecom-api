@@ -21,6 +21,12 @@ import { Product } from './ProductModel';
 
 @Entity('product_image')
 export class ProductImage extends BaseModel {
+  public getId(): number {
+    return this.productImageId;
+  }
+  public getIdField(): string {
+    return 'productImageId';
+  }
   @PrimaryGeneratedColumn({ name: 'product_image_id' })
   @IsNotEmpty()
   public productImageId: number;

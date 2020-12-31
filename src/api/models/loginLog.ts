@@ -18,6 +18,12 @@ import moment from 'moment';
 
 @Entity('login_log')
 export class LoginLog extends BaseModel {
+  public getId(): number {
+    return this.id;
+  }
+  public getIdField(): string {
+    return 'id';
+  }
   @PrimaryGeneratedColumn()
   public id: number;
 

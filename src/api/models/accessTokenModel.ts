@@ -12,6 +12,12 @@ import { BaseModel } from './BaseModel';
 import moment = require('moment');
 @Entity('access_token')
 export class AccessToken extends BaseModel {
+  public getIdField(): string {
+    return 'id';
+  }
+  public getId(): number {
+    return this.id;
+  }
   @PrimaryGeneratedColumn({ name: 'id' })
   public id: number;
 

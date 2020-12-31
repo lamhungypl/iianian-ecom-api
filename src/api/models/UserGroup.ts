@@ -20,6 +20,12 @@ import moment = require('moment');
 
 @Entity('user_group')
 export class UserGroup extends BaseModel {
+  public getId(): number {
+    return this.groupId;
+  }
+  public getIdField(): string {
+    return 'groupId';
+  }
   @PrimaryGeneratedColumn({ name: 'group_id' })
   public groupId: number;
 

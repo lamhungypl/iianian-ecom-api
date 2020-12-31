@@ -16,6 +16,12 @@ import moment = require('moment/moment');
 
 @Entity('email_template')
 export class EmailTemplate extends BaseModel {
+  public getId(): number {
+    return this.emailTemplateId;
+  }
+  public getIdField(): string {
+    return 'emailTemplateId';
+  }
   @PrimaryGeneratedColumn({ name: 'id' })
   public emailTemplateId: number;
 
