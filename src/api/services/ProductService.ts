@@ -3,7 +3,7 @@ import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Product } from '../models/ProductModel';
 import { ProductRepository } from '../repositories/ProductRepository';
-import { FindManyOptions, Like } from 'typeorm';
+import { FindManyOptions, Like, SelectQueryBuilder } from 'typeorm';
 import { BaseService } from './base/BaseService';
 import { get } from 'lodash';
 import { OrderProduct } from '../models/OrderProduct';
@@ -59,11 +59,26 @@ export class ProductService extends BaseService<Product, ProductRepository> {
     return query.getRawMany();
   }
 
-  public async productMaxPrice(): Promise<any> {
-    const { maxPrice } = await this.repository
+  public async productMaxPrice({
+    take,
+    skip,
+    join,
+    ...options
+  }: FindManyOptions<Product>): Promise<number> {
+    const query = this.repository
       .createQueryBuilder('product')
-      .select('MAX(product.price)', 'maxPrice')
-      .getRawOne();
+      .leftJoinAndSelect('product.productToCategory', 'productToCategory')
+      .where(options.where)
+      .select('MAX(product.price)', 'maxPrice');
+
+    if (take) {
+      query.limit(take);
+    }
+    if (skip) {
+      query.offset(skip);
+    }
+
+    const { maxPrice } = await query.getRawOne();
 
     return maxPrice;
   }

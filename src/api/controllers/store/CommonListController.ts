@@ -32,12 +32,16 @@ import { LanguageService } from '../../services/languageService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
-import { isNumber, orderBy, pickBy, parseInt as _parseInt } from 'lodash';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 import {
+  Between,
   Brackets,
   FindConditions,
   FindManyOptions,
+  FindOperator,
+  LessThanOrEqual,
   Like,
+  MoreThanOrEqual,
   ObjectLiteral,
   SelectQueryBuilder,
 } from 'typeorm';
@@ -48,6 +52,8 @@ import { Zone } from 'src/api/models/zone';
 import { Banner } from 'src/api/models/banner';
 import { Language } from 'src/api/models/language';
 import { ProductToCategory } from 'src/api/models/ProductToCategory';
+import { Request } from 'express';
+import { NotNullObject } from '../../Utils';
 
 @JsonController('/list')
 export class CommonListController {
@@ -378,7 +384,9 @@ export class CommonListController {
 
     if (count) {
       const productCount = await this.productService.productCount(options);
-      const maximumPrice: any = await this.productService.productMaxPrice();
+      const maximumPrice: any = await this.productService.productMaxPrice(
+        options
+      );
 
       const res = {
         status: 1,
@@ -474,7 +482,9 @@ export class CommonListController {
     });
     const finalResult = await Promise.all(promises);
     // const maximum: any = ['Max(product.price) As maximumProductPrice'];
-    const maximumPrice: any = await this.productService.productMaxPrice();
+    const maximumPrice: any = await this.productService.productMaxPrice(
+      options
+    );
     // const productPrice: any = maximumPrice.maximumProductPrice;
     const successResponse: any = {
       status: 1,
@@ -516,28 +526,20 @@ export class CommonListController {
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
     @QueryParam('keyword') keyword: string,
-    @QueryParam('manufacturerId') manufacturerId: string,
+    @QueryParam('manufacturerId') manufacturerId: number,
     @QueryParam('categoryId') categoryId: string,
-    @QueryParam('priceFrom') priceFrom: string,
-    @QueryParam('priceTo') priceTo: string,
+    @QueryParam('priceFrom') priceFrom: number,
+    @QueryParam('priceTo') priceTo: number,
     @QueryParam('price') price: string,
+    @QueryParam('priceOrder') priceOrder: string,
+
     @QueryParam('condition') condition: number,
     @QueryParam('count') count: number | boolean,
-    @Req() request: any,
+    @Req() request: Request,
     @Res() response: any
   ): Promise<any> {
     // TODO
 
-    const options1: FindManyOptions<Product> = {
-      take: limit,
-      skip: offset,
-      relations: ['productToCategory'],
-      where: {
-        name: keyword,
-        manufacturerId: manufacturerId,
-        productToCategory: { categoryId },
-      },
-    };
     const options: FindManyOptions<Product> = {
       take: limit,
       skip: offset,
@@ -547,29 +549,45 @@ export class CommonListController {
         leftJoin: { productToCategory: 'product.productToCategory' },
       },
       where: (qb: SelectQueryBuilder<Product>) => {
+        const priceRange = priceFrom && priceTo;
+        let priceSelect: FindOperator<number> | number | undefined = undefined;
+        if (!!priceRange) {
+          priceSelect = Between(priceFrom, priceTo);
+        } else if (priceFrom) {
+          priceSelect = MoreThanOrEqual(priceFrom);
+        } else if (priceTo) {
+          priceSelect = LessThanOrEqual(priceTo);
+        }
+
         qb.where(
-          pickBy({
+          NotNullObject<
+            FindConditions<Product> | FindConditions<ProductToCategory>
+          >({
             // Filter Role fields
             name: (keyword && Like(`%${keyword}%`)) || undefined,
-            manufacturerId: manufacturerId,
-          }),
-          value => value != null
+            manufacturerId: manufacturerId || undefined,
+            price: priceSelect,
+            condition: condition || undefined,
+          })
         );
+
         if (categoryId) {
           qb.andWhere('productToCategory.categoryId =:categoryId', {
             categoryId,
           });
         }
+        qb.addOrderBy(
+          'product.price',
+          (priceOrder === 'desc' && 'DESC') || 'ASC'
+        );
       },
     };
-    console.log('options', JSON.stringify(options));
-
-    const test = await this.productService.list(options);
-    console.log({ test });
 
     if (count) {
       const productCount = await this.productService.productCount(options);
-      const maximumPrice: any = await this.productService.productMaxPrice();
+      const maximumPrice: any = await this.productService.productMaxPrice(
+        options
+      );
 
       const res = {
         status: 1,
@@ -579,23 +597,10 @@ export class CommonListController {
       return response.status(200).send(res);
     }
 
-    const productList: any = await this.productService.list({
-      take: 10,
-      skip: 0,
-    });
-
-    // const productList: any = await this.productService.list(
-    //   limit,
-    //   offset,
-    //   categoryId,
-    //   manufacturerId,
-    //   condition,
-    //   keyword,
-    //   priceFrom,
-    //   priceTo,
-    //   price
-    // );
-    const promises = test.map(async (result: any) => {
+    const productList: Product[] = await this.productService.productList(
+      options
+    );
+    const promises = productList.map(async (result: any) => {
       const productImage = await this.productImageService.findOne({
         select: ['productId', 'image', 'containerName', 'defaultImage'],
         where: {
