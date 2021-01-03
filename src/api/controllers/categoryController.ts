@@ -285,7 +285,7 @@ export class CategoryController {
       categoryTarget.categoryId
     );
     //console.log('category' + deleteCategory);
-    if (!deleteCategory) {
+    if (deleteCategory === 1) {
       const successResponse: any = {
         status: 1,
         message: 'Successfully deleted category.',
