@@ -33,6 +33,7 @@ import parseInt from 'lodash/parseInt';
 import * as fs from 'fs';
 import { DeleteCustomerRequest } from './requests/DeleteCustomerRequest';
 import { isNumber } from 'lodash';
+import { NotNullObject } from '../Utils';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -230,13 +231,10 @@ export class CustomerController {
     @Res() response: Response
   ) {
     const options: FindManyOptions<Customer> = {
-      ...pickBy<{ take?: number; skip?: number }>(
-        {
-          take: (limit && parseInt(limit)) || undefined,
-          skip: (offset && parseInt(offset)) || undefined,
-        },
-        value => isNumber(value)
-      ),
+      ...NotNullObject<FindManyOptions<Customer>>({
+        take: (limit && parseInt(limit)) || undefined,
+        skip: (offset && parseInt(offset)) || undefined,
+      }),
       select: [
         'id',
         'username',
@@ -247,28 +245,25 @@ export class CustomerController {
         'mobileNumber',
         'avatar',
         'avatarPath',
-        'password',
+        'newsletter',
+        'mailStatus',
+        'isActive',
+        'modifiedDate',
+        'customerGroupId',
+        'createdDate',
       ],
-      where: pickBy<
-        | FindConditions<Customer>
-        | FindConditions<Customer>[]
-        | { [key: string]: any }
-      >(
-        {
-          firstName: (name && Like(`%${name}%`)) || undefined,
-          email: (email && Like(`%${email}%`)) || undefined,
-          createdDate: (date && Like(`%${date}%`)) || undefined,
-          customerGroupId:
-            (Number.isInteger(parseInt(customerGroup)) &&
-              parseInt(customerGroup)) ||
-            undefined,
-          isActive:
-            (Number.isInteger(parseInt(status)) && parseInt(customerGroup)) ||
-            1,
-          deleteFlag: 0,
-        },
-        value => value != null
-      ),
+      where: NotNullObject<FindConditions<Customer>>({
+        firstName: (name && Like(`%${name}%`)) || undefined,
+        email: (email && Like(`%${email}%`)) || undefined,
+        createdDate: (date && Like(`%${date}%`)) || undefined,
+        customerGroupId:
+          (Number.isInteger(parseInt(customerGroup)) &&
+            parseInt(customerGroup)) ||
+          undefined,
+        isActive:
+          (Number.isInteger(parseInt(status)) && parseInt(status)) || undefined,
+        deleteFlag: 0,
+      }),
     };
 
     if (count) {
