@@ -71,12 +71,12 @@ export class ProductService extends BaseService<Product, ProductRepository> {
       .where(options.where)
       .select('MAX(product.price)', 'maxPrice');
 
-    if (take) {
-      query.limit(take);
-    }
-    if (skip) {
-      query.offset(skip);
-    }
+    // if (take) {
+    //   query.limit(take);
+    // }
+    // if (skip) {
+    //   query.offset(skip);
+    // }
 
     const { maxPrice } = await query.getRawOne();
 

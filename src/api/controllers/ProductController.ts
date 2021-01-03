@@ -185,43 +185,43 @@ export class ProductController {
     return response.status(200).send(successResponse);
   }
 
-  @Delete('/delete-product/:id')
-  @Authorized()
-  public async deleteProduct(
-    @Body({ validate: true }) productDelete: DeleteProductRequest,
-    @Res() response: any,
-    @Req() request: any
-  ): Promise<Product> {
-    const product = await this.productService.findOne({
-      where: {
-        productId: productDelete.productId,
-      },
-    });
-    if (!product) {
-      const errorResponse: any = {
-        status: 0,
-        message: 'Invalid productId',
-      };
-      return response.status(400).send(errorResponse);
-    }
-    const deleteProduct = await this.productService.delete(
-      productDelete.productId
-    );
+  // @Delete('/delete-product/:id')
+  // @Authorized()
+  // public async deleteProduct(
+  //   @Body({ validate: true }) productDelete: DeleteProductRequest,
+  //   @Res() response: any,
+  //   @Req() request: any
+  // ): Promise<Product> {
+  //   const product = await this.productService.findOne({
+  //     where: {
+  //       productId: productDelete.productId,
+  //     },
+  //   });
+  //   if (!product) {
+  //     const errorResponse: any = {
+  //       status: 0,
+  //       message: 'Invalid productId',
+  //     };
+  //     return response.status(400).send(errorResponse);
+  //   }
+  //   const deleteProduct = await this.productService.delete(
+  //     productDelete.productId
+  //   );
 
-    if (deleteProduct) {
-      const successResponse: any = {
-        status: 1,
-        message: 'Successfully deleted Product',
-      };
-      return response.status(200).send(successResponse);
-    } else {
-      const errorResponse: any = {
-        status: 0,
-        message: 'unable to delete product',
-      };
-      return response.status(400).send(errorResponse);
-    }
-  }
+  //   if (deleteProduct) {
+  //     const successResponse: any = {
+  //       status: 1,
+  //       message: 'Successfully deleted Product',
+  //     };
+  //     return response.status(200).send(successResponse);
+  //   } else {
+  //     const errorResponse: any = {
+  //       status: 0,
+  //       message: 'unable to delete product',
+  //     };
+  //     return response.status(400).send(errorResponse);
+  //   }
+  // }
 
   // Create Product API
   /**
@@ -1212,78 +1212,89 @@ export class ProductController {
     });
   }
 
-  // // Delete Multiple Product API
+  // Delete Multiple Product API
 
-  // @Post('/delete-product')
-  // @Authorized()
-  // public async deleteMultipleProduct(@Body({validate: true}) productDelete: DeleteProductRequest , @Res() response: any, @Req() request: any): Promise<Product> {
+  @Post('/delete-product')
+  @Authorized()
+  public async deleteMultipleProduct(
+    @Body({ validate: true }) productDelete: DeleteProductRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<Product> {
+    const productIdNo = productDelete.productId.toString();
+    const productid = productIdNo.split(',');
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose a product for delete',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    for (const id of productid) {
+      const orderProduct = await this.orderProductService.findOne({
+        where: { productId: id },
+      });
+      if (orderProduct) {
+        const errorResponse: any = {
+          status: 0,
+          message: `${orderProduct.name} (${orderProduct.productId}) is ordered (${orderProduct.orderId})`,
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    for (const id of productid) {
+      const deleteProductId = parseInt(id, 10);
+      await this.productService.delete(deleteProductId);
+    }
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully deleted Product',
+    };
+    return response.status(200).send(successResponse);
+  }
 
-  //     const productIdNo = productDelete.productId.toString();
-  //     const productid = productIdNo.split(',');
-  //     for ( const id of productid ) {
-  //         const dataId = await this.productService.findOneById(id);
-  //         if (dataId === undefined) {
-  //             const errorResponse: any = {
-  //                 status: 0,
-  //                 message: 'Please choose a product for delete',
-  //             };
-  //             return response.status(400).send(errorResponse);
-  //         }
-  //     }
-  //     for ( const id of productid ) {
-  //         const orderProductId = await this.orderProductService.findOne({where: { productId: id }});
-  //         if (orderProductId) {
-  //             const errorResponse: any = {
-  //                 status: 0,
-  //                 message: 'That product is ordered',
-  //             };
-  //             return response.status(400).send(errorResponse);
-  //         }
-  //     }
-  //     for ( const id of productid ) {
-  //         const deleteProductId = parseInt(id, 10);
-  //         await this.productService.delete(deleteProductId);
-  //     }
-  //     const successResponse: any = {
-  //         status: 1,
-  //         message: 'Successfully deleted Product',
-  //     };
-  //     return response.status(200).send(successResponse);
-  // }
+  @Delete('/delete-product/:id')
+  @Authorized()
+  public async deleteProduct(
+    @Param('id') productid: number,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<Product> {
+    const product = await this.productService.findOneById(productid);
+    if (product === undefined) {
+      const errorResponse: any = {
+        status: 0,
+        message: 'Invalid productId',
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const orderProduct = await this.orderProductService.findOne({
+      where: { productId: productid },
+    });
+    if (orderProduct) {
+      const errorResponse: any = {
+        status: 0,
+        message: `${orderProduct.name} (${orderProduct.productId}) is ordered (${orderProduct.orderId})`,
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const deleteProduct = await this.productService.delete(productid);
 
-  // @Delete('/delete-product/:id')
-  // @Authorized()
-  // public async deleteProduct(@Param('id') productid: number , @Res() response: any, @Req() request: any): Promise<Product> {
-  //     const product = await this.productService.findOne(productid);
-  //     if (product === undefined) {
-  //         const errorResponse: any = {
-  //             status: 0,
-  //             message: 'Invalid productId',
-  //         };
-  //         return response.status(400).send(errorResponse);
-  //     }
-  //     const orderProductId = await this.orderProductService.findOne({where: { productId: productid }});
-  //     if (orderProductId) {
-  //         const errorResponse: any = {
-  //             status: 0,
-  //             message: 'That product is ordered',
-  //         };
-  //         return response.status(400).send(errorResponse);
-  //     }
-  //     const deleteProduct = await this.productService.delete(productid);
-
-  //     if (deleteProduct) {
-  //         const successResponse: any = {
-  //             status: 1,
-  //             message: 'Successfully deleted Product',
-  //         };
-  //         return response.status(200).send(successResponse);
-  //     } else {
-  //         const errorResponse: any = {
-  //             status: 0,
-  //             message: 'unable to delete product',
-  //         };
-  //         return response.status(400).send(errorResponse);
-  //     }
-  // }
+    if (deleteProduct) {
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully deleted Product',
+      };
+      return response.status(200).send(successResponse);
+    } else {
+      const errorResponse: any = {
+        status: 0,
+        message: 'unable to delete product',
+      };
+      return response.status(400).send(errorResponse);
+    }
+  }
 }
