@@ -29,6 +29,7 @@ import { Response } from 'express';
 import * as fs from 'fs';
 import { DeleteOrderRequest } from './requests/DeleteOrderRequest';
 import { OrderLog } from '../models/OrderLog';
+import moment from 'moment';
 
 @JsonController('/order')
 export class OrderController {
@@ -219,7 +220,7 @@ export class OrderController {
           ],
         })
         .then(val => {
-          //console.log(val);
+          console.log(val);
           const productVal = val.map(async (value: any) => {
             const productDetail = await this.productService.findOne({
               where: { productId: value.productId },
@@ -247,12 +248,7 @@ export class OrderController {
             // const rating = await this.productRatingService.findOne({select: ['rating', 'review'], where: {customerId : result.customerId, orderProductId : value.orderProductId, productId: value.productId}});
             const tempVal: any = value;
             const nowDate = new Date();
-            const todaydate =
-              nowDate.getFullYear() +
-              '-' +
-              (nowDate.getMonth() + 1) +
-              '-' +
-              nowDate.getDate();
+            const todaydate = moment(nowDate).format('DD-MM-YYYY');
             const productSpecial = await this.productSpecialService.findSpecialPrice(
               value.productId,
               todaydate
@@ -271,7 +267,8 @@ export class OrderController {
               tempVal.pricerefer = '';
               tempVal.flag = '';
             }
-            tempVal.productDetail = productDetail;
+
+            tempVal.productDetail = { ...productDetail };
             tempVal.productDetail.productImage = image;
             // tempVal.orderOptions = orderOption;
             // if (rating !== undefined) {
