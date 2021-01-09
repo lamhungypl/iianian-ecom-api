@@ -474,7 +474,7 @@ export class CustomerOrderController {
               tempVal.pricerefer = '';
               tempVal.flag = '';
             }
-            tempVal.productDetail = productDetail;
+            tempVal.productDetail = { ...productDetail };
             tempVal.productDetail.productImage = image;
             return tempVal;
           });

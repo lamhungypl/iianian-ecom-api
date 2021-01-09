@@ -532,7 +532,6 @@ export class CommonListController {
     @QueryParam('priceTo') priceTo: number,
     @QueryParam('price') price: string,
     @QueryParam('priceOrder') priceOrder: string,
-
     @QueryParam('condition') condition: number,
     @QueryParam('count') count: number | boolean,
     @Req() request: Request,
@@ -558,12 +557,11 @@ export class CommonListController {
         } else if (priceTo) {
           priceSelect = LessThanOrEqual(priceTo);
         }
-
+        // Filter product options by name, brand,...
         qb.where(
           NotNullObject<
             FindConditions<Product> | FindConditions<ProductToCategory>
           >({
-            // Filter Role fields
             name: (keyword && Like(`%${keyword}%`)) || undefined,
             manufacturerId: manufacturerId || undefined,
             price: priceSelect,
