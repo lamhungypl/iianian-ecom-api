@@ -25,4 +25,6 @@ export class UpdateCategoryRequest {
   public metaTagDescription: string;
 
   public metaTagKeyword: string;
+
+  public status: any;
 }

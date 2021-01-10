@@ -710,6 +710,7 @@ export class CustomerController {
    */
 
   @Get('/customer-excel-list')
+  @Authorized()
   public async excelCustomerView(
     @QueryParam('customerId') customerId: string,
     @Req() request: any,

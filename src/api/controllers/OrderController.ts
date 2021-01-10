@@ -582,6 +582,7 @@ export class OrderController {
    */
 
   @Get('/order-excel-list')
+  @Authorized()
   public async excelOrderView(
     @QueryParam('orderId') orderId: string,
     @Req() request: any,

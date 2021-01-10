@@ -178,6 +178,7 @@ export class CategoryController {
     categoryId.metaTagTitle = category.metaTagTitle;
     categoryId.metaTagDescription = category.metaTagDescription;
     categoryId.metaTagKeyword = category.metaTagKeyword;
+    categoryId.isActive = category.status || categoryId.isActive;
     const categorySave = await this.categoryService.create(categoryId);
 
     const deleteCategory = await this.categoryPathService.list({
@@ -339,7 +340,7 @@ export class CategoryController {
         },
         value => isNumber(value)
       ),
-      select: ['categoryId', 'name', 'parentInt', 'sortOrder'],
+      select: ['categoryId', 'name', 'parentInt', 'sortOrder', 'isActive'],
       where: pickBy<
         | FindConditions<Category>[]
         | FindConditions<Category>
