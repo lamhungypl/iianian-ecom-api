@@ -1,29 +1,19 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { AccessTokenRepository } from '../repositories/accessTokenRepository';
 import { AccessToken } from '../models/accessTokenModel';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class AccessTokenService {
+export class AccessTokenService extends BaseService<
+  AccessToken,
+  AccessTokenRepository
+> {
   constructor(
-    @OrmRepository() private accessTokenRepository: AccessTokenRepository,
+    @InjectRepository(AccessTokenRepository) repository: AccessTokenRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  public findOne(accessToken: any): Promise<any> {
-    this.log.info('find one access token', accessToken);
-    return this.accessTokenRepository.findOne(accessToken);
-  }
-  // delete token
-  public async delete(id: number): Promise<any> {
-    this.log.info('Delete a token', id);
-    await this.accessTokenRepository.delete(id);
-    return;
-  }
-  // create token
-  public async create(accessToken: any): Promise<AccessToken> {
-    this.log.info('create one access token', accessToken);
-    return this.accessTokenRepository.save(accessToken);
+  ) {
+    super(repository);
   }
 }

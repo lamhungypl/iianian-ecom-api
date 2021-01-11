@@ -15,6 +15,8 @@ import {
 import { EmailTemplate } from '../models/emailTemplate';
 import { CreateEmailTemplate } from './requests/createEmailTemplateRequest';
 import { EmailTemplateService } from '../services/emailTemplateService';
+import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/email-template')
 export class EmailTemplateController {
@@ -106,35 +108,36 @@ export class EmailTemplateController {
   @Get('/email-templatelist')
   @Authorized()
   public async emailTemplateList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'emailTemplateId',
-      'title',
-      'subject',
-      'content',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'title',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<EmailTemplate> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: ['emailTemplateId', 'title', 'subject', 'content', 'isActive'],
+      where: {
+        title: Like(`%${keyword}%`),
       },
-    ];
-    const WhereConditions = [];
-    const emailTemplateList = await this.emailTemplateService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+    if (count) {
+      const emailTemplateCount = await this.emailTemplateService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got the email count',
+        data: emailTemplateCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const emailTemplateList = await this.emailTemplateService.list(options);
     if (emailTemplateList) {
       const successResponse: any = {
         status: 1,
@@ -257,7 +260,7 @@ export class EmailTemplateController {
     }
 
     const deleteEmailTemplate = await this.emailTemplateService.delete(
-      emailTemplate
+      emailTemplate.emailTemplateId
     );
     if (deleteEmailTemplate) {
       const successResponse: any = {

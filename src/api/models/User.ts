@@ -25,6 +25,12 @@ import { AccessToken } from './accessTokenModel';
 
 @Entity('users')
 export class User extends BaseModel {
+  public getId(): number {
+    return this.userId;
+  }
+  public getIdField(): string {
+    return 'userId';
+  }
   public static hashPassword(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       bcrypt.hash(password, 10, (err, hash) => {
@@ -40,7 +46,7 @@ export class User extends BaseModel {
     user: User,
     password: string
   ): Promise<boolean> {
-    console.log(password);
+    //console.log(password);
     return new Promise((resolve, reject) => {
       bcrypt.compare(password, user.password, (err, res) => {
         resolve(res === true);

@@ -21,21 +21,21 @@ export class AuthService {
   ): Promise<number> {
     const authorization = req.header('Authorization');
 
-    console.log(authorization);
-    console.log(authorization.split(' ')[0]);
+    //console.log(authorization);
+    //console.log(authorization.split(' ')[0]);
 
     if (authorization && authorization.split(' ')[0] === 'Bearer') {
-      console.log('Credentials provided by the client');
+      //console.log('Credentials provided by the client');
       this.log.info('Credentials provided by the client');
       if (!authorization) {
         return undefined;
       }
-      console.log(authorization.split(' ')[1]);
+      //console.log(authorization.split(' ')[1]);
 
       const UserId = await this.decryptToken(authorization.split(' ')[1]);
 
       return UserId;
-      console.log('I m here');
+      //console.log('I m here');
     }
 
     this.log.info('No credentials provided by the client');
@@ -43,26 +43,26 @@ export class AuthService {
   }
 
   public async decryptToken(encryptString: string): Promise<number> {
-    return new Promise<number>((subresolve, subreject) => {
+    return new Promise<number>((resolve, reject) => {
       jwt.verify(encryptString, '123##$$)(***&', (err, decoded) => {
         if (err) {
-          console.log(err);
-          return subresolve(undefined);
+          //console.log(err);
+          return resolve(undefined);
         }
-        console.log(decoded);
-        return subresolve(decoded.id);
+        //console.log(decoded);
+        return resolve(decoded['id']);
       });
     });
   }
 
   public async validateUser(userId: number): Promise<User> {
-    console.log('userId' + userId);
+    //console.log('userId' + userId);
     const user = await this.userRepository.findOne({
       where: {
-        user_id: userId,
+        userId,
       },
     });
-    console.log(user);
+    //console.log(user);
 
     if (user) {
       return user;
@@ -72,13 +72,13 @@ export class AuthService {
   }
 
   public async validateCustomer(userId: number): Promise<any> {
-    console.log('customerId' + userId);
+    //console.log('customerId' + userId);
     const customer = await this.customerRepository.findOne({
       where: {
         id: userId,
       },
     });
-    console.log(customer);
+    //console.log(customer);
 
     if (customer) {
       return customer;

@@ -17,6 +17,7 @@ import { DeleteRoleRequest } from './requests/deleteRoleRequest';
 import { CreateRole as CreateRoleRequest } from './requests/createRoleRequest';
 import { UserGroupService } from '../services/UserGroupService';
 import { UserGroup } from '../models/UserGroup';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/role')
 export class RoleController {
@@ -50,13 +51,13 @@ export class RoleController {
     @Body({ validate: true }) createRoleParam: CreateRoleRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(createRoleParam);
+    //console.log(createRoleParam);
     const role = await this.userGroupService.findOne({
       where: {
         name: createRoleParam.name,
       },
     });
-    console.log(role);
+    //console.log(role);
     if (role) {
       const errorResponse: any = {
         status: 0,
@@ -65,7 +66,7 @@ export class RoleController {
       return response.status(400).send(errorResponse);
     }
 
-    const newRoleParams: any = new UserGroup();
+    const newRoleParams = new UserGroup();
     newRoleParams.name = createRoleParam.name;
     newRoleParams.isActive = createRoleParam.status;
     const userGroupSaveResponse = await this.userGroupService.create(
@@ -117,13 +118,13 @@ export class RoleController {
     @Body({ validate: true }) createRoleParam: CreateRoleRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(createRoleParam);
+    //console.log(createRoleParam);
     const role = await this.userGroupService.findOne({
       where: {
         groupId: id,
       },
     });
-    console.log(role);
+    //console.log(role);
     if (!role) {
       const errorResponse: any = {
         status: 0,
@@ -180,26 +181,27 @@ export class RoleController {
   public async roleList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    console.log(keyword);
-    const select = ['groupId', 'name', 'isActive'];
-    const whereConditions = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<UserGroup> = {
+      select: ['groupId', 'name', 'isActive'],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
-    const roleList = await this.userGroupService.list(
-      limit,
-      offset,
-      select,
-      whereConditions,
-      count
-    );
+    };
+    if (count) {
+      const roleListCount = await this.userGroupService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get all role List count',
+        data: roleListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const roleList = await this.userGroupService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully get all role List',
@@ -249,7 +251,7 @@ export class RoleController {
     }
 
     const deleteRole = await this.userGroupService.delete(role.groupId);
-    console.log('role' + deleteRole);
+    //console.log('role' + deleteRole);
     if (deleteRole) {
       const successResponse: any = {
         status: 1,

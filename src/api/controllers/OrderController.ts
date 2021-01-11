@@ -8,6 +8,8 @@ import {
   Req,
   Post,
   Body,
+  Delete,
+  Param,
 } from 'routing-controllers';
 import { OrderService } from '../services/OrderService';
 import { CustomerService } from '../services/CustomerService';
@@ -19,6 +21,15 @@ import { OrderStatusService } from '../services/orderStatusService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductImageService } from '../services/ProductImageService';
+import { FindManyOptions, Like, MoreThan } from 'typeorm';
+import { Order } from '../models/Order';
+import { isNumber, pickBy, toNumber, parseInt as _parseInt } from 'lodash';
+import { Response } from 'express';
+
+import * as fs from 'fs';
+import { DeleteOrderRequest } from './requests/DeleteOrderRequest';
+import { OrderLog } from '../models/OrderLog';
+import moment from 'moment';
 
 @JsonController('/order')
 export class OrderController {
@@ -66,77 +77,63 @@ export class OrderController {
    * @apiErrorExample {json} order error
    * HTTP/1.1 500 Internal Server Error
    */
-  @Get('/orderlist')
+  @Get('/order-list')
   @Authorized()
   public async orderList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('orderId') orderId: string,
     @QueryParam('orderStatusId') orderStatusId: string,
     @QueryParam('customerName') customerName: string,
-    @QueryParam('totalAmount') totalAmount: string,
     @QueryParam('dateAdded') dateAdded: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<any> {
-    const search = [
-      {
-        name: 'orderPrefixId',
-        op: 'like',
-        value: orderId,
-      },
-      {
-        name: 'orderStatusId',
-        op: 'like',
-        value: orderStatusId,
-      },
-      {
-        name: 'shippingFirstname',
-        op: 'like',
-        value: customerName,
-      },
-      {
-        name: 'total',
-        op: 'like',
-        value: totalAmount,
-      },
-      {
-        name: 'createdDate',
-        op: 'like',
-        value: dateAdded,
-      },
-    ];
-    const WhereConditions = [];
-    const orderList = await this.orderService.list(
-      limit,
-      offset,
-      0,
-      search,
-      WhereConditions,
-      0,
-      count
-    );
+    @QueryParam('totalAmount', { type: 'string' }) totalAmount = '',
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<Order> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      where: pickBy(
+        {
+          orderPrefixId: (orderId && Like(`%${orderId}%`)) || undefined,
+          orderStatusId: orderStatusId || undefined,
+          shippingFirstname:
+            (customerName && Like(`%${customerName}%`)) || undefined,
+          createdDate: (dateAdded && Like(`%${dateAdded}%`)) || undefined,
+          total: (totalAmount && MoreThan(toNumber(totalAmount))) || undefined,
+        },
+        value => value != null
+      ),
+    };
     if (count) {
-      const Response: any = {
+      const orderCount = await this.orderService.count(options);
+      const res = {
         status: 1,
         message: 'Successfully got count.',
-        data: orderList,
+        data: orderCount,
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
-    const orderStatus = orderList.map(async (value: any) => {
+    const orderList = await this.orderService.list(options);
+
+    const orderStatus = orderList.map(async value => {
       // OrderList API
 
       const status = await this.orderStatusService.findOne({
         where: { orderStatusId: value.orderStatusId },
         select: ['orderStatusId', 'name', 'colorCode'],
       });
-      const temp: any = value;
+      const temp = value;
       temp.orderStatus = status;
       return temp;
     });
     const results = await Promise.all(orderStatus);
-    const successResponse: any = {
+    const successResponse = {
       status: 1,
       message: 'Successfully got the complete order list.',
       data: results,
@@ -169,12 +166,12 @@ export class OrderController {
   @Get('/order-detail')
   @Authorized()
   public async orderDetail(
-    @QueryParam('orderId') orderid: number,
+    @QueryParam('orderId') orderId: number,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const orderData = await this.orderService.find({
-      where: { orderId: orderid },
+    const orderData = await this.orderService.list({
+      where: { orderId: orderId },
       select: [
         'orderId',
         'orderStatusId',
@@ -209,8 +206,8 @@ export class OrderController {
     });
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
-        .find({
-          where: { orderId: orderid },
+        .list({
+          where: { orderId: orderId },
           select: [
             'orderProductId',
             'orderId',
@@ -251,12 +248,7 @@ export class OrderController {
             // const rating = await this.productRatingService.findOne({select: ['rating', 'review'], where: {customerId : result.customerId, orderProductId : value.orderProductId, productId: value.productId}});
             const tempVal: any = value;
             const nowDate = new Date();
-            const todaydate =
-              nowDate.getFullYear() +
-              '-' +
-              (nowDate.getMonth() + 1) +
-              '-' +
-              nowDate.getDate();
+            const todaydate = moment(nowDate).format('DD-MM-YYYY');
             const productSpecial = await this.productSpecialService.findSpecialPrice(
               value.productId,
               todaydate
@@ -275,7 +267,8 @@ export class OrderController {
               tempVal.pricerefer = '';
               tempVal.flag = '';
             }
-            tempVal.productDetail = productDetail;
+
+            tempVal.productDetail = { ...productDetail };
             tempVal.productDetail.productImage = image;
             // tempVal.orderOptions = orderOption;
             // if (rating !== undefined) {
@@ -316,7 +309,7 @@ export class OrderController {
           'zoneId',
         ],
       });
-      console.log(customer);
+      //console.log(customer);
       temp.customerDetail = customer;
       return temp;
     });
@@ -350,7 +343,7 @@ export class OrderController {
   @Authorized()
   public async salesList(@Res() response: any): Promise<any> {
     const orderList = await this.orderService.salesList();
-    console.log(orderList);
+    //console.log(orderList);
     const promises = orderList.map(async (result: any) => {
       const monthNames = [
         '',
@@ -402,7 +395,7 @@ export class OrderController {
   @Authorized()
   public async totalOrderAmount(@Res() response: any): Promise<any> {
     let total = 0;
-    const order = await this.orderService.findAll();
+    const order = await this.orderService.list({});
     let n = 0;
     for (n; n < order.length; n++) {
       total += +order[n].total;
@@ -451,22 +444,18 @@ export class OrderController {
       (nowDate.getMonth() + 1) +
       '-' +
       nowDate.getDate();
-    console.log(todaydate);
-    let total = 0;
-    const order = await this.orderService.findAlltodayOrder(todaydate);
-    let n = 0;
-    for (n; n < order.length; n++) {
-      total += +order[n].total;
-    }
-    if (order) {
+    //console.log(todaydate);
+
+    try {
+      const orderTotal = await this.orderService.findAllTodayOrder(todaydate);
       const successResponse: any = {
         status: 1,
         message: 'Successfully get today order Amount',
-        data: total,
+        data: orderTotal || 0,
       };
 
       return response.status(200).send(successResponse);
-    } else {
+    } catch (error) {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get today order amount',
@@ -541,10 +530,10 @@ export class OrderController {
     @Body({ validate: true }) orderChangeStatus: UpdateOrderChangeStatus,
     @Res() response: any
   ): Promise<any> {
-    const updateOrder = await this.orderService.findOrder(
+    const updateOrder = await this.orderService.findOneById(
       orderChangeStatus.orderId
     );
-    console.log(updateOrder);
+    //console.log(updateOrder);
     if (!updateOrder) {
       const errorResponse: any = {
         status: 0,
@@ -553,11 +542,11 @@ export class OrderController {
       return response.status(400).send(errorResponse);
     }
 
-    await this.orderLogService.create(updateOrder);
-    console.log(updateOrder);
+    await this.orderLogService.create((updateOrder as unknown) as OrderLog);
+    //console.log(updateOrder);
 
     updateOrder.orderStatusId = orderChangeStatus.orderStatusId;
-    console.log(updateOrder.orderStatusId);
+    //console.log(updateOrder.orderStatusId);
 
     const orderSave = await this.orderService.create(updateOrder);
     if (orderSave) {
@@ -574,5 +563,232 @@ export class OrderController {
       };
       return response.status(400).send(errorResponse);
     }
+  }
+  // Order Details Excel Document download
+  /**
+   * @api {get} /api/order/order-excel-list Order Excel
+   * @apiGroup Order
+   * @apiParam (Request body) {String} orderId orderId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Order Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/order/order-excel-list
+   * @apiErrorExample {json} Order Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/order-excel-list')
+  @Authorized()
+  public async excelOrderView(
+    @QueryParam('orderId') orderId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Order Detail Sheet');
+    const rows = [];
+    const orderid = orderId.split(',');
+    for (const id of orderid) {
+      const dataId = await this.orderService.list({ where: { orderId: id } });
+      if (dataId.length === 0) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid orderId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Order Id', key: 'orderPrefixId', size: 16, width: 15 },
+      {
+        header: 'Customer Name',
+        key: 'shippingFirstname',
+        size: 16,
+        width: 15,
+      },
+      { header: 'Email', key: 'email', size: 16, width: 15 },
+      { header: 'Mobile Number', key: 'telephone', size: 16, width: 15 },
+      { header: 'Total Amount', key: 'total', size: 16, width: 15 },
+      { header: 'Created Date', key: 'createdDate', size: 16, width: 15 },
+      { header: 'Updated Date', key: 'modifiedDate', size: 16, width: 15 },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('G1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of orderid) {
+      const dataId = await this.orderService.findOneById(id);
+      rows.push([
+        dataId.orderPrefixId,
+        dataId.shippingFirstname + ' ' + dataId.shippingLastname,
+        dataId.email,
+        dataId.telephone,
+        dataId.total,
+        dataId.createdDate,
+        dataId.modifiedDate,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './OrderExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
+  }
+  // Delete Order API
+  /**
+   * @api {delete} /api/order/delete-order/:id Delete Single Order API
+   * @apiGroup Order
+   * @apiHeader {String} Authorization
+   * @apiParamExample {json} Input
+   * {
+   *      "id" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted Order.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/order/delete-order/:id
+   * @apiErrorExample {json} orderDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Delete('/delete-order/:id')
+  @Authorized()
+  public async deleteOrder(
+    @Param('id') orderid: number,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const orderData = await this.orderService.list({
+      where: { orderId: orderid },
+    });
+    if (orderData.length === 0) {
+      const errorResponse: any = {
+        status: 0,
+        message: 'Invalid orderId',
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const deleteOrder = await this.orderService.delete(orderid);
+    if (deleteOrder) {
+      const successResponse: any = {
+        status: 1,
+        message: 'Order Deleted Successfully',
+      };
+      return response.status(200).send(successResponse);
+    } else {
+      const errorResponse: any = {
+        status: 0,
+        message: 'unable to delete Order',
+      };
+      return response.status(400).send(errorResponse);
+    }
+  }
+
+  // Delete Multiple Order API
+  /**
+   * @api {post} /api/order/delete-order Delete Order API
+   * @apiGroup Order
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {number} orderId orderId
+   * @apiParamExample {json} Input
+   * {
+   * "orderId" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted Order.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/order/delete-order
+   * @apiErrorExample {json} orderDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Post('/delete-order')
+  @Authorized()
+  public async deleteMultipleOrder(
+    @Body({ validate: true }) orderDelete: DeleteOrderRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const orderIdNo = orderDelete.orderId.toString();
+    const orderid = orderIdNo.split(',');
+    for (const id of orderid) {
+      const orderData = await this.orderService.list({
+        where: { orderId: id },
+      });
+      if (orderData.length === 0) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose a order for delete',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+
+    for (const id of orderid) {
+      const deleteOrderId = parseInt(id, 10);
+      await this.orderService.delete(deleteOrderId);
+    }
+    const successResponse: any = {
+      status: 1,
+      message: 'Order Deleted Successfully',
+    };
+    return response.status(200).send(successResponse);
   }
 }

@@ -20,6 +20,12 @@ import { Product } from './ProductModel';
 
 @Entity('order_product')
 export class OrderProduct extends BaseModel {
+  public getId(): number {
+    return this.orderProductId;
+  }
+  public getIdField(): string {
+    return 'orderProductId';
+  }
   @PrimaryGeneratedColumn({ name: 'order_product_id' })
   public orderProductId: number;
 

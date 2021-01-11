@@ -20,14 +20,14 @@ export class CreateSettingRequest {
   public storeFax: string;
   public storeLogo: string;
   public maintenanceMode: number;
-  public storeLanguageName: number;
+  public storeLanguageName: string;
   public storeCurrencyId: number;
   public storeImage: string;
   public google: string;
   public twitter: string;
   public instagram: string;
   public facebook: string;
-  public status: number;
+  public status: string;
   public invoicePrefix: string;
   public orderStatus: number;
   public categoryProductCount: number;

@@ -10,6 +10,12 @@ import moment from 'moment';
 import { ProductToCategory } from './ProductToCategory';
 @Entity('category')
 export class Category extends BaseModel {
+  public getId(): number {
+    return this.categoryId;
+  }
+  public getIdField(): string {
+    return 'categoryId';
+  }
   @PrimaryGeneratedColumn({ name: 'category_id' })
   public categoryId: number;
 

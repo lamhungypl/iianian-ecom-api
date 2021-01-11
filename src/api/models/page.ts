@@ -16,6 +16,12 @@ import moment = require('moment/moment');
 
 @Entity('page')
 export class Page extends BaseModel {
+  public getId(): number {
+    return this.pageId;
+  }
+  public getIdField(): string {
+    return 'pageId';
+  }
   @PrimaryGeneratedColumn({ name: 'page_id' })
   public pageId: number;
 

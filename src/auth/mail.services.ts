@@ -28,7 +28,7 @@ export class MAILService {
         { emailContent, productDetailData },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               from: mail.FROM,
@@ -39,9 +39,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });
@@ -74,7 +74,7 @@ export class MAILService {
         { emailContent, productDetailData },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               from: mail.FROM,
@@ -85,9 +85,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });
@@ -120,7 +120,7 @@ export class MAILService {
         { emailContent, productDetailData },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               from: mail.FROM,
@@ -131,9 +131,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });
@@ -162,7 +162,7 @@ export class MAILService {
         { emailContent, productDetailData },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               to: mail.FROM,
@@ -172,9 +172,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });
@@ -208,7 +208,7 @@ export class MAILService {
         { emailContent, orderData, productDetailData, today },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               from: orderData.email,
@@ -219,9 +219,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });
@@ -255,7 +255,7 @@ export class MAILService {
         { emailContent, orderData, productDetailData, today },
         (err, data) => {
           if (err) {
-            console.log(err);
+            //console.log(err);
           } else {
             const mailOptions = {
               from: mail.FROM,
@@ -266,9 +266,9 @@ export class MAILService {
             transporter.sendMail(mailOptions, (error, info) => {
               if (error) {
                 reject(error);
-                console.log(error);
+                //console.log(error);
               } else {
-                console.log('Email sent: ' + info.response);
+                //console.log('Email sent: ' + info.response);
                 resolve(info);
               }
             });

@@ -17,6 +17,12 @@ import moment from 'moment';
 
 @Entity('settings')
 export class Settings extends BaseModel {
+  public getId(): number {
+    return this.settingsId;
+  }
+  public getIdField(): string {
+    return 'settingsId';
+  }
   @PrimaryGeneratedColumn({ name: 'settings_id' })
   @IsNotEmpty()
   public settingsId: number;

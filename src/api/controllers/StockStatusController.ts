@@ -15,6 +15,8 @@ import {
 import { CreateStockStatus } from './requests/createStockStatusRequest';
 import { StockStatus } from '../models/stockStatus';
 import { StockStatusService } from '../services/stockStatusService';
+import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 @JsonController('/stock-status')
 export class StockStatusController {
@@ -155,30 +157,35 @@ export class StockStatusController {
   @Get('/stock-status-list')
   @Authorized()
   public async stockStatusList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    console.log(keyword);
-    const select = ['stockStatusId', 'name', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<StockStatus> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: ['stockStatusId', 'name', 'isActive'],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
-    const WhereConditions = [];
-    const stockStatusList = await this.stockStatusService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+    if (count) {
+      const stockStatusCount = await this.stockStatusService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got all stockStatus List',
+        data: stockStatusCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const stockStatusList = await this.stockStatusService.list(options);
     if (stockStatusList) {
       const successResponse: any = {
         status: 1,
@@ -234,7 +241,9 @@ export class StockStatusController {
       return response.status(400).send(errorResponse);
     }
 
-    const deleteStockStatus = await this.stockStatusService.delete(stockStatus);
+    const deleteStockStatus = await this.stockStatusService.delete(
+      stockStatus.stockStatusId
+    );
     if (deleteStockStatus) {
       const successResponse: any = {
         status: 1,

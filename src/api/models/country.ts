@@ -5,10 +5,17 @@
  */
 
 import { Column, PrimaryGeneratedColumn, Entity, OneToMany } from 'typeorm';
+import { BaseModel } from './BaseModel';
 import { Zone } from './zone';
 
 @Entity('country')
-export class Country {
+export class Country extends BaseModel {
+  public getId(): number {
+    return this.countryId;
+  }
+  public getIdField(): string {
+    return 'countryId';
+  }
   @PrimaryGeneratedColumn({ name: 'country_id' })
   public countryId: number;
 

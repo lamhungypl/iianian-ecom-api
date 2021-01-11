@@ -16,6 +16,7 @@ import { Currency } from '../models/currency';
 import { CreateCurrency } from './requests/createCurrencyRequest';
 import { CurrencyService } from '../services/currencyService';
 import { UpdateCurrency } from './requests/updateCurrenyRequest';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/currency')
 export class CurrencyController {
@@ -134,14 +135,33 @@ export class CurrencyController {
       },
     ];
     const WhereConditions = [];
-    const currencyList = await this.currencyService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Currency> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'currencyId',
+        'title',
+        'code',
+        'symbolLeft',
+        'symbolRight',
+        'value',
+        'modifiedDate',
+        'isActive',
+      ],
+      where: {
+        title: Like(`%${keyword}%`),
+      },
+    };
+    if (count) {
+      const currencyCount: number = await this.currencyService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got the complete currency list.',
+        data: currencyCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const currencyList = await this.currencyService.list(options);
     if (currencyList) {
       const successResponse: any = {
         status: 1,

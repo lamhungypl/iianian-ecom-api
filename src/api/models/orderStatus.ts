@@ -19,6 +19,12 @@ import { Order } from './Order';
 
 @Entity('order_status')
 export class OrderStatus extends BaseModel {
+  public getId(): number {
+    return this.orderStatusId;
+  }
+  public getIdField(): string {
+    return 'orderStatusId';
+  }
   @PrimaryGeneratedColumn({ name: 'order_status_id' })
   public orderStatusId: number;
 

@@ -20,6 +20,8 @@ import { UpdateManufacturer } from './requests/updateManufacturerRequest';
 import { DeleteManufacturer } from './requests/deleteManufacturerRequest';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
+import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
 
 // S3 SetUp
 AWS.config.update({
@@ -85,7 +87,7 @@ export class ManufacturerController {
       } else {
         val = await this.imageService.imageUpload(path + name, base64Data);
       }
-      console.log(val);
+      //console.log(val);
       const newManufacturer: any = new Manufacturer();
       newManufacturer.name = manufacturer.name;
       newManufacturer.image = name;
@@ -126,36 +128,43 @@ export class ManufacturerController {
   @Get('/manufacturerlist')
   @Authorized()
   public async manufacturerList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'manufacturerId',
-      'name',
-      'image',
-      'imagePath',
-      'sortOrder',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Manufacturer> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'manufacturerId',
+        'name',
+        'image',
+        'imagePath',
+        'sortOrder',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
       },
-    ];
-    const WhereConditions = [];
-    const manufacturerList: any = await this.manufacturerService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+    if (count) {
+      const manufacturerCount = await this.manufacturerService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got the complete manufacturers list.',
+        data: manufacturerCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const manufacturerList = await this.manufacturerService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got the complete manufacturers list.',
@@ -284,7 +293,7 @@ export class ManufacturerController {
       } else {
         val = await this.imageService.imageUpload(path + name, base64Data);
       }
-      console.log(val);
+      //console.log(val);
       manufacturer.image = name;
       manufacturer.imagePath = path;
     }

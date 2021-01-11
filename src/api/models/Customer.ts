@@ -20,6 +20,12 @@ import { ProductRating } from './ProductRating';
 
 @Entity('customer')
 export class Customer extends BaseModel {
+  public getId(): number {
+    return this.id;
+  }
+  public getIdField(): string {
+    return 'id';
+  }
   public static hashPassword(password: string): Promise<string> {
     return new Promise((resolve, reject) => {
       bcrypt.hash(password, 10, (err, hash) => {

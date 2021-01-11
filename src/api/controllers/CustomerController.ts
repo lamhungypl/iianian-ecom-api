@@ -26,6 +26,14 @@ import { ProductImageService } from '../services/ProductImageService';
 import { ProductService } from '../services/ProductService';
 import { OrderProductService } from '../services/OrderProductService';
 import { EmailTemplateService } from '../services/emailTemplateService';
+import { Response } from 'express';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
+import pickBy from 'lodash/pickBy';
+import parseInt from 'lodash/parseInt';
+import * as fs from 'fs';
+import { DeleteCustomerRequest } from './requests/DeleteCustomerRequest';
+import { isNumber } from 'lodash';
+import { NotNullObject } from '../Utils';
 
 @JsonController('/customer')
 export class CustomerController {
@@ -83,7 +91,7 @@ export class CustomerController {
     @Res() response: any
   ): Promise<any> {
     const avatar = customerParam.avatar;
-    const newCustomer: any = new Customer();
+    const newCustomer = new Customer();
     const resultUser = await this.customerService.findOne({
       where: { email: customerParam.email, deleteFlag: 0 },
     });
@@ -115,10 +123,10 @@ export class CustomerController {
       newCustomer.avatarPath = path;
       s3.upload(params, (err, data) => {
         if (data) {
-          console.log('image upload successfully');
-          console.log(data);
+          //console.log('image upload successfully');
+          //console.log(data);
         } else {
-          console.log('error while uploading image');
+          //console.log('error while uploading image');
         }
       });
     }
@@ -139,7 +147,7 @@ export class CustomerController {
 
       if (customerSave) {
         if (customerParam.mailStatus === 1) {
-          const emailContent = await this.emailTemplateService.findOne(4);
+          const emailContent = await this.emailTemplateService.findOneById(4);
           const message = emailContent.content
             .replace('{name}', customerParam.username)
             .replace('{email}', customerParam.email)
@@ -176,7 +184,7 @@ export class CustomerController {
 
   // Customer List API
   /**
-   * @api {get} /api/customer/customerlist Customer List API
+   * @api {get} /api/customer/customer-list Customer List API
    * @apiGroup Customer
    * @apiHeader {String} Authorization
    * @apiParam (Request body) {Number} limit limit
@@ -205,70 +213,76 @@ export class CustomerController {
    *      }
    *      "status": "1"
    * }
-   * @apiSampleRequest /api/customer/customerlist
+   * @apiSampleRequest /api/customer/customer-list
    * @apiErrorExample {json} customer error
    * HTTP/1.1 500 Internal Server Error
    */
-  @Get('/customerlist')
+  @Get('/customer-list')
   @Authorized()
   public async customerList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
-    @QueryParam('name') name: string,
-    @QueryParam('status') status: string,
-    @QueryParam('email') email: string,
-    @QueryParam('customerGroup') customerGroup: string,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
+    @QueryParam('name', { type: 'string' }) name: string,
+    @QueryParam('status', { type: 'string' }) status: string,
+    @QueryParam('email', { type: 'sting' }) email: string,
+    @QueryParam('customerGroup', { type: 'string' }) customerGroup: string,
     @QueryParam('date') date: string,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<any> {
-    const search = [
-      {
-        name: 'firstName',
-        op: 'like',
-        value: name,
-      },
-      {
-        name: 'email',
-        op: 'like',
-        value: email,
-      },
-      {
-        name: 'createdDate',
-        op: 'like',
-        value: date,
-      },
-      {
-        name: 'customerGroupId',
-        op: 'like',
-        value: customerGroup,
-      },
-      {
-        name: 'isActive',
-        op: 'like',
-        value: (status && parseInt(status)) || 1,
-      },
-    ];
-    const WhereConditions = [
-      {
-        name: 'deleteFlag',
-        value: 0,
-      },
-    ];
-    const customerList = await this.customerService.list(
-      limit,
-      offset,
-      search,
-      WhereConditions,
-      0,
-      count
-    );
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<Customer> = {
+      ...NotNullObject<FindManyOptions<Customer>>({
+        take: (limit && parseInt(limit)) || undefined,
+        skip: (offset && parseInt(offset)) || undefined,
+      }),
+      select: [
+        'id',
+        'username',
+        'firstName',
+        'lastName',
+        'email',
+        'address',
+        'mobileNumber',
+        'avatar',
+        'avatarPath',
+        'newsletter',
+        'mailStatus',
+        'isActive',
+        'modifiedDate',
+        'customerGroupId',
+        'createdDate',
+      ],
+      where: NotNullObject<FindConditions<Customer>>({
+        firstName: (name && Like(`%${name}%`)) || undefined,
+        email: (email && Like(`%${email}%`)) || undefined,
+        createdDate: (date && Like(`%${date}%`)) || undefined,
+        customerGroupId:
+          (Number.isInteger(parseInt(customerGroup)) &&
+            parseInt(customerGroup)) ||
+          undefined,
+        isActive:
+          (Number.isInteger(parseInt(status)) && parseInt(status)) || undefined,
+        deleteFlag: 0,
+      }),
+    };
 
-    const successResponse: any = {
+    if (count) {
+      const customerCount = await this.customerService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got Customer list count',
+        data: customerCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const customerList = await this.customerService.list(options);
+
+    const successResponse = {
       status: 1,
       message: 'Successfully got Customer list.',
       data: customerList,
     };
+
     return response.status(200).send(successResponse);
   }
 
@@ -372,7 +386,7 @@ export class CustomerController {
     @Body({ validate: true }) customerParam: UpdateCustomer,
     @Res() response: any
   ): Promise<any> {
-    console.log(customerParam);
+    //console.log(customerParam);
     const customer = await this.customerService.findOne({
       where: {
         id,
@@ -406,10 +420,10 @@ export class CustomerController {
         };
         s3.upload(params, (err, data) => {
           if (data) {
-            console.log('image upload successfully');
-            console.log(data);
+            //console.log('image upload successfully');
+            //console.log(data);
           } else {
-            console.log('error while uploading image');
+            //console.log('error while uploading image');
           }
         });
         customer.avatar = name;
@@ -490,9 +504,9 @@ export class CustomerController {
       return response.status(400).send(errorResponse);
     }
 
-    const order = await this.orderService.find({ where: { customerId: Id } });
-    const productLists = await order.map(async (result: any) => {
-      const product = await this.orderProductService.find({
+    const order = await this.orderService.list({ where: { customerId: Id } });
+    const productLists = order.map(async (result: any) => {
+      const orderProduct = await this.orderProductService.list({
         where: { orderId: result.orderId },
         select: [
           'productId',
@@ -503,44 +517,39 @@ export class CustomerController {
           'createdDate',
         ],
       });
-      const productPromises = await product.map(async (value: any) => {
-        const productsDetails: any = value;
-        const products = await this.productService.find({
-          where: { productId: value.productId },
+      const productPromises = await orderProduct.map(async (product: any) => {
+        const products = await this.productService.findOne({
+          where: { productId: product.productId },
         });
 
-        const productImages = await products.map(async (values: any) => {
-          const productImagesResult: any = values;
-          const Image = await this.productImageService.findOne({
-            select: [
-              'productId',
-              'productImageId',
-              'image',
-              'containerName',
-              'defaultImage',
-            ],
-            where: { productId: values.productId, defaultImage: 1 },
-          });
-          productImagesResult.productImages = Image;
-          return productImagesResult;
+        const productImages = await this.productImageService.findOne({
+          select: [
+            'productId',
+            'productImageId',
+            'image',
+            'containerName',
+            'defaultImage',
+          ],
+          where: { productId: product.productId, defaultImage: 1 },
         });
-        const images = await Promise.all(productImages);
-        productsDetails.productDetails = images;
-        return productsDetails;
+
+        return {
+          ...classToPlain(products),
+          productImages: classToPlain(productImages),
+        };
       });
       const productsListWithImages = await Promise.all(productPromises);
-      const temp: any = await productsListWithImages;
-      return temp;
+      return productsListWithImages;
     });
 
     const finalResult = await Promise.all(productLists);
-    customer.productList = finalResult;
+    // customer.productList = finalResult;
     // customer.productCount = finalResult.length;
     if (finalResult) {
       const successResponse: any = {
         status: 1,
         message: 'successfully got Customer details. ',
-        data: customer,
+        data: { ...customer, productList: finalResult },
       };
       return response.status(200).send(successResponse);
     } else {
@@ -576,21 +585,14 @@ export class CustomerController {
   @Get('/recent-customerlist')
   @Authorized()
   public async recentCustomerList(@Res() response: any): Promise<any> {
-    const order = 1;
-    const WhereConditions = [
-      {
-        name: 'deleteFlag',
-        value: 0,
+    const customerList = await this.customerService.list({
+      where: {
+        deleteFlag: 0,
       },
-    ];
-    const customerList = await this.customerService.list(
-      0,
-      0,
-      0,
-      WhereConditions,
-      order,
-      0
-    );
+      order: {
+        createdDate: 1,
+      },
+    });
     const successResponse: any = {
       status: 1,
       message: 'Successfully got Customer list.',
@@ -636,5 +638,176 @@ export class CustomerController {
       data: customerCount,
     };
     return response.status(200).send(successResponse);
+  }
+  // Delete Multiple Customer API
+  /**
+   * @api {post} /api/product/delete-customer Delete Multiple Customer API
+   * @apiGroup Customer
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {number} customerId customerId
+   * @apiParamExample {json} Input
+   * {
+   * "customerId" : "",
+   * }
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   * "message": "Successfully deleted customer.",
+   * "status": "1"
+   * }
+   * @apiSampleRequest /api/customer/delete-customer
+   * @apiErrorExample {json} customerDelete error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Post('/delete-customer')
+  @Authorized()
+  public async deleteMultipleCustomer(
+    @Body({ validate: true }) deleteCustomerId: DeleteCustomerRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<any> {
+    const customers = deleteCustomerId.customerId.toString();
+    const customer: any = customers.split(',');
+    console.log(customer);
+    const data: any = customer.map(async (id: any) => {
+      const dataId = await this.customerService.findOne(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose customer for delete',
+        };
+        return response.status(400).send(errorResponse);
+      } else {
+        dataId.deleteFlag = 1;
+        return await this.customerService.create(dataId);
+      }
+    });
+    const deleteCustomer = await Promise.all(data);
+    if (deleteCustomer) {
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully deleted customer',
+      };
+      return response.status(200).send(successResponse);
+    }
+  }
+
+  // Customer Details Excel Document Download
+  /**
+   * @api {get} /api/customer/customer-excel-list Customer Excel
+   * @apiGroup Customer
+   * @apiParam (Request body) {String} customerId customerId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Customer Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/customer/customer-excel-list
+   * @apiErrorExample {json} Customer Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/customer-excel-list')
+  @Authorized()
+  public async excelCustomerView(
+    @QueryParam('customerId') customerId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Order Detail Sheet');
+    const rows = [];
+    const customerid = customerId.split(',');
+    for (const id of customerid) {
+      const dataId = await this.customerService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid customerId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Customer Id', key: 'id', size: 16, width: 15 },
+      { header: 'Customer Name', key: 'first_name', size: 16, width: 15 },
+      { header: 'User Name', key: 'username', size: 16, width: 24 },
+      { header: 'Email Id', key: 'email', size: 16, width: 15 },
+      { header: 'Mobile Number', key: 'mobileNumber', size: 16, width: 15 },
+      {
+        header: 'Date Of Registration',
+        key: 'createdDate',
+        size: 16,
+        width: 15,
+      },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of customerid) {
+      const dataId = await this.customerService.findOneById(id);
+      if (dataId.lastName === null) {
+        dataId.lastName = '';
+      }
+      rows.push([
+        dataId.id,
+        dataId.firstName + ' ' + dataId.lastName,
+        dataId.username,
+        dataId.email,
+        dataId.mobileNumber,
+        dataId.createdDate,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './CustomerExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
   }
 }

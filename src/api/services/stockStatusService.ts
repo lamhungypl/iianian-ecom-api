@@ -1,76 +1,20 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { StockStatusRepository } from '../repositories/stockStatusRepository';
 import { Like } from 'typeorm/index';
+import { StockStatus } from '../models/stockStatus';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class StockStatusService {
+export class StockStatusService extends BaseService<
+  StockStatus,
+  StockStatusRepository
+> {
   constructor(
-    @OrmRepository() private stockStatusRepository: StockStatusRepository,
+    @InjectRepository(StockStatusRepository) repository: StockStatusRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create stock Status
-  public async create(stockStatus: any): Promise<any> {
-    const newStockStatus = await this.stockStatusRepository.save(stockStatus);
-    this.log.info('Create a stockStatus');
-    return newStockStatus;
-  }
-
-  // find stsscok status
-  public findOne(stockStatus: any): Promise<any> {
-    return this.stockStatusRepository.findOne(stockStatus);
-  }
-
-  // stock Status list
-  public list(
-    limit: any,
-    offset: any,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-    this.log.info('list stock  ', { condition, search });
-
-    if (count) {
-      return this.stockStatusRepository.count(condition);
-    } else {
-      return this.stockStatusRepository.find(condition);
-    }
-  }
-
-  // delete StockStatus
-  public async delete(id: number): Promise<any> {
-    return await this.stockStatusRepository.delete(id);
+  ) {
+    super(repository);
   }
 }

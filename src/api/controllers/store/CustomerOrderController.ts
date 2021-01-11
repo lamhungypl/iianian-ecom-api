@@ -27,6 +27,8 @@ import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { OrderStatusService } from '../../services/orderStatusService';
 import { CountryService } from '../../services/countryService';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/orders')
 export class CustomerOrderController {
@@ -61,8 +63,8 @@ export class CustomerOrderController {
    * @apiParam (Request body) {String} shippingCountry Shipping Country
    * @apiParam (Request body) {String} shippingZone Shipping Zone
    * @apiParam (Request body) {String} shippingAddressFormat Shipping Address Format
-   * @apiparam (Request body) {Number} phoneNumber Customer Phone Number
-   * @apiparam (Request body) {String} emailId Customer Email Id
+   * @apiParam (Request body) {Number} phoneNumber Customer Phone Number
+   * @apiParam (Request body) {String} emailId Customer Email Id
    * @apiParamExample {json} Input
    * {
    *      "productDetail" :[
@@ -139,7 +141,7 @@ export class CustomerOrderController {
     newOrder.invoicePrefix = setting.invoicePrefix;
     newOrder.paymentAddressFormat = checkoutParam.shippingAddressFormat;
     const orderData = await this.orderService.create(newOrder);
-    const countryName = await this.countryService.findOne(
+    const countryName = await this.countryService.findOneById(
       orderData.shippingCountry
     );
     orderData.shippingCountry = countryName.name;
@@ -153,27 +155,34 @@ export class CustomerOrderController {
       productDetails.quantity = orderProduct[i].quantity;
       productDetails.total = +orderProduct[i].quantity * +orderProduct[i].price;
       productDetails.model = orderProduct[i].model;
-      const productInformatiom = await this.orderProductService.createData(
+      const productInformation = await this.orderProductService.create(
         productDetails
       );
-      const productImageData = await this.productService.findOne(
-        productInformatiom.productId
+      const productData = await this.productService.findOneById(
+        productInformation.productId
       );
       const productImageDetail = await this.productImageService.findOne({
-        where: { productId: productInformatiom.productId },
+        where: { productId: productInformation.productId },
       });
-      productImageData.productInformatiomData = productInformatiom;
-      productImageData.productImage = productImageDetail;
-      totalProductAmount = await this.orderProductService.findData(
-        orderProduct[i].productId,
-        orderData.orderId,
-        productInformatiom.orderProductId
-      );
+      // productData.productInformationData = productInformation;
+      // productData.productImage = productImageDetail;
+      totalProductAmount = await this.orderProductService.list({
+        where: {
+          productId: orderProduct[i].productId,
+          orderId: orderData.orderId,
+          orderProductId: productInformation.orderProductId,
+        },
+      });
       for (n = 0; n < totalProductAmount.length; n++) {
         totalAmount += +totalProductAmount[n].total;
       }
-      productImageData.productOption = [];
-      productDetailData.push(productImageData);
+      // productData.productOption = [];
+      productDetailData.push({
+        ...productData,
+        productInformationData: productInformation,
+        productImage: productImageDetail,
+        productOption: [],
+      });
     }
 
     newOrder.total = totalAmount;
@@ -193,8 +202,8 @@ export class CustomerOrderController {
     newOrderTotal.orderId = orderData.orderId;
     newOrderTotal.value = totalAmount;
     await this.orderTotalService.createOrderTotalData(newOrderTotal);
-    const emailContent = await this.emailTemplateService.findOne(5);
-    const adminEmailContent = await this.emailTemplateService.findOne(6);
+    const emailContent = await this.emailTemplateService.findOneById(5);
+    const adminEmailContent = await this.emailTemplateService.findOneById(6);
     const today =
       ('0' + nowDate.getDate()).slice(-2) +
       '.' +
@@ -265,47 +274,64 @@ export class CustomerOrderController {
   @Get('/order-list')
   @Authorized('customer')
   public async orderList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('count') count: number | boolean,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const search = [
-      {
-        name: 'customerId',
-        op: 'where',
-        value: request.user.id,
-      },
-    ];
-    const whereConditions = 0;
-    const select = [
-      'orderId',
-      'customerId',
-      'currencyId',
-      'orderStatus',
-      'total',
-      'createdDate',
-      'orderPrefixId',
-    ];
-    const relation = ['orderStatus'];
-    const OrderData = await this.orderService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      relation,
-      count
-    );
+    // const search = [
+    //   {
+    //     name: 'customerId',
+    //     op: 'where',
+    //     value: request.user.id,
+    //   },
+    // ];
+
+    // const select = [
+    //   'orderId',
+    //   'customerId',
+    //   'currencyId',
+    //   'orderStatus',
+    //   'total',
+    //   'createdDate',
+    //   'orderPrefixId',
+    // ];
+    // const relation = ['orderStatus'];
+
+    const options: FindManyOptions<Order> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'orderId',
+        'customerId',
+        'currencyId',
+        'orderStatus',
+        'total',
+        'createdDate',
+        'orderPrefixId',
+      ],
+      where: { customerId: request.user.id },
+      relations: ['orderStatus'],
+    };
+
     if (count) {
-      const Response: any = {
+      const orderCount = await this.orderService.count(options);
+
+      const res = {
         status: 1,
         message: 'Successfully get Count. ',
-        data: OrderData,
+        data: orderCount,
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
+    const OrderData = await this.orderService.list(options);
+
     const promises = OrderData.map(async (results: any) => {
       const Id = results.orderId;
       const countValue = await this.orderProductService.findAndCount({
@@ -348,12 +374,12 @@ export class CustomerOrderController {
   @Get('/order-detail')
   @Authorized('customer')
   public async orderDetail(
-    @QueryParam('orderId') orderid: number,
+    @QueryParam('orderId') orderId: number,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const orderData = await this.orderService.find({
-      where: { orderId: orderid, customerId: request.user.id },
+    const orderData = await this.orderService.list({
+      where: { orderId: orderId, customerId: request.user.id },
       select: [
         'orderId',
         'orderStatusId',
@@ -385,8 +411,8 @@ export class CustomerOrderController {
     });
     const promises = orderData.map(async (result: any) => {
       const product = await this.orderProductService
-        .find({
-          where: { orderId: orderid },
+        .list({
+          where: { orderId: orderId },
           select: [
             'orderProductId',
             'orderId',
@@ -399,7 +425,7 @@ export class CustomerOrderController {
           ],
         })
         .then(val => {
-          console.log(val);
+          //console.log(val);
           const productVal = val.map(async (value: any) => {
             const productDetail = await this.productService.findOne({
               where: { productId: value.productId },
@@ -448,7 +474,7 @@ export class CustomerOrderController {
               tempVal.pricerefer = '';
               tempVal.flag = '';
             }
-            tempVal.productDetail = productDetail;
+            tempVal.productDetail = { ...productDetail };
             tempVal.productDetail.productImage = image;
             return tempVal;
           });

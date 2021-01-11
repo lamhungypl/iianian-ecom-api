@@ -7,6 +7,6 @@ figlet.text(process.argv[2], (error: any, data: any) => {
   }
 
   console.log(chalk.blue(data));
-  console.log('');
+
   return process.exit(0);
 });

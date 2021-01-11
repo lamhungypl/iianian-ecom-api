@@ -21,4 +21,9 @@ export abstract class BaseModel {
   @Exclude()
   @Column({ name: 'modified_date' })
   public modifiedDate: string;
+  /**
+   * getId
+   */
+  public abstract getId(): number;
+  public abstract getIdField(): string;
 }

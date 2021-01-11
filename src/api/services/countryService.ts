@@ -1,85 +1,17 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Country } from '../models/country';
 import { CountryRepository } from '../repositories/countryRepository';
 import { Like } from 'typeorm/index';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class CountryService {
+export class CountryService extends BaseService<Country, CountryRepository> {
   constructor(
-    @OrmRepository() private countryRepository: CountryRepository,
+    @InjectRepository(CountryRepository) repository: CountryRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create Country
-  public async create(country: any): Promise<Country> {
-    this.log.info('Create a new country ', country);
-    return this.countryRepository.save(country);
-  }
-
-  // findCondition
-  public findOne(country: any): Promise<any> {
-    this.log.info('findOne  country ', country);
-
-    return this.countryRepository.findOne(country);
-  }
-
-  // update country
-  public update(id: any, country: Country): Promise<any> {
-    this.log.info('update country ', id, country);
-    country.countryId = id;
-    return this.countryRepository.save(country);
-  }
-
-  // country List
-  public list(
-    limit: any,
-    offset: any,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-    this.log.info('find countries ', { condition }, { search });
-
-    if (count) {
-      return this.countryRepository.count(condition);
-    } else {
-      return this.countryRepository.find(condition);
-    }
-  }
-
-  // delete Country
-  public async delete(id: number): Promise<any> {
-    return await this.countryRepository.delete(id);
+  ) {
+    super(repository);
   }
 }

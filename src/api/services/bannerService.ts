@@ -1,87 +1,17 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Like } from 'typeorm/index';
 import { BannerRepository } from '../repositories/bannerRepository';
+import { BaseService } from './base/BaseService';
+import { Banner } from '../models/banner';
 
 @Service()
-export class BannerService {
+export class BannerService extends BaseService<Banner, BannerRepository> {
   constructor(
-    @OrmRepository() private bannerRepository: BannerRepository,
+    @InjectRepository() repository: BannerRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create banner
-  public async create(banner: any): Promise<any> {
-    this.log.info('Create a new banner ', banner);
-    return this.bannerRepository.save(banner);
-  }
-
-  // find Condition
-  public findOne(banner: any): Promise<any> {
-    this.log.info('find one banner ', banner);
-
-    return this.bannerRepository.findOne(banner);
-  }
-
-  // update banner
-  public update(banner: any): Promise<any> {
-    this.log.info('save/update one banner ', banner);
-    return this.bannerRepository.save(banner);
-  }
-
-  // banner List
-  public list(
-    limit: any,
-    offset: any,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== undefined) {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== undefined) {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-
-    condition.order = {
-      position: 'ASC',
-    };
-    this.log.info('list banner ', { search }, { condition });
-
-    if (count) {
-      return this.bannerRepository.count(condition);
-    } else {
-      return this.bannerRepository.find(condition);
-    }
-  }
-
-  // delete banner
-  public async delete(id: number): Promise<any> {
-    return await this.bannerRepository.delete(id);
+  ) {
+    super(repository);
   }
 }

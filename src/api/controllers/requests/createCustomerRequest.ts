@@ -30,7 +30,7 @@ export class CreateCustomer {
 
   public avatar: string;
 
-  public newsletter: number;
+  public newsletter: string;
 
   @IsNotEmpty()
   public mailStatus: number;

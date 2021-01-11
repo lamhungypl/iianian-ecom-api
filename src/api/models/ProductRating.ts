@@ -21,6 +21,12 @@ import { Customer } from './Customer';
 
 @Entity('product_rating')
 export class ProductRating extends BaseModel {
+  public getId(): number {
+    return this.ratingId;
+  }
+  public getIdField(): string {
+    return 'ratingId';
+  }
   @PrimaryGeneratedColumn({ name: 'rating_id' })
   public ratingId: number;
 

@@ -15,6 +15,8 @@ import {
 import { classToPlain } from 'class-transformer';
 import jwt from 'jsonwebtoken';
 
+import { Request, Response } from 'express';
+
 import { env } from '../../env';
 import { ForgotPassword } from './requests/forgotPasswordRequest';
 import { UserLogin as LoginRequest } from './requests/userLoginRequest';
@@ -31,6 +33,11 @@ import { EmailTemplateService } from '../services/emailTemplateService';
 import { MAILService } from '../../auth/mail.services';
 import { ImageService } from '../services/ImageService';
 import { S3Service } from '../services/S3Service';
+// import { UserService } from '../services/_UserService';
+import { FindConditions, FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { UserGroup } from '../models/UserGroup';
+
 @JsonController('/auth')
 export class UserController {
   constructor(
@@ -68,15 +75,17 @@ export class UserController {
   @Post('/login')
   public async login(
     @Body({ validate: true }) loginParam: LoginRequest,
-    @Res() response: any
+    @Res() response: Response
   ): Promise<any> {
-    console.log(loginParam.username);
-    console.log(loginParam.password);
+    //console.log(loginParam.username);
+    //console.log(loginParam.password);
+    console.log(this.userService.findOne);
     const user = await this.userService.findOne({
       where: {
         username: loginParam.username,
       },
     });
+
     if (user) {
       if (await User.comparePassword(user, loginParam.password)) {
         // create a token
@@ -88,7 +97,7 @@ export class UserController {
           newToken.userId = user.userId;
           newToken.token = token;
           const tokenSave = await this.accessTokenService.create(newToken);
-          console.log(tokenSave);
+          //console.log(tokenSave);
         }
         const successResponse: any = {
           status: 1,
@@ -138,19 +147,22 @@ export class UserController {
   @Get('/userlist')
   @Authorized()
   public async findAll(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<any> {
-    console.log(keyword);
-    const relation = ['usergroup'];
-    const WhereConditions = [];
-    const user = await this.userService.list(
-      limit,
-      offset,
-      [
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<User> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+
+      select: [
         'userId',
         'username',
         'firstName',
@@ -162,16 +174,34 @@ export class UserController {
         'avatarPath',
         'password',
       ],
-      relation,
-      WhereConditions,
-      keyword,
-      count
-    );
+      where: pickBy<FindConditions<User> | { [key: string]: any }>(
+        {
+          firstName: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+      relations: ['usergroup'],
+    };
+    // console.log({ limit, offset, keyword, count });
+    if (count) {
+      const usersCount = await this.userService.count(options);
+
+      const successResponse: any = {
+        status: 1,
+        data: usersCount,
+        message: 'Successfully get All user List',
+      };
+      return response.status(200).send(successResponse);
+    }
+    const users = await this.userService.list(options);
+
     const successResponse: any = {
       status: 1,
-      data: classToPlain(user),
+      data: users,
       message: 'Successfully get All user List',
     };
+    console.log({ successResponse });
+
     return response.status(200).send(successResponse);
   }
 
@@ -209,22 +239,15 @@ export class UserController {
   @Authorized()
   public async createUser(
     @Body({ validate: true }) createParam: CreateRequest,
-    @Res() response: any
-  ): Promise<any> {
-    console.log(createParam);
-    const userGroupExistWhereCondition = [
-      {
-        name: 'id',
-        value: createParam.userGroupId,
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<UserGroup> = {
+      where: {
+        groupId: createParam.userGroupId,
       },
-    ];
-    const userGroupExistRecord = await this.userGroupService.list(
-      0,
-      0,
-      [],
-      userGroupExistWhereCondition,
-      0
-    );
+    };
+
+    const userGroupExistRecord = await this.userGroupService.list(options);
     if (userGroupExistRecord.length === 0) {
       const errorResponse: any = {
         status: 0,
@@ -237,7 +260,7 @@ export class UserController {
         username: createParam.username,
       },
     });
-    console.log(user);
+    //console.log(user);
     if (user) {
       const errorResponse: any = {
         status: 0,
@@ -246,7 +269,7 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     // return this.userLoginService.find();
-    console.log(createParam.password);
+    //console.log(createParam.password);
     const newUserPassword = await User.hashPassword(createParam.password);
     const newUserParams = new User();
     newUserParams.username = createParam.username;
@@ -264,6 +287,12 @@ export class UserController {
         data: userSaveResponse,
       };
       return response.status(200).send(successResponse);
+    } else {
+      const res: any = {
+        status: 1,
+        message: 'can not save use',
+      };
+      return response.status(201).send(res);
     }
   }
 
@@ -302,22 +331,14 @@ export class UserController {
   public async updateUser(
     @Param('id') id: number,
     @Body({ validate: true }) createParam: updateUserRequest,
-    @Res() response: any
-  ): Promise<any> {
-    console.log(createParam);
-    const userGroupExistWhereCondition = [
-      {
-        name: 'id',
-        value: createParam.userGroupId,
+    @Res() response: Response
+  ) {
+    const options: FindManyOptions<UserGroup> = {
+      where: {
+        groupId: createParam.userGroupId,
       },
-    ];
-    const userGroupExistRecord = await this.userGroupService.list(
-      0,
-      0,
-      [],
-      userGroupExistWhereCondition,
-      0
-    );
+    };
+    const userGroupExistRecord = await this.userGroupService.list(options);
     if (userGroupExistRecord.length === 0) {
       const errorResponse: any = {
         status: 0,
@@ -326,7 +347,7 @@ export class UserController {
       return response.status(400).send(errorResponse);
     }
     // return this.userLoginService.find();
-    console.log(createParam.password);
+    //console.log(createParam.password);
     const newUserPassword = await User.hashPassword(createParam.password);
     const newUserParams = new User();
     newUserParams.username = createParam.username;
@@ -370,13 +391,10 @@ export class UserController {
    * HTTP/1.1 500 Internal Server Error
    */
   @Delete('/delete-user/:id')
-  public async remove(
-    @Param('id') id: number,
-    @Res() response: any
-  ): Promise<any> {
-    console.log(id);
+  public async remove(@Param('id') id: number, @Res() response: Response) {
+    //console.log(id);
     const userDelete = await this.userService.delete(id);
-    console.log(userDelete);
+    //console.log(userDelete);
     if (userDelete) {
       const successResponse: any = {
         status: 1,
@@ -413,9 +431,9 @@ export class UserController {
   @Post('/forgot-password')
   public async forgotPassword(
     @Body({ validate: true }) forgotPassword: ForgotPassword,
-    @Res() response: any
-  ): Promise<any> {
-    console.log('emailId' + forgotPassword.email);
+    @Res() response: Response
+  ) {
+    //console.log('emailId' + forgotPassword.email);
 
     const user = await this.userService.findOne({
       where: {
@@ -429,15 +447,15 @@ export class UserController {
       };
       return response.status(400).send(errorResponse);
     }
-    const tempPassword: any = Math.random().toString().substr(2, 5);
-    console.log(tempPassword);
+    const tempPassword = Math.random().toString().substr(2, 5);
+    //console.log(tempPassword);
     const password = await User.hashPassword(tempPassword);
     user.password = password;
-    console.log(password);
+    //console.log(password);
 
     await this.userService.create(user);
 
-    const emailContent = await this.emailTemplateService.findOne(2);
+    const emailContent = await this.emailTemplateService.findOneById(2);
     const message = emailContent.content
       .replace('{name}', user.firstName)
       .replace('{xxxxxx}', tempPassword);
@@ -488,9 +506,9 @@ export class UserController {
   public async changePassword(
     @Body({ validate: true }) changePasswordParam: ChangePassword,
     @Req() request: any,
-    @Res() response: any
-  ): Promise<any> {
-    console.log(request.user.userId);
+    @Res() response: Response
+  ) {
+    //console.log(request.user.userId);
     const user = await this.userService.findOne({
       where: {
         userId: request.user.userId,
@@ -550,9 +568,9 @@ export class UserController {
   @Get('/logout')
   @Authorized()
   public async logout(@Req() request: any, @Res() response: any): Promise<any> {
-    console.log('logout');
-    console.log(request.user.userId);
-    const user = await this.accessTokenService.findOne({
+    //console.log('logout');
+    //console.log(request.user.userId);
+    const user: AccessToken = await this.accessTokenService.findOne({
       where: {
         userId: request.user.userId,
       },
@@ -564,8 +582,8 @@ export class UserController {
       };
       return response.status(400).send(errorResponse);
     }
-    const deleteToken = await this.accessTokenService.delete(user);
-    console.log('token' + deleteToken);
+    const deleteToken = await this.accessTokenService.delete(user.id);
+    //console.log('token' + deleteToken);
     if (!deleteToken) {
       const successResponse: any = {
         status: 1,

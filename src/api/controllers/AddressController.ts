@@ -16,6 +16,7 @@ import { AddressService } from '../services/AddressService';
 import { Address } from '../models/Address';
 import { CreateAddress } from './requests/CreateAddressRequest';
 import { CustomerService } from '../services/CustomerService';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/address')
 export class AddressController {
@@ -164,7 +165,7 @@ export class AddressController {
     address.addressType = addressParam.addressType;
 
     const addressSave = await this.addressService.create(address);
-    console.log('addressSave' + addressSave);
+    //console.log('addressSave' + addressSave);
     if (addressSave) {
       const successResponse: any = {
         status: 1,
@@ -209,12 +210,21 @@ export class AddressController {
     @Res() response: any
   ): Promise<any> {
     const WhereConditions = [];
-    const addressList = await this.addressService.list(
-      limit,
-      offset,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Address> = {
+      take: limit,
+      skip: offset,
+    };
+    if (count) {
+      const addressListCount = await this.addressService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got complete address list.',
+        data: addressListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const addressList = await this.addressService.list(options);
     if (addressList) {
       const successResponse: any = {
         status: 1,
@@ -319,10 +329,10 @@ export class AddressController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(id);
+    //console.log(id);
     const customer = await this.customerService.findOne({ where: { id } });
-    console.log({ customer });
-    if (customer.length === 0) {
+    //console.log({ customer });
+    if (!customer) {
       const errorResponse: any = {
         status: 0,
         message: ' invalid customer Id',
@@ -335,12 +345,24 @@ export class AddressController {
         value: id,
       },
     ];
-    const customerAddress = await this.addressService.list(
-      limit,
-      offset,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Address> = {
+      take: limit,
+      skip: offset,
+      where: {
+        customerId: id,
+      },
+    };
+    if (count) {
+      const customerAddressCount = await this.addressService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully Get the customer Address',
+        data: customerAddressCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const customerAddress = await this.addressService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully Get the customer Address',

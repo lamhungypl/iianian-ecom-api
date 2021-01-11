@@ -10,6 +10,12 @@ import { BaseModel } from './BaseModel';
 import moment = require('moment');
 @Entity('language')
 export class Language extends BaseModel {
+  public getId(): number {
+    return this.languageId;
+  }
+  public getIdField(): string {
+    return 'languageId';
+  }
   @PrimaryGeneratedColumn({ name: 'language_id' })
   public languageId: number;
 

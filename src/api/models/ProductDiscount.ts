@@ -10,6 +10,12 @@ import { BaseModel } from './BaseModel';
 import moment = require('moment');
 @Entity('product_discount')
 export class ProductDiscount extends BaseModel {
+  public getId(): number {
+    return this.productDiscountId;
+  }
+  public getIdField(): string {
+    return 'productDiscountId';
+  }
   @PrimaryGeneratedColumn({ name: 'product_discount_id' })
   public productDiscountId: number;
 

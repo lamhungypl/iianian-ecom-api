@@ -24,6 +24,12 @@ import { ProductRating } from './ProductRating';
 
 @Entity('product')
 export class Product extends BaseModel {
+  public getId(): number {
+    return this.productId;
+  }
+  public getIdField(): string {
+    return 'productId';
+  }
   @PrimaryGeneratedColumn({ name: 'product_id' })
   @IsNotEmpty()
   public productId: number;

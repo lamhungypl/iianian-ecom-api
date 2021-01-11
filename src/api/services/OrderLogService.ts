@@ -1,92 +1,17 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Like } from 'typeorm/index';
 import { OrderLogRepository } from '../repositories/OrderLogRepository';
+import { BaseService } from './base/BaseService';
+import { OrderLog } from '../models/OrderLog';
 
 @Service()
-export class OrderLogService {
+export class OrderLogService extends BaseService<OrderLog, OrderLogRepository> {
   constructor(
-    @OrmRepository() private orderLogRepository: OrderLogRepository,
+    @InjectRepository(OrderLogRepository) repository: OrderLogRepository,
     @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create orderLog
-  public async create(order: any): Promise<any> {
-    this.log.info('Create a new orderLog ');
-    return this.orderLogRepository.save(order);
-  }
-
-  // find Condition
-  public findOne(whereCondition: any): Promise<any> {
-    this.log.info('Find orderLog Detail');
-    const condition: any = {};
-    if (whereCondition && whereCondition.length > 0) {
-      condition.where = whereCondition[0];
-      condition.relations = whereCondition[1].relation;
-    } else {
-      condition.orderLogId = whereCondition;
-    }
-    return this.orderLogRepository.findOne(condition);
-  }
-
-  // update orderLog
-  public update(id: any, orderLog: any): Promise<any> {
-    this.log.info('update order log ', orderLog);
-
-    orderLog.orderLogId = id;
-    return this.orderLogRepository.save(orderLog);
-  }
-
-  // orderLog List
-  public list(
-    limit: number,
-    offset: number,
-    search: any = [],
-    whereConditions: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-    this.log.info('list order log ', { condition, search });
-
-    if (count) {
-      return this.orderLogRepository.count(condition);
-    } else {
-      return this.orderLogRepository.find(condition);
-    }
-  }
-
-  // delete orderLog
-  public async delete(id: number): Promise<any> {
-    return await this.orderLogRepository.delete(id);
-  }
-
-  // orderLog count
-  public find(): Promise<any> {
-    return this.orderLogRepository.find();
+  ) {
+    super(repository);
   }
 }

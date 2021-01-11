@@ -6,6 +6,7 @@ import { CreateSettingRequest } from './requests/createSettingRequest';
 import { env } from '../../env';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
+import { FindManyOptions } from 'typeorm';
 
 @JsonController('/settings')
 export class SettingController {
@@ -38,13 +39,11 @@ export class SettingController {
     const WhereConditions = [];
     const limit = 1;
 
-    const settings: any = await this.settingService.list(
-      limit,
-      select,
-      relation,
-      WhereConditions
-    );
-    console.log('settings' + settings);
+    const options: FindManyOptions<Settings> = {
+      take: 1,
+    };
+    const settings: any = await this.settingService.list(options);
+    //console.log('settings' + settings);
     const successResponse: any = {
       status: 1,
       message: 'Successfully get settings',
@@ -127,11 +126,11 @@ export class SettingController {
     @Body({ validate: true }) settings: CreateSettingRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(settings.metaTagKeywords);
-    const settingValue: any = await this.settingService.findOne();
-    console.log(settingValue);
+    //console.log(settings.metaTagKeywords);
+    const settingValue: Settings = await this.settingService.findOne();
+    //console.log(settingValue);
     if (settingValue === undefined) {
-      const newSettings: any = new Settings();
+      const newSettings = new Settings();
       newSettings.url = settings.url;
       newSettings.metaTagTitle = settings.metaTagTitle;
       newSettings.metaTagDescription = settings.metaTagDescription;
@@ -163,7 +162,7 @@ export class SettingController {
         newSettings.storeLogoPath = path;
       }
 
-      newSettings.maintainanceMode = settings.maintenanceMode;
+      newSettings.maintenanceMode = settings.maintenanceMode;
       newSettings.storeLanguageName = settings.storeLanguageName;
       newSettings.storeCurrencyId = settings.storeCurrencyId;
       newSettings.storeImage = settings.storeImage;

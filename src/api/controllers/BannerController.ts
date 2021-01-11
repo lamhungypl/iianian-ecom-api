@@ -19,6 +19,7 @@ import { CreateBanner } from './requests/createBannerRequest';
 import { UpdateBanner } from './requests/updateBannerRequest';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
+import { FindManyOptions, Like } from 'typeorm';
 
 @JsonController('/banner')
 export class BannerController {
@@ -156,14 +157,32 @@ export class BannerController {
       },
     ];
     const WhereConditions = [];
-    const bannerList: any = await this.bannerService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    const options: FindManyOptions<Banner> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'bannerId',
+        'title',
+        'image',
+        'imagePath',
+        'content',
+        'link',
+        'position',
+      ],
+      where: {
+        title: Like(`%${keyword}%`),
+      },
+    };
+    if (count) {
+      const bannerListCount: any = await this.bannerService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got banner list count',
+        data: bannerListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+    const bannerList: any = await this.bannerService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got banner list',

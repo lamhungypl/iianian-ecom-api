@@ -12,7 +12,10 @@ import { BannerService } from '../../services/bannerService';
 import { MAILService } from '../../../auth/mail.services';
 import { classToPlain } from 'class-transformer';
 import { CategoryService } from '../../services/categoryService';
-import { ProductService } from '../../services/ProductService';
+import {
+  // FindManyProductOptions,
+  ProductService,
+} from '../../services/ProductService';
 import arrayToTree from 'array-to-tree';
 import { ProductRelated } from '../../models/ProductRelated';
 import { ProductRelatedService } from '../../services/ProductRelatedService';
@@ -29,6 +32,28 @@ import { LanguageService } from '../../services/languageService';
 import { ProductDiscountService } from '../../services/ProductDiscountService';
 import { ProductSpecialService } from '../../services/ProductSpecialService';
 import { ProductToCategoryService } from '../../services/ProductToCategoryService';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import {
+  Between,
+  Brackets,
+  FindConditions,
+  FindManyOptions,
+  FindOperator,
+  LessThanOrEqual,
+  Like,
+  MoreThanOrEqual,
+  ObjectLiteral,
+  SelectQueryBuilder,
+} from 'typeorm';
+import { Product } from '../../models/ProductModel';
+import { Category } from 'src/api/models/categoryModel';
+import { Country } from '../../models/country';
+import { Zone } from 'src/api/models/zone';
+import { Banner } from 'src/api/models/banner';
+import { Language } from 'src/api/models/language';
+import { ProductToCategory } from 'src/api/models/ProductToCategory';
+import { Request } from 'express';
+import { NotNullObject } from '../../Utils';
 
 @JsonController('/list')
 export class CommonListController {
@@ -77,7 +102,7 @@ export class CommonListController {
   public async bannerList(
     @QueryParam('limit') limit: number,
     @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('keyword') keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
@@ -98,14 +123,35 @@ export class CommonListController {
       },
     ];
     const WhereConditions = [];
-    const bannerList: any = await this.bannerService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Banner> = {
+      take: limit,
+      skip: offset,
+
+      select: [
+        'bannerId',
+        'title',
+        'image',
+        'imagePath',
+        'content',
+        'link',
+        'position',
+      ],
+      where: {
+        title: Like(`%${keyword}%`),
+      },
+    };
+    if (count) {
+      const bannerListCount = await this.bannerService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully got banner list count',
+        data: bannerListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const bannerList: any = await this.bannerService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got banner list',
@@ -144,51 +190,58 @@ export class CommonListController {
   // Category List Function
   @Get('/category-list')
   public async CategoryList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
-    @QueryParam('sortOrder') sortOrder: number,
+    @QueryParam('sortOrder') sortOrder: string,
     @QueryParam('count') count: number | boolean,
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'categoryId',
-      'name',
-      'image',
-      'imagePath',
-      'parentInt',
-      'sortOrder',
-      'metaTagTitle',
-      'metaTagDescription',
-      'metaTagKeyword',
-    ];
-
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Category> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'categoryId',
+        'name',
+        'image',
+        'imagePath',
+        'parentInt',
+        'sortOrder',
+        'metaTagTitle',
+        'metaTagDescription',
+        'metaTagKeyword',
+      ],
+      where: pickBy<
+        | FindConditions<Category>
+        | FindConditions<Category>[]
+        | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+        },
+        value => value != null
+      ),
+      order: {
+        name: (sortOrder === '-1' && 'DESC') || 'ASC',
       },
-    ];
-    const WhereConditions = [];
-    const categoryData = await this.categoryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      sortOrder,
-      count
-    );
+    };
+
     if (count) {
+      const categoryDataCount = await this.categoryService.count(options);
       const successResponse: any = {
         status: 1,
         message: 'Successfully get All category List',
-        data: categoryData,
+        data: categoryDataCount,
       };
       return response.status(200).send(successResponse);
     } else {
+      const categoryData = await this.categoryService.list(options);
       const categoryList = arrayToTree(categoryData, {
         parentProperty: 'parentInt',
         customID: 'categoryId',
@@ -275,8 +328,8 @@ export class CommonListController {
    */
   @Get('/productlist')
   public async productList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('manufacturerId') manufacturerId: string,
     @QueryParam('categoryId') categoryId: string,
@@ -288,94 +341,75 @@ export class CommonListController {
     @Req() request: any,
     @Res() response: any
   ): Promise<any> {
-    console.log(manufacturerId);
-    const select = [
-      'product.productId',
-      'product.sku',
-      'product.name',
-      'product.quantity',
-      'product.description',
-      'product.price',
-      'product.isActive AS isActive',
-      'product.manufacturerId AS manufacturerId',
-      'product.location AS location',
-      'product.minimumQuantity AS minimumQuantity',
-      'product.subtractStock',
-      'product.wishListStatus',
-      'product.stockStatusId',
-      'product.shipping',
-      'product.sortOrder',
-      'product.condition',
-      'product.dateAvailable',
-      'product.amount',
-      'product.metaTagTitle',
-      'product.metaTagDescription',
-      'product.metaTagKeyword',
-      'product.discount',
-      'product.rating',
-    ];
+    const products = await this.productService.repository.manager
+      .createQueryBuilder(Product, 'product')
+      .leftJoinAndSelect('product.productToCategory', 'productToCategory')
+      .where('productToCategory.categoryId = :categoryId', { categoryId })
+      .getMany();
 
-    const searchConditions = [
-      {
-        name: 'product.isActive',
-        op: 'where',
-        value: 1,
-      },
-      {
-        name: 'product.manufacturerId',
-        op: 'and',
-        value: manufacturerId,
-      },
-      {
-        name: 'product.name',
-        op: 'and',
-        value: keyword,
-      },
-      {
-        name: 'product.condition',
-        op: 'andWhere',
-        value: condition,
-      },
-    ];
+    const relation = ['productToCategory', 'relatedproduct'];
 
-    const whereConditions: any = [
-      {
-        name: 'product.productId',
-        op: 'inraw',
-        value: categoryId,
-      },
-    ];
+    const options: FindManyOptions<Product> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      relations: relation,
+      where: pickBy<
+        | FindConditions<Product>[]
+        | FindConditions<Product>
+        | { [key: string]: any }
+      >(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+          manufacturerId:
+            (manufacturerId && Like(`%${manufacturerId}%`)) || undefined,
+          condition: (condition && Like(`%${condition}%`)) || undefined,
+          isActive: 1,
+          // categoryId: categoryId || undefined,
+          // 'productToCategory.categoryId': categoryId,
+        },
+        value => value != null
+      ),
+      // join: {
+      //   alias: 'product',
+      //   leftJoinAndSelect: {
+      //     productToCategory: 'product.productToCategory',
+      //   },
+      // },
+    };
 
-    const productList: any = await this.productService.productList(
-      limit,
-      offset,
-      select,
-      searchConditions,
-      whereConditions,
-      categoryId,
-      priceFrom,
-      priceTo,
-      price,
-      count
-    );
     if (count) {
-      const Response: any = {
+      const productCount = await this.productService.productCount(options);
+      const maximumPrice: any = await this.productService.productMaxPrice(
+        options
+      );
+
+      const res = {
         status: 1,
         message: 'Successfully got Products count',
-        data: productList,
+        data: { productCount, maximumProductPrice: maximumPrice },
       };
-      return response.status(200).send(Response);
+      return response.status(200).send(res);
     }
-    const promises = productList.map(async (result: any) => {
+    const productList: Product[] = await this.productService.productList(
+      options
+    );
+    const promises = products.map(async (result: Product) => {
       const productToCategory = await this.productToCategoryService
-        .findAll({
+        .list({
           select: ['categoryId', 'productId'],
           where: { productId: result.productId },
         })
         .then(val => {
           const category = val.map(async (value: any) => {
             const categoryNames = await this.categoryService.findOne({
-              categoryId: value.categoryId,
+              where: {
+                categoryId: value.categoryId,
+              },
             });
             const JsonData = JSON.stringify(categoryNames);
             const ParseData = JSON.parse(JsonData);
@@ -429,7 +463,7 @@ export class CommonListController {
         const userUniqueId: any = Object.keys(userId).map((key: any) => {
           return [key, userId[key]];
         });
-        console.log(userUniqueId[0][1]);
+        //console.log(userUniqueId[0][1]);
         const wishStatus = await this.customerWishlistService.findOne({
           where: {
             productId: result.productId,
@@ -447,22 +481,143 @@ export class CommonListController {
       return temp;
     });
     const finalResult = await Promise.all(promises);
-    const maximum: any = ['Max(product.price) As maximumProductPrice'];
+    // const maximum: any = ['Max(product.price) As maximumProductPrice'];
     const maximumPrice: any = await this.productService.productMaxPrice(
-      maximum
+      options
     );
-    const productPrice: any = maximumPrice.maximumProductPrice;
+    // const productPrice: any = maximumPrice.maximumProductPrice;
     const successResponse: any = {
       status: 1,
       message: 'Successfully got the complete list of products.',
       data: {
-        maximumProductPrice: productPrice,
+        maximumProductPrice: maximumPrice,
         productList: finalResult,
       },
     };
     return response.status(200).send(successResponse);
   }
+  // Custom Product List API
+  /**
+   * @api {get} /api/list/custom-product-list Custom Product List API
+   * @apiGroup Store List
+   * @apiHeader {String} Authorization
+   * @apiParam (Request body) {Number} limit limit
+   * @apiParam (Request body) {Number} offset offset
+   * @apiParam (Request body) {Number} manufacturerId manufacturerId
+   * @apiParam (Request body) {String} categoryId categoryId
+   * @apiParam (Request body) {Number} priceFrom price from you want to list
+   * @apiParam (Request body) {Number} priceTo price to you want to list
+   * @apiParam (Request body) {String} price ASC OR DESC
+   * @apiParam (Request body) {Number} condition  1->new 2->used
+   * @apiParam (Request body) {String} keyword keyword
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "status": "1"
+   *      "message": "Successfully get product list",
+   *      "data":"{}"
+   * }
+   * @apiSampleRequest /api/list/custom-product-list
+   * @apiErrorExample {json} productList error
+   * HTTP/1.1 500 Internal Server Error
+   */
+  @Get('/custom-product-list')
+  public async customProductList(
+    @QueryParam('limit') limit: number,
+    @QueryParam('offset') offset: number,
+    @QueryParam('keyword') keyword: string,
+    @QueryParam('manufacturerId') manufacturerId: number,
+    @QueryParam('categoryId') categoryId: string,
+    @QueryParam('priceFrom') priceFrom: number,
+    @QueryParam('priceTo') priceTo: number,
+    @QueryParam('price') price: string,
+    @QueryParam('priceOrder') priceOrder: string,
+    @QueryParam('condition') condition: number,
+    @QueryParam('count') count: number | boolean,
+    @Req() request: Request,
+    @Res() response: any
+  ): Promise<any> {
+    // TODO
 
+    const options: FindManyOptions<Product> = {
+      take: limit,
+      skip: offset,
+      // relations: ['productToCategory'],
+      join: {
+        alias: 'product',
+        leftJoin: { productToCategory: 'product.productToCategory' },
+      },
+      where: (qb: SelectQueryBuilder<Product>) => {
+        const priceRange = priceFrom && priceTo;
+        let priceSelect: FindOperator<number> | number | undefined = undefined;
+        if (!!priceRange) {
+          priceSelect = Between(priceFrom, priceTo);
+        } else if (priceFrom) {
+          priceSelect = MoreThanOrEqual(priceFrom);
+        } else if (priceTo) {
+          priceSelect = LessThanOrEqual(priceTo);
+        }
+        // Filter product options by name, brand,...
+        qb.where(
+          NotNullObject<
+            FindConditions<Product> | FindConditions<ProductToCategory>
+          >({
+            name: (keyword && Like(`%${keyword}%`)) || undefined,
+            manufacturerId: manufacturerId || undefined,
+            price: priceSelect,
+            condition: condition || undefined,
+          })
+        );
+
+        if (categoryId) {
+          qb.andWhere('productToCategory.categoryId =:categoryId', {
+            categoryId,
+          });
+        }
+        qb.addOrderBy(
+          'product.price',
+          (priceOrder === 'desc' && 'DESC') || 'ASC'
+        );
+      },
+    };
+
+    if (count) {
+      const productCount = await this.productService.productCount(options);
+      const maximumPrice: any = await this.productService.productMaxPrice(
+        options
+      );
+
+      const res = {
+        status: 1,
+        message: 'Successfully got Products count',
+        data: { productCount, maximumProductPrice: maximumPrice },
+      };
+      return response.status(200).send(res);
+    }
+
+    const productList: Product[] = await this.productService.productList(
+      options
+    );
+    const promises = productList.map(async (result: any) => {
+      const productImage = await this.productImageService.findOne({
+        select: ['productId', 'image', 'containerName', 'defaultImage'],
+        where: {
+          productId: result.productId,
+          defaultImage: 1,
+        },
+      });
+      const temp: any = result;
+      temp.Images = productImage;
+      return temp;
+    });
+    const finalResult = await Promise.all(promises);
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got the complete list of products.',
+      data: finalResult,
+    };
+    return response.status(200).send(successResponse);
+  }
   // Related Product Showing API
   /**
    * @api {get} /api/list/related-product-list Related Product List
@@ -496,22 +651,24 @@ export class CommonListController {
         productId: productid,
       },
     ];
-    const relatedData = await this.productRelatedService.list(
-      0,
-      0,
-      0,
-      0,
-      whereConditions,
-      count
-    );
+    const options: FindManyOptions<ProductRelated> = {
+      where: {
+        productId: productid,
+      },
+    };
+
     if (count) {
+      const relatedDataCount: number = await this.productRelatedService.count(
+        options
+      );
       const Response: any = {
         status: 1,
         message: 'Related product list is successfully being shown. ',
-        data: relatedData,
+        data: relatedDataCount,
       };
       return response.status(200).send(Response);
     }
+    const relatedData = await this.productRelatedService.list(options);
     const promises = relatedData.map(async (results: any) => {
       const Id = results.relatedProductId;
       const product = await this.productService.findOne({
@@ -569,41 +726,45 @@ export class CommonListController {
    */
   @Get('/country-list')
   public async countryList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
-    @QueryParam('keyword') keyword: string,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
+    @QueryParam('keyword', { type: 'string' }) keyword = '',
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'countryId',
-      'name',
-      'isoCode2',
-      'isoCode3',
-      'postcodeRequired',
-      'isActive',
-    ];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Country> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'countryId',
+        'name',
+        'isoCode2',
+        'isoCode3',
+        'postcodeRequired',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
       },
-      {
-        name: 'isActive',
-        op: 'where',
-        value: 1,
-      },
-    ];
-    const WhereConditions = [];
-    const countryList = await this.countryService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+    };
+
+    if (count) {
+      const countryCount: number = await this.countryService.count(options);
+      const successResponse = {
+        status: 1,
+        message: 'Successfully got the count of countries.',
+        data: countryCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const countryList = await this.countryService.list(options);
     const successResponse: any = {
       status: 1,
       message: 'Successfully got the list of countries.',
@@ -652,7 +813,7 @@ export class CommonListController {
     const informationData = await this.contactService.create(
       contactInformation
     );
-    const emailContent = await this.emailTemplateService.findOne(3);
+    const emailContent = await this.emailTemplateService.findOneById(3);
     const message = emailContent.content
       .replace('{name}', informationData.name)
       .replace('{email}', informationData.email)
@@ -699,38 +860,40 @@ export class CommonListController {
    */
   @Get('/zone-list')
   public async zonelist(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = ['zoneId', 'countryId', 'code', 'name', 'isActive'];
-    const search = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
+    const options: FindManyOptions<Zone> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: ['zoneId', 'countryId', 'code', 'name', 'isActive'],
+      relations: ['country'],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
       },
-      {
-        name: 'isActive',
-        op: 'where',
-        value: 1,
-      },
-    ];
+    };
 
-    const WhereConditions = [];
-    const relation = ['country'];
+    if (count) {
+      const zoneCount: number = await this.zoneService.count(options);
+      const successResponse: any = {
+        status: 1,
+        message: 'Successfully get all zone List',
+        data: zoneCount,
+      };
+      return response.status(200).send(successResponse);
+    }
 
-    const zoneList = await this.zoneService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      relation,
-      count
-    );
+    const zoneList: Zone[] = await this.zoneService.list(options);
+
     if (zoneList) {
       const successResponse: any = {
         status: 1,
@@ -804,14 +967,40 @@ export class CommonListController {
       },
     ];
     const WhereConditions = [];
-    const languageList = await this.languageService.list(
-      limit,
-      offset,
-      select,
-      search,
-      WhereConditions,
-      count
-    );
+
+    const options: FindManyOptions<Language> = {
+      take: limit,
+      skip: offset,
+      select: [
+        'languageId',
+        'name',
+        'code',
+        'image',
+        'imagePath',
+        'isActive',
+        'sortOrder',
+        'isActive',
+      ],
+      where: {
+        name: Like(`%${keyword}%`),
+        isActive: 1,
+      },
+    };
+
+    if (count) {
+      const languageListCount: number = await this.languageService.count(
+        options
+      );
+      const successResponse = {
+        status: 1,
+        message: 'successfully got the complete language list count.',
+        data: languageListCount,
+      };
+      return response.status(200).send(successResponse);
+    }
+
+    const languageList: Language[] = await this.languageService.list(options);
+
     if (languageList) {
       const successResponse: any = {
         status: 1,

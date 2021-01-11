@@ -17,6 +17,12 @@ import { Exclude } from 'class-transformer';
 
 @Entity('product_view_log')
 export class ProductViewLog extends BaseModel {
+  public getId(): number {
+    return this.id;
+  }
+  public getIdField(): string {
+    return 'id';
+  }
   @PrimaryGeneratedColumn({ name: 'id' })
   public id: number;
 

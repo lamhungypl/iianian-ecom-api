@@ -1,133 +1,48 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 import { Like } from 'typeorm/index';
 import { OrderRepository } from '../repositories/OrderRepository';
+import { BaseService } from './base/BaseService';
+import { Order } from '../models/Order';
 
 @Service()
-export class OrderService {
+export class OrderService extends BaseService<Order, OrderRepository> {
   constructor(
-    @OrmRepository() private orderRepository: OrderRepository,
-    @Logger(__filename) private log: LoggerInterface
-  ) {}
-
-  // create order
-  public async create(order: any): Promise<any> {
-    this.log.info('Create a new order ');
-    return this.orderRepository.save(order);
-  }
-
-  // order count
-  public find(order: any): Promise<any> {
-    this.log.info('find order ', order);
-    return this.orderRepository.find(order);
-  }
-
-  // order count
-  public findAll(): Promise<any> {
-    this.log.info('find all ');
-
-    return this.orderRepository.find();
-  }
-
-  // findOne Condition
-  public findOne(whereCondition: any): Promise<any> {
-    const condition: any = {};
-    if (whereCondition && whereCondition.length > 0) {
-      condition.where = whereCondition[0];
-      condition.relations = whereCondition[1].relation;
-    } else {
-      condition.orderId = whereCondition;
-    }
-    this.log.info('Find Order Detail', { condition });
-
-    return this.orderRepository.findOne(condition);
-  }
-
-  // update order
-  public update(id: any, order: any): Promise<any> {
-    order.oderId = id;
-    return this.orderRepository.save(order);
-  }
-
-  // order List
-  public list(
-    limit: number,
-    offset: number,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    relation: any = [],
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (relation && relation.length > 0) {
-      condition.relations = relation;
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-
-    condition.order = {
-      createdDate: 'DESC',
-    };
-    this.log.info('list order  ', { condition, search });
-
-    if (count) {
-      return this.orderRepository.count(condition);
-    } else {
-      return this.orderRepository.find(condition);
-    }
-  }
-
-  // findOne order
-  public findOrder(order: any): Promise<any> {
-    return this.orderRepository.findOne(order);
-  }
-
-  // delete order
-  public async delete(id: number): Promise<any> {
-    return await this.orderRepository.delete(id);
-  }
-
-  // sales list
-  public async salesList(): Promise<any> {
-    return await this.orderRepository.salesList();
+    @Logger(__filename) private log: LoggerInterface,
+    @InjectRepository(OrderRepository)
+    repository: OrderRepository
+  ) {
+    super(repository);
   }
 
   // find today orders
-  public async findAlltodayOrder(todayDate: string): Promise<any> {
-    return await this.orderRepository.findAllTodayOrder(todayDate);
+  public async findAllTodayOrder(todayDate: string) {
+    const query = this.repository.manager.createQueryBuilder(Order, 'order');
+    query.select([' SUM(order.total) as total']);
+    query.where('DATE(order.createdDate) = :todayDate', { todayDate });
+    return query.getOne();
   }
 
-  // find today orders count
-  public async findAllTodayOrderCount(todayDate: string): Promise<any> {
-    return await this.orderRepository.findAllTodayOrderCount(todayDate);
+  public async salesList() {
+    const query = this.repository.manager.createQueryBuilder(Order, 'order');
+    query.select([
+      'COUNT(order_id) as orderCount',
+      'MONTH(created_date) as month',
+      'YEAR(created_date) as year',
+    ]);
+    query.groupBy('month');
+    query.addGroupBy('year');
+    query.orderBy('year', 'ASC');
+    query.addOrderBy('month', 'ASC');
+    query.limit(12);
+    return query.getRawMany();
+  }
+
+  public async findAllTodayOrderCount(todayDate: string) {
+    const query = this.repository.manager.createQueryBuilder(Order, 'order');
+    query.select(['COUNT(order.orderId) as orderCount']);
+    query.where('DATE(order.createdDate) = :todayDate', { todayDate });
+    return query.getRawOne<number>();
   }
 }

@@ -1,7 +1,7 @@
 import { Connection } from 'typeorm';
-import { Factory, Seed } from 'typeorm-seeding';
+import { Factory, Seeder } from 'typeorm-seeding';
 import { EmailTemplate } from '../../api/models/emailTemplate';
-export class CreateEmailTemplate implements Seed {
+export class CreateEmailTemplate implements Seeder {
   public async seed(
     factory: Factory,
     connection: Connection
@@ -81,4 +81,5 @@ export class CreateEmailTemplate implements Seed {
     }
     return statusData;
   }
+  async run() {}
 }

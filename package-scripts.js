@@ -6,7 +6,7 @@ const { series, rimraf } = require('nps-utils');
 
 module.exports = {
   scripts: {
-    default: 'nps start',
+    default: 'node dist/app.js',
     /**
      * Starts the builded app from the dist directory.
      */
@@ -25,7 +25,7 @@ module.exports = {
      * Starts the builded app from the dist directory.
      */
     production: {
-      script: 'cross-env NODE_ENV=production node dist/app.js',
+      script: 'node dist/app.js',
       description: 'Starts the builded app',
     },
     /**
@@ -84,7 +84,7 @@ module.exports = {
       script: series(
         'nps banner.build',
         'nps config',
-        'nps lint',
+        // 'nps lint',
         'nps clean.dist',
         'nps transpile',
         'nps generateapidoc',
@@ -305,7 +305,7 @@ function run(path) {
 }
 
 function runFast(path) {
-  return `ts-node --transpileOnly ${path}`;
+  return `ts-node --transpile-only ${path}`;
 }
 
 function tslint(path) {

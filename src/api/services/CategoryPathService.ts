@@ -1,97 +1,21 @@
 import { Service } from 'typedi';
-import { OrmRepository } from 'typeorm-typedi-extensions';
+import { InjectRepository, OrmRepository } from 'typeorm-typedi-extensions';
 import { CategoryPath } from '../models/CategoryPath';
 import { CategoryPathRepository } from '../repositories/CategoryPathRepository';
 import { Logger, LoggerInterface } from '../../decorators/Logger';
 
-import { Like } from 'typeorm/index';
+import { BaseService } from './base/BaseService';
 
 @Service()
-export class CategoryPathService {
+export class CategoryPathService extends BaseService<
+  CategoryPath,
+  CategoryPathRepository
+> {
   constructor(
-    @OrmRepository() private categoryPathRepository: CategoryPathRepository,
+    @InjectRepository(CategoryPathRepository)
+    repository: CategoryPathRepository,
     @Logger(__filename) private log: LoggerInterface
-
-  ) {}
-  // create CategoryPath
-  public async create(categoryPath: any): Promise<CategoryPath> {
-    this.log.info('Create a new category path ', {categoryPath});
-    return this.categoryPathRepository.save(categoryPath);
-  }
-  // findone CategoryPath
-  public findOne(categoryPath: any): Promise<any> {
-    this.log.info('findOne category path ', {categoryPath});
-    return this.categoryPathRepository.findOne(categoryPath);
-  }
-  // delete CategoryPath
-  public async delete(id: any): Promise<any> {
-    this.log.info('delete a  category path ', id);
-
-    await this.categoryPathRepository.delete(id);
-    return;
-  }
-  // categoryList
-  public list(
-    limit: any,
-    offset: any,
-    select: any = [],
-    search: any = [],
-    whereConditions: any = [],
-    sortOrder: number,
-    count: number | boolean
-  ): Promise<any> {
-    const condition: any = {};
-
-    if (select && select.length > 0) {
-      condition.select = select;
-    }
-    condition.where = {};
-
-    if (whereConditions && whereConditions.length > 0) {
-      whereConditions.forEach((item: any) => {
-        condition.where[item.name] = item.value;
-      });
-    }
-
-    if (search && search.length > 0) {
-      search.forEach((table: any) => {
-        const operator: string = table.op;
-        if (operator === 'where' && table.value !== '') {
-          condition.where[table.name] = table.value;
-        } else if (operator === 'like' && table.value !== '') {
-          condition.where[table.name] = Like('%' + table.value + '%');
-        }
-      });
-    }
-
-    if (limit && limit > 0) {
-      condition.take = limit;
-      condition.skip = offset;
-    }
-
-    if (sortOrder && sortOrder === 1) {
-      condition.order = {
-        sortOrder: 'ASC',
-      };
-    }
-    if (sortOrder && sortOrder === 2) {
-      condition.order = {
-        sortOrder: 'DESC',
-      };
-    }
-
-    this.log.info('list category path ', { search }, { condition });
-
-    if (count) {
-      return this.categoryPathRepository.count(condition);
-    }
-    return this.categoryPathRepository.find(condition);
-  }
-
-  // find categoryPath
-  public find(categoryPath: any): Promise<any> {
-    this.log.info('fine categoryPath ',categoryPath);
-
-    return this.categoryPathRepository.find(categoryPath);
+  ) {
+    super(repository);
   }
 }

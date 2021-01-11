@@ -12,7 +12,10 @@ import {
   Param,
   Put,
 } from 'routing-controllers';
-import { ProductService } from '../services/ProductService';
+import {
+  // FindManyProductOptions,
+  ProductService,
+} from '../services/ProductService';
 import { ProductToCategoryService } from '../services/ProductToCategoryService';
 import { ProductImageService } from '../services/ProductImageService';
 import { Product } from '../models/ProductModel';
@@ -33,7 +36,12 @@ import { UpdateTodayDealsParam } from './requests/UpdateTodayDealsParam';
 import { ProductViewLogService } from '../services/ProductViewLogService';
 import { ProductDiscountService } from '../services/ProductDiscountService';
 import { ProductSpecialService } from '../services/ProductSpecialService';
-import moment = require('moment');
+import moment from 'moment';
+import { FindManyOptions, Like } from 'typeorm';
+import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { Response } from 'express';
+import fs from 'fs';
+import { ProductViewLog } from '../models/productViewLog';
 
 @JsonController('/product')
 export class ProductController {
@@ -76,67 +84,64 @@ export class ProductController {
   @Get('/productlist')
   @Authorized()
   public async productList(
-    @QueryParam('limit') limit: number,
-    @QueryParam('offset') offset: number,
+    @QueryParam('limit') limit: string,
+    @QueryParam('offset') offset: string,
     @QueryParam('keyword') keyword: string,
     @QueryParam('sku') sku: string,
     @QueryParam('status') status: string,
-    @QueryParam('price') price: number,
+    // @QueryParam('price') price: number,
     @QueryParam('count') count: number | boolean,
-    @Res() response: any
-  ): Promise<Product> {
-    const select = [
-      'productId',
-      'sku',
-      'name',
-      'quantity',
-      'price',
-      'image',
-      'imagePath',
-      'isFeatured',
-      'todayDeals',
-      'isActive',
-    ];
-
+    @Res() response: Response
+  ) {
     const relation = ['productToCategory', 'relatedproduct'];
 
-    const WhereConditions = [
-      {
-        name: 'name',
-        op: 'like',
-        value: keyword,
-      },
-      {
-        name: 'sku',
-        op: 'like',
-        value: sku || '',
-      },
-      {
-        name: 'isActive',
-        op: 'like',
-        value: (status && parseInt(status)) || 1,
-      },
-    ];
-    console.log({ WhereConditions });
-    const productLists: any = await this.productService.list(
-      limit,
-      offset,
-      select,
-      relation,
-      WhereConditions,
-      0,
-      price,
-      count
-    );
+    const options: FindManyOptions<Product> = {
+      ...pickBy<{ take?: number; skip?: number }>(
+        {
+          take: (limit && _parseInt(limit)) || undefined,
+          skip: (offset && _parseInt(offset)) || undefined,
+        },
+        value => isNumber(value)
+      ),
+      select: [
+        'productId',
+        'sku',
+        'name',
+        'quantity',
+        'price',
+        'image',
+        'imagePath',
+        'isFeatured',
+        'todayDeals',
+        'isActive',
+      ],
+      relations: relation,
+      where: pickBy(
+        {
+          name: (keyword && Like(`%${keyword}%`)) || undefined,
+          sku: (sku && Like(`%${sku}%`)) || undefined,
+
+          isActive: (status && parseInt(status)) || 1,
+        },
+        value => value != null
+      ),
+    };
+
     if (count) {
+      const productCount = await this.productService.productCount(options);
+
       const successRes: any = {
         status: 1,
         message: 'Successfully got count ',
-        data: productLists,
+        data: productCount,
       };
       return response.status(200).send(successRes);
     }
-    const productList = productLists.map(async (value: any) => {
+    const productLists: Product[] = await this.productService.productList(
+      options
+    );
+
+    const productList = productLists.map(async (value: Product) => {
       const defaultValue = await this.productImageService.findOne({
         where: {
           productId: value.productId,
@@ -171,7 +176,7 @@ export class ProductController {
     });
     const results = await Promise.all(productList);
 
-    const successResponse: any = {
+    const successResponse = {
       status: 1,
       message: 'Successfully got the complete product list. ',
       data: classToPlain(results),
@@ -179,63 +184,43 @@ export class ProductController {
     return response.status(200).send(successResponse);
   }
 
-  // Delete Product API
-  /**
-   * @api {delete} /api/product/delete-product/:id Delete Product API
-   * @apiGroup Product
-   * @apiHeader {String} Authorization
-   * @apiParam (Request body) {number} productId productId
-   * @apiParamExample {json} Input
-   * {
-   * "productId" : "",
-   * }
-   * @apiSuccessExample {json} Success
-   * HTTP/1.1 200 OK
-   * {
-   * "message": "Successfully deleted Product.",
-   * "status": "1"
-   * }
-   * @apiSampleRequest /api/product/delete-product/:id
-   * @apiErrorExample {json} productDelete error
-   * HTTP/1.1 500 Internal Server Error
-   */
-  @Delete('/delete-product/:id')
-  @Authorized()
-  public async deleteProduct(
-    @Body({ validate: true }) productDelete: DeleteProductRequest,
-    @Res() response: any,
-    @Req() request: any
-  ): Promise<Product> {
-    const product = await this.productService.findOne({
-      where: {
-        productId: productDelete.productId,
-      },
-    });
-    if (!product) {
-      const errorResponse: any = {
-        status: 0,
-        message: 'Invalid productId',
-      };
-      return response.status(400).send(errorResponse);
-    }
-    const deleteProduct = await this.productService.delete(
-      productDelete.productId
-    );
+  // @Delete('/delete-product/:id')
+  // @Authorized()
+  // public async deleteProduct(
+  //   @Body({ validate: true }) productDelete: DeleteProductRequest,
+  //   @Res() response: any,
+  //   @Req() request: any
+  // ): Promise<Product> {
+  //   const product = await this.productService.findOne({
+  //     where: {
+  //       productId: productDelete.productId,
+  //     },
+  //   });
+  //   if (!product) {
+  //     const errorResponse: any = {
+  //       status: 0,
+  //       message: 'Invalid productId',
+  //     };
+  //     return response.status(400).send(errorResponse);
+  //   }
+  //   const deleteProduct = await this.productService.delete(
+  //     productDelete.productId
+  //   );
 
-    if (deleteProduct) {
-      const successResponse: any = {
-        status: 1,
-        message: 'Successfully deleted Product',
-      };
-      return response.status(200).send(successResponse);
-    } else {
-      const errorResponse: any = {
-        status: 0,
-        message: 'unable to delete product',
-      };
-      return response.status(400).send(errorResponse);
-    }
-  }
+  //   if (deleteProduct) {
+  //     const successResponse: any = {
+  //       status: 1,
+  //       message: 'Successfully deleted Product',
+  //     };
+  //     return response.status(200).send(successResponse);
+  //   } else {
+  //     const errorResponse: any = {
+  //       status: 0,
+  //       message: 'unable to delete product',
+  //     };
+  //     return response.status(400).send(errorResponse);
+  //   }
+  // }
 
   // Create Product API
   /**
@@ -327,7 +312,7 @@ export class ProductController {
     @Body({ validate: true }) product: AddProductRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(product);
+    //console.log(product);
     // let productOptions = [];
     // let optionValue = [];
     const newProduct: any = new Product();
@@ -528,7 +513,7 @@ export class ProductController {
     @Body({ validate: true }) product: UpdateProductRequest,
     @Res() response: any
   ): Promise<any> {
-    console.log(product);
+    //console.log(product);
     const updateProduct: any = await this.productService.findOne({
       where: {
         productId: product.productId,
@@ -700,115 +685,75 @@ export class ProductController {
   @Authorized()
   public async productDetail(
     @Param('id') id: number,
-    @Res() response: any
-  ): Promise<any> {
-    const select = [
-      'productId',
-      'sku',
-      'upc',
-      'name',
-      'description',
-      'location',
-      'minimumQuantity',
-      'quantity',
-      'subtractStock',
-      'metaTagTitle',
-      'manufacturerId',
-      'stockStatusId',
-      'shipping',
-      'dateAvailable',
-      'sortOrder',
-      'price',
-      'condition',
-      'isActive',
-    ];
-
-    const relation = ['productImage'];
-
-    const WhereConditions = [
-      {
-        name: 'productId',
-        op: 'where',
-        value: id,
-      },
-    ];
-    const productDetail: any = await this.productService.list(
-      0,
-      0,
-      select,
-      relation,
-      WhereConditions,
-      0,
-      0,
-      0
-    );
-    const productDetails: any = classToPlain(productDetail);
-    const promises = productDetails.map(async (result: any) => {
-      const productToCategory = await this.productToCategoryService
-        .findAll({
-          select: ['categoryId', 'productId'],
-          where: { productId: result.productId },
-        })
-        .then(val => {
-          const category = val.map(async (value: any) => {
-            const categoryNames = await this.categoryService.findOne({
-              categoryId: value.categoryId,
-            });
-            const JsonData = JSON.stringify(categoryNames);
-            const ParseData = JSON.parse(JsonData);
-            const temp: any = value;
-            temp.categoryName = ParseData.name;
-            return temp;
-          });
-          const results = Promise.all(category);
-          return results;
-        });
-      const relatedProductData = await this.productRelatedService
-        .findAll({ where: { productId: result.productId } })
-        .then(val => {
-          const relatedProduct = val.map(async (value: any) => {
-            const productId = value.relatedProductId;
-            const product = await this.productService.findOne({
-              select: ['productId', 'name'],
-              where: { productId },
-              relations: ['productImage'],
-            });
-            return classToPlain(product);
-          });
-          const resultData = Promise.all(relatedProduct);
-          return resultData;
-        });
-
-      const productSpecialData = await this.productSpecialService.findAll({
-        select: [
-          'productSpecialId',
-          'priority',
-          'price',
-          'dateStart',
-          'dateEnd',
-        ],
-        where: { productId: result.productId },
-      });
-      const productDiscountData = await this.productDiscountService.findAll({
-        select: [
-          'productDiscountId',
-          'quantity',
-          'priority',
-          'price',
-          'dateStart',
-          'dateEnd',
-        ],
-        where: { productId: result.productId },
-      });
-      const dd: any = result;
-      dd.Category = productToCategory;
-      dd.relatedProductDetail = relatedProductData;
-      dd.productSpecialPrice = productSpecialData;
-      dd.productDiscountData = productDiscountData;
-      return dd;
+    @Res() response: Response
+  ) {
+    const productDetail: any = await this.productService.findOneById(id, {
+      relations: ['productImage'],
     });
-    // wait until all promises resolve
-    const finalResult = await Promise.all(promises);
+    const productDetails = classToPlain(productDetail);
+
+    const productToCategory = await this.productToCategoryService
+      .list({
+        select: ['categoryId', 'productId'],
+        where: { productId: productDetails.productId },
+      })
+      .then(val => {
+        const category = val.map(async (value: any) => {
+          const categoryNames = await this.categoryService.findOne({
+            where: {
+              categoryId: value.categoryId,
+            },
+          });
+          const JsonData = JSON.stringify(categoryNames);
+          const ParseData = JSON.parse(JsonData);
+          const temp: any = value;
+          temp.categoryName = ParseData.name;
+          return temp;
+        });
+        const results = Promise.all(category);
+        return results;
+      });
+    const relatedProductData = await this.productRelatedService
+      .list({ where: { productId: productDetails.productId } })
+      .then(val => {
+        const relatedProduct = val.map(async (value: any) => {
+          const productId = value.relatedProductId;
+          const product = await this.productService.findOne({
+            select: ['productId', 'name'],
+            where: { productId },
+            relations: ['productImage'],
+          });
+          return classToPlain(product);
+        });
+        const resultData = Promise.all(relatedProduct);
+        return resultData;
+      });
+
+    const productSpecialData = await this.productSpecialService.list({
+      select: ['productSpecialId', 'priority', 'price', 'dateStart', 'dateEnd'],
+      where: { productId: productDetails.productId },
+    });
+
+    const productDiscountData = await this.productDiscountService.list({
+      select: [
+        'productDiscountId',
+        'quantity',
+        'priority',
+        'price',
+        'dateStart',
+        'dateEnd',
+      ],
+      where: { productId: productDetails.productId },
+    });
+
+    const finalResult = {
+      ...productDetails,
+      Category: productToCategory,
+      relatedProducts: relatedProductData,
+      productSpecial: productSpecialData,
+      productDiscount: productDiscountData,
+    };
+
     const successResponse: any = {
       status: 1,
       message: 'Successfully get productDetail',
@@ -853,17 +798,17 @@ export class ProductController {
         ],
         where: { productId: result.product },
       });
-      const temp: any = result;
-      const productImage = await this.productImageService.findAll({
+      // const temp: any = result;
+      const productImage = await this.productImageService.list({
         select: ['productId', 'image', 'containerName'],
         where: {
           productId: result.product,
           defaultImage: 1,
         },
       });
-      temp.product = product;
-      temp.productImage = productImage;
-      return temp;
+      // temp.product = product;
+      // temp.productImage = productImage;
+      return { ...result, product, productImage };
     });
 
     const value = await Promise.all(promise);
@@ -899,22 +844,22 @@ export class ProductController {
     @Res() response: any
   ): Promise<any> {
     const limit = 3;
-    const orderList = await this.orderProductService.List(limit);
+    const orderList = await this.orderProductService.list({ take: limit });
     const promises = orderList.map(async (result: any) => {
-      const order = await this.orderService.findOrder({
+      const order = await this.orderService.list({
         select: ['invoiceNo', 'invoicePrefix', 'orderId', 'orderStatusId'],
         where: { orderId: result.orderId },
       });
-      const temp: any = result;
-      temp.order = order;
-      const product = await this.productImageService.findAll({
+      // const temp: any = result;
+      // temp.order = order;
+      const productImage = await this.productImageService.list({
         where: {
           productId: result.productId,
           defaultImage: 1,
         },
       });
-      temp.productImage = product;
-      return temp;
+      // temp.productImage = product;
+      return { ...result, order, productImage };
     });
     const results = await Promise.all(promises);
     const successResponse: any = {
@@ -1015,30 +960,27 @@ export class ProductController {
     const select = [];
     const whereConditions = [];
     const search = [];
-    const viewLogs = await this.productViewLogService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      0,
-      count
-    );
+    const options: FindManyOptions<ProductViewLog> = {
+      take: limit,
+      skip: offset,
+    };
     if (count) {
+      const viewLogsCount = await this.productViewLogService.count(options);
       const successresponse: any = {
         status: 1,
         message: 'Successfully got view log count',
-        data: viewLogs,
+        data: viewLogsCount,
       };
       return response.status(200).send(successresponse);
-    } else {
-      const successResponse: any = {
-        status: 1,
-        message: 'Successfully got view log List',
-        data: viewLogs,
-      };
-      return response.status(200).send(successResponse);
     }
+    const viewLogs = await this.productViewLogService.list(options);
+
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got view log List',
+      data: viewLogs,
+    };
+    return response.status(200).send(successResponse);
   }
 
   // Customer product view list API
@@ -1079,29 +1021,279 @@ export class ProductController {
       },
     ];
     const search = [];
-    const customerProductview = await this.productViewLogService.list(
-      limit,
-      offset,
-      select,
-      search,
-      whereConditions,
-      0,
-      count
-    );
+    const options: FindManyOptions<ProductViewLog> = {
+      take: limit,
+      skip: offset,
+      where: {
+        customerId: id,
+      },
+    };
+
     if (count) {
+      const viewLogCount: number = await this.productViewLogService.count(
+        options
+      );
+
       const successresponse: any = {
         status: 1,
         message: 'Successfully got view log count',
-        data: customerProductview,
+        data: viewLogCount,
       };
       return response.status(200).send(successresponse);
-    } else {
+    }
+    const customerProductview = await this.productViewLogService.list(options);
+
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully got view log List',
+      data: customerProductview,
+    };
+    return response.status(200).send(successResponse);
+  }
+  // Product Details Excel Document download
+  /**
+   * @api {get} /api/product/product-excel-list Product Excel
+   * @apiGroup Product
+   * @apiParam (Request body) {String} productId productId
+   * @apiSuccessExample {json} Success
+   * HTTP/1.1 200 OK
+   * {
+   *      "message": "Successfully download the Product Excel List..!!",
+   *      "status": "1",
+   *      "data": {},
+   * }
+   * @apiSampleRequest /api/product/product-excel-list
+   * @apiErrorExample {json} product Excel List error
+   * HTTP/1.1 500 Internal Server Error
+   */
+
+  @Get('/product-excel-list')
+  @Authorized()
+  public async excelProductView(
+    @QueryParam('productId') productId: string,
+    @Req() request: any,
+    @Res() response: any
+  ): Promise<any> {
+    const excel = require('exceljs');
+    const workbook = new excel.Workbook();
+    const worksheet = workbook.addWorksheet('Product Detail Sheet');
+    const rows = [];
+    const productid = productId.split(',');
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Invalid productId',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    // Excel sheet column define
+    worksheet.columns = [
+      { header: 'Product Id', key: 'productId', size: 16, width: 15 },
+      { header: 'Product Name', key: 'name', size: 16, width: 15 },
+      { header: 'Description', key: 'description', size: 16, width: 30 },
+      { header: 'Price', key: 'price', size: 16, width: 15 },
+      { header: 'SKU', key: 'sku', size: 16, width: 15 },
+      { header: 'UPC', key: 'upc', size: 16, width: 15 },
+      { header: 'Quantity', key: 'quantity', size: 16, width: 15 },
+      {
+        header: 'Minimum Quantity',
+        key: 'minimumQuantity',
+        size: 16,
+        width: 19,
+      },
+      { header: 'Subtract Stock', key: 'subtractstock', size: 16, width: 15 },
+      { header: 'Manufacture Id', key: 'manufactureId', size: 16, width: 15 },
+      { header: 'Meta Tag Title', key: 'metaTagTitle', size: 16, width: 15 },
+    ];
+    worksheet.getCell('A1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('B1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('C1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('D1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('E1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('F1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('G1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('H1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('I1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('J1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    worksheet.getCell('K1').border = {
+      top: { style: 'thin' },
+      left: { style: 'thin' },
+      bottom: { style: 'thin' },
+      right: { style: 'thin' },
+    };
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      const productDescription = dataId.description;
+      const dataDescription = productDescription.replace(
+        /(&nbsp;|(<([^>]+)>))/gi,
+        ''
+      );
+      rows.push([
+        dataId.productId,
+        dataId.name,
+        dataDescription.trim(),
+        dataId.price,
+        dataId.sku,
+        dataId.upc,
+        dataId.quantity,
+        dataId.minimumQuantity,
+        dataId.subtractStock,
+        dataId.manufacturerId,
+        dataId.metaTagTitle,
+      ]);
+    }
+    // Add all rows data in sheet
+    worksheet.addRows(rows);
+    const fileName = './ProductExcel_' + Date.now() + '.xlsx';
+    await workbook.xlsx.writeFile(fileName);
+    return new Promise((resolve, reject) => {
+      response.download(fileName, (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          fs.unlinkSync(fileName);
+          return response.end();
+        }
+      });
+    });
+  }
+
+  // Delete Multiple Product API
+
+  @Post('/delete-product')
+  @Authorized()
+  public async deleteMultipleProduct(
+    @Body({ validate: true }) productDelete: DeleteProductRequest,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<Product> {
+    const productIdNo = productDelete.productId.toString();
+    const productid = productIdNo.split(',');
+    for (const id of productid) {
+      const dataId = await this.productService.findOneById(id);
+      if (dataId === undefined) {
+        const errorResponse: any = {
+          status: 0,
+          message: 'Please choose a product for delete',
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    for (const id of productid) {
+      const orderProduct = await this.orderProductService.findOne({
+        where: { productId: id },
+      });
+      if (orderProduct) {
+        const errorResponse: any = {
+          status: 0,
+          message: `${orderProduct.name} (${orderProduct.productId}) is ordered (${orderProduct.orderId})`,
+        };
+        return response.status(400).send(errorResponse);
+      }
+    }
+    for (const id of productid) {
+      const deleteProductId = parseInt(id, 10);
+      await this.productService.delete(deleteProductId);
+    }
+    const successResponse: any = {
+      status: 1,
+      message: 'Successfully deleted Product',
+    };
+    return response.status(200).send(successResponse);
+  }
+
+  @Delete('/delete-product/:id')
+  @Authorized()
+  public async deleteProduct(
+    @Param('id') productid: number,
+    @Res() response: any,
+    @Req() request: any
+  ): Promise<Product> {
+    const product = await this.productService.findOneById(productid);
+    if (product === undefined) {
+      const errorResponse: any = {
+        status: 0,
+        message: 'Invalid productId',
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const orderProduct = await this.orderProductService.findOne({
+      where: { productId: productid },
+    });
+    if (orderProduct) {
+      const errorResponse: any = {
+        status: 0,
+        message: `${orderProduct.name} (${orderProduct.productId}) is ordered (${orderProduct.orderId})`,
+      };
+      return response.status(400).send(errorResponse);
+    }
+    const deleteProduct = await this.productService.delete(productid);
+
+    if (deleteProduct) {
       const successResponse: any = {
         status: 1,
-        message: 'Successfully got view log List',
-        data: customerProductview,
+        message: 'Successfully deleted Product',
       };
       return response.status(200).send(successResponse);
+    } else {
+      const errorResponse: any = {
+        status: 0,
+        message: 'unable to delete product',
+      };
+      return response.status(400).send(errorResponse);
     }
   }
 }
