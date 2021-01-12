@@ -35,7 +35,7 @@ module.exports = {
       inspector: {
         script: series(
           'nps banner.serve',
-          'apidoc -i src -o src/public/apidoc',
+          'apidoc -i src -o public/apidoc',
           'nodemon --watch src --watch .env --inspect'
         ),
         description:
@@ -43,7 +43,7 @@ module.exports = {
       },
       script: series(
         'nps banner.serve',
-        'apidoc -i src -o src/public/apidoc',
+        'apidoc -i src -o public/apidoc',
         'nodemon --watch src --watch .env'
       ),
       description:
@@ -60,7 +60,7 @@ module.exports = {
      * Generate the api documentation
      */
     generateapidoc: {
-      script: series('apidoc -i src -o src/public/apidoc'),
+      script: series('apidoc -i src -o public/apidoc'),
       description: 'Setup`s the development environment(npm & database)',
     },
     /**
