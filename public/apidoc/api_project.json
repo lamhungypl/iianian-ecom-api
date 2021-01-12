@@ -1,4 +1,4 @@
-define({
+{
   "name": "apidoc",
   "version": "0.0.0",
   "description": "RESTFUL API Document",
@@ -9,8 +9,8 @@ define({
   "apidoc": "0.3.0",
   "generator": {
     "name": "apidoc",
-    "time": "2021-01-12T04:32:42.726Z",
+    "time": "2021-01-12T07:33:47.200Z",
     "url": "https://apidocjs.com",
     "version": "0.25.0"
   }
-});
+}
