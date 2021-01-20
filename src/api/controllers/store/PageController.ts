@@ -72,6 +72,7 @@ export class PageController {
       >(
         {
           name: (keyword && Like(`%${keyword}%`)) || undefined,
+          isActive: 1,
         },
         value => value != null
       ),
@@ -130,6 +131,7 @@ export class PageController {
     const page: Page = await this.pageService.findOne({
       where: {
         pageId: id,
+        isActive: 1,
       },
     });
     // if (!page) {

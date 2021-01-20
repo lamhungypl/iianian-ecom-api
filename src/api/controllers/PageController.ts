@@ -18,7 +18,7 @@ import { PageService } from '../services/pageService';
 import { UpdatePage } from './requests/updatePageRequest';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import pickBy from 'lodash/pickBy';
-import { isNumber, parseInt as _parseInt } from 'lodash';
+import { isInteger, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
 
 @JsonController('/page')
@@ -130,7 +130,7 @@ export class PageController {
           take: (limit && _parseInt(limit)) || undefined,
           skip: (offset && _parseInt(offset)) || undefined,
         },
-        value => isNumber(value)
+        value => isInteger(value)
       ),
       select: [
         'pageId',
@@ -144,7 +144,7 @@ export class PageController {
       where: pickBy<FindConditions<Page> | FindConditions<Page>[]>(
         {
           title: (keyword && Like(`%${keyword}%`)) || undefined,
-          isActive: (status && _parseInt(status)) || 0,
+          isActive: isInteger(parseInt(status)) ? parseInt(status) : undefined,
         },
         value => value != null
       ),
