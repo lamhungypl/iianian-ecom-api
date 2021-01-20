@@ -77,6 +77,7 @@ export class CategoryController {
     newCategory.metaTagTitle = category.metaTagTitle;
     newCategory.metaTagDescription = category.metaTagDescription;
     newCategory.metaTagKeyword = category.metaTagKeyword;
+    newCategory.isActive = _parseInt(category.status);
     const categorySave = await this.categoryService.create(newCategory);
 
     const getAllPath: any = await this.categoryPathService.list({

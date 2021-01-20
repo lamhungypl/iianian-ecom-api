@@ -1,1 +1,0 @@
-{"version":3,"file":"LoginLogRepository.js","sourceRoot":"","sources":["../../../../src/api/repositories/LoginLogRepository.ts"],"names":[],"mappings":";;;;AAAA,qCAAuD;AAEvD,iDAA8C;AAC9C,0DAAuD;AAGvD,IAAa,kBAAkB,GAA/B,MAAa,kBAAmB,SAAQ,+BAAwB;CAAG,CAAA;AAAtD,kBAAkB;IAD9B,0BAAgB,CAAC,mBAAQ,CAAC;GACd,kBAAkB,CAAoC;AAAtD,gDAAkB"}

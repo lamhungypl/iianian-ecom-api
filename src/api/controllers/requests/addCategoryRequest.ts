@@ -16,4 +16,6 @@ export class AddCategory {
   public metaTagDescription: string;
 
   public metaTagKeyword: string;
+
+  public status: any;
 }

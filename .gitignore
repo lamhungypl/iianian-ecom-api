@@ -51,3 +51,6 @@ Thumbs.db
 .history/
 .env
 keys/
+
+
+build-prod/

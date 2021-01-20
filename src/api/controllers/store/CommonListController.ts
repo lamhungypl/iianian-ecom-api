@@ -139,6 +139,7 @@ export class CommonListController {
       ],
       where: {
         title: Like(`%${keyword}%`),
+        isActive: 1,
       },
     };
     if (count) {
@@ -224,6 +225,7 @@ export class CommonListController {
       >(
         {
           name: (keyword && Like(`%${keyword}%`)) || undefined,
+          isActive: 1,
         },
         value => value != null
       ),

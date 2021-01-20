@@ -1,7 +1,7 @@
 #
 # APPLICATION
 #
-APP_NAME=spurtCommerce
+APP_NAME=iianianEcommerce
 APP_SCHEMA=http
 APP_HOST=localhost
 APP_PORT=8000
@@ -22,7 +22,7 @@ TYPEORM_HOST=localhost
 TYPEORM_PORT=8889
 TYPEORM_USERNAME=root
 TYPEORM_PASSWORD=root
-TYPEORM_DATABASE=spurtecommerce
+TYPEORM_DATABASE=blank-iian-ecom
 TYPEORM_SYNCHRONIZE=false
 TYPEORM_LOGGING=["query", "error"]
 TYPEORM_LOGGER=advanced-console
