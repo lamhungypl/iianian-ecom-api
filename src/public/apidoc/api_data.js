@@ -23,8 +23,8 @@ define({ "api": [
     "url": "",
     "version": "0.0.0",
     "filename": "src/public/apidoc/main.js",
-    "group": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/apidoc/main.js",
-    "groupTitle": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/apidoc/main.js",
+    "group": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/iianian-ecom-api/src/public/apidoc/main.js",
+    "groupTitle": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/iianian-ecom-api/src/public/apidoc/main.js",
     "name": ""
   },
   {
@@ -51,8 +51,8 @@ define({ "api": [
     "url": "",
     "version": "0.0.0",
     "filename": "src/public/main.js",
-    "group": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/main.js",
-    "groupTitle": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/spurt-api/src/public/main.js",
+    "group": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/iianian-ecom-api/src/public/main.js",
+    "groupTitle": "/Users/jmango/Workspace/Upwork/iiaanian-project/api/iianian-ecom-api/src/public/main.js",
     "name": ""
   },
   {
