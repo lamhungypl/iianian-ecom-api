@@ -12,4 +12,6 @@ export class CreateBanner {
   public link: string;
 
   public position: number;
+
+  public status: any;
 }

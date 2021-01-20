@@ -84,6 +84,7 @@ export class BannerController {
       newBanner.imagePath = path;
       newBanner.link = bannerParam.link;
       newBanner.position = bannerParam.position;
+      newBanner.isActive = parseInt(bannerParam.status);
       const bannerSave = await this.bannerService.create(newBanner);
 
       if (bannerSave) {
@@ -140,23 +141,6 @@ export class BannerController {
     @QueryParam('count') count: number | boolean,
     @Res() response: any
   ): Promise<any> {
-    const select = [
-      'bannerId',
-      'title',
-      'image',
-      'imagePath',
-      'content',
-      'link',
-      'position',
-    ];
-    const search = [
-      {
-        name: 'title',
-        op: 'like',
-        value: keyword,
-      },
-    ];
-    const WhereConditions = [];
     const options: FindManyOptions<Banner> = {
       take: limit,
       skip: offset,
@@ -168,6 +152,7 @@ export class BannerController {
         'content',
         'link',
         'position',
+        'isActive',
       ],
       where: {
         title: Like(`%${keyword}%`),
@@ -316,6 +301,7 @@ export class BannerController {
     banner.content = bannerParam.content;
     banner.link = bannerParam.link;
     banner.position = bannerParam.position;
+    banner.isActive = parseInt(bannerParam.status);
     const bannerSave = await this.bannerService.create(banner);
 
     if (bannerSave) {

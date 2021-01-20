@@ -43,7 +43,7 @@ export class Banner extends BaseModel {
   @Column({ name: 'position' })
   public position: number;
 
-  @Column({ name: 'banner_group_id' })
+  @Column({ name: 'banner_group_id', default: 0, nullable: true })
   public bannerGroupId: number;
 
   @Column({ name: 'image' })

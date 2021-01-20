@@ -15,4 +15,6 @@ export class UpdateBanner {
   public link: string;
 
   public position: number;
+
+  public status: any;
 }
