@@ -447,7 +447,10 @@ export class OrderController {
     //console.log(todaydate);
 
     try {
+      console.log('todaydate', todaydate);
+
       const orderTotal = await this.orderService.findAllTodayOrder(todaydate);
+      console.log({ orderTotal });
       const successResponse: any = {
         status: 1,
         message: 'Successfully get today order Amount',
