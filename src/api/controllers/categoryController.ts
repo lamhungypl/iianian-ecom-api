@@ -341,7 +341,16 @@ export class CategoryController {
         },
         value => isNumber(value)
       ),
-      select: ['categoryId', 'name', 'parentInt', 'sortOrder', 'isActive'],
+      select: [
+        'categoryId',
+        'name',
+        'parentInt',
+        'sortOrder',
+        'isActive',
+        'metaTagTitle',
+        'metaTagDescription',
+        'metaTagKeyword',
+      ],
       where: pickBy<
         | FindConditions<Category>[]
         | FindConditions<Category>

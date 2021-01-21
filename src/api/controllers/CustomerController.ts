@@ -256,12 +256,12 @@ export class CustomerController {
         firstName: (name && Like(`%${name}%`)) || undefined,
         email: (email && Like(`%${email}%`)) || undefined,
         createdDate: (date && Like(`%${date}%`)) || undefined,
-        customerGroupId:
-          (Number.isInteger(parseInt(customerGroup)) &&
-            parseInt(customerGroup)) ||
-          undefined,
-        isActive:
-          (Number.isInteger(parseInt(status)) && parseInt(status)) || undefined,
+        customerGroupId: Number.isInteger(parseInt(customerGroup))
+          ? parseInt(customerGroup)
+          : undefined,
+        isActive: Number.isInteger(parseInt(status))
+          ? parseInt(status)
+          : undefined,
         deleteFlag: 0,
       }),
     };
