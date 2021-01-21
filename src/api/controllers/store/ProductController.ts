@@ -155,13 +155,13 @@ export class ProductController {
       todayDate
     );
     if (productSpecial !== undefined) {
-      finalResult.priceRefer = productSpecial.price;
+      finalResult.pricerefer = productSpecial.price;
       finalResult.flag = 1;
     } else if (productDiscount !== undefined) {
-      finalResult.priceRefer = productDiscount.price;
+      finalResult.pricerefer = productDiscount.price;
       finalResult.flag = 0;
     } else {
-      finalResult.priceRefer = '';
+      finalResult.pricerefer = '';
       finalResult.flag = '';
     }
 
