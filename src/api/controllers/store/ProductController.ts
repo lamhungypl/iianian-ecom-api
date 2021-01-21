@@ -341,16 +341,41 @@ export class ProductController {
     }
     const featureProduct = await this.productService.list(options);
 
-    const promises = featureProduct.map(async (result: any) => {
+    const promises = featureProduct.map(async (product: any) => {
       const productImage = await this.productImageService.findOne({
         select: ['productId', 'image', 'containerName', 'defaultImage'],
         where: {
-          productId: result.productId,
+          productId: product.productId,
           defaultImage: 1,
         },
       });
-      const temp: any = result;
+      const temp: any = product;
       temp.Images = productImage;
+      const nowDate = new Date();
+      const todayDate =
+        nowDate.getFullYear() +
+        '-' +
+        (nowDate.getMonth() + 1) +
+        '-' +
+        nowDate.getDate();
+      const productSpecial = await this.productSpecialService.findSpecialPrice(
+        product.productId,
+        todayDate
+      );
+      const productDiscount = await this.productDiscountService.findDiscountPrice(
+        product.productId,
+        todayDate
+      );
+      if (productSpecial !== undefined) {
+        temp.pricerefer = productSpecial.price;
+        temp.flag = 1;
+      } else if (productDiscount !== undefined) {
+        temp.pricerefer = productDiscount.price;
+        temp.flag = 0;
+      } else {
+        temp.pricerefer = '';
+        temp.flag = '';
+      }
       return temp;
     });
     const finalResult = await Promise.all(promises);
@@ -447,16 +472,41 @@ export class ProductController {
       return response.status(200).send(res);
     }
     const todayDeals = await this.productService.list(options);
-    const promises = todayDeals.map(async (result: any) => {
+    const promises = todayDeals.map(async (product: any) => {
       const productImage = await this.productImageService.findOne({
         select: ['productId', 'image', 'containerName', 'defaultImage'],
         where: {
-          productId: result.productId,
+          productId: product.productId,
           defaultImage: 1,
         },
       });
-      const temp: any = result;
+      const temp: any = product;
       temp.Images = productImage;
+      const nowDate = new Date();
+      const todayDate =
+        nowDate.getFullYear() +
+        '-' +
+        (nowDate.getMonth() + 1) +
+        '-' +
+        nowDate.getDate();
+      const productSpecial = await this.productSpecialService.findSpecialPrice(
+        product.productId,
+        todayDate
+      );
+      const productDiscount = await this.productDiscountService.findDiscountPrice(
+        product.productId,
+        todayDate
+      );
+      if (productSpecial !== undefined) {
+        temp.pricerefer = productSpecial.price;
+        temp.flag = 1;
+      } else if (productDiscount !== undefined) {
+        temp.pricerefer = productDiscount.price;
+        temp.flag = 0;
+      } else {
+        temp.pricerefer = '';
+        temp.flag = '';
+      }
       return temp;
     });
     const finalResult = await Promise.all(promises);
