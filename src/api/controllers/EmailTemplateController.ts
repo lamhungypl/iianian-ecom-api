@@ -17,7 +17,7 @@ import { CreateEmailTemplate } from './requests/createEmailTemplateRequest';
 import { EmailTemplateService } from '../services/emailTemplateService';
 import { FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
-import { logApiResponse } from 'src/lib/helpers';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/email-template')
 export class EmailTemplateController {

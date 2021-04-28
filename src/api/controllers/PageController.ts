@@ -20,6 +20,7 @@ import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import pickBy from 'lodash/pickBy';
 import { isInteger, parseInt as _parseInt } from 'lodash';
 import { Response } from 'express';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/page')
 export class PageController {
@@ -76,12 +77,18 @@ export class PageController {
         message: 'Successfully created a new page.',
         data: pageSave,
       };
+      logApiResponse({
+        '/page/add-page': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to create page',
       };
+      logApiResponse({
+        '/page/add-page': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -156,6 +163,9 @@ export class PageController {
         message: 'Successfully got the complete list of pages. ',
         data: pageListCount,
       };
+      logApiResponse({
+        '/page/pagelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
     const pageList = await this.pageService.list(options);
@@ -165,12 +175,18 @@ export class PageController {
         message: 'Successfully got the complete list of pages. ',
         data: pageList,
       };
+      logApiResponse({
+        '/page/pagelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to list pages',
       };
+      logApiResponse({
+        '/page/pagelist': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -224,6 +240,9 @@ export class PageController {
         status: 0,
         message: 'invalid page id',
       };
+      logApiResponse({
+        '/page/update-page/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -240,12 +259,18 @@ export class PageController {
         message: 'Successfully updated the page.',
         data: pageSave,
       };
+      logApiResponse({
+        '/page/update-page/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update page',
       };
+      logApiResponse({
+        '/page/update-page/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -285,6 +310,9 @@ export class PageController {
         status: 0,
         message: 'Invalid pageId',
       };
+      logApiResponse({
+        '/page/delete-page/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     const deletePage = await this.pageService.delete(page.pageId);
@@ -293,12 +321,18 @@ export class PageController {
         status: 1,
         message: 'Successfully deleted the page.',
       };
+      logApiResponse({
+        '/page/delete-page/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete page',
       };
+      logApiResponse({
+        '/page/delete-page/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }

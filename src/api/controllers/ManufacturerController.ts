@@ -22,6 +22,7 @@ import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
 import { FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { logApiResponse } from '../../lib/helpers';
 
 // S3 SetUp
 AWS.config.update({
@@ -101,6 +102,9 @@ export class ManufacturerController {
         message: 'Successfully created a new manufacturer.',
         data: { name, path },
       };
+      logApiResponse({
+        '/manufacturer/create-manufacturer': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -161,6 +165,9 @@ export class ManufacturerController {
         message: 'Successfully got the complete manufacturers list.',
         data: manufacturerCount,
       };
+      logApiResponse({
+        '/manufacturer/manufacturerlist': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
 
@@ -170,6 +177,9 @@ export class ManufacturerController {
       message: 'Successfully got the complete manufacturers list.',
       data: manufacturerList,
     };
+    logApiResponse({
+      '/manufacturer/manufacturerlist': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -210,6 +220,9 @@ export class ManufacturerController {
         status: 0,
         message: 'Invalid manufacturerId',
       };
+      logApiResponse({
+        '/manufacturer/delete-manufacturer/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -221,12 +234,18 @@ export class ManufacturerController {
         status: 1,
         message: 'Successfully deleted the manufacturer. ',
       };
+      logApiResponse({
+        '/manufacturer/delete-manufacturer/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete manufacturer',
       };
+      logApiResponse({
+        '/manufacturer/delete-manufacturer/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -276,6 +295,9 @@ export class ManufacturerController {
         status: 0,
         message: 'Invalid manufacturerId',
       };
+      logApiResponse({
+        '/manufacturer/update-manufacturer/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     const image = manufacturerParam.image;
@@ -310,12 +332,18 @@ export class ManufacturerController {
         message: 'Successfully updated the manufacturer.',
         data: manufacturerSave,
       };
+      logApiResponse({
+        '/manufacturer/update-manufacturer/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update manufacturer',
       };
+      logApiResponse({
+        '/manufacturer/update-manufacturer/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }

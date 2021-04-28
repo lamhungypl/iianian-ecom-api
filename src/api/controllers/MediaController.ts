@@ -20,6 +20,7 @@ import { FileNameRequest } from './requests/createFileNameRequest';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
 import { aws_setup, env } from '../../env';
+import { logApiResponse } from '../../lib/helpers';
 
 AWS.config.update({
   accessKeyId: aws_setup.AWS_ACCESS_KEY_ID,
@@ -86,6 +87,9 @@ export class MediaController {
         message: 'Successfully get bucket object list',
         data: val,
       };
+      logApiResponse({
+        '/media/bucket-object-list': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -135,6 +139,9 @@ export class MediaController {
         message: 'Successfully created folder',
         data: val,
       };
+      logApiResponse({
+        '/media/create-folder': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -178,6 +185,9 @@ export class MediaController {
         status: 1,
         message: 'Successfully deleted folder',
       };
+      logApiResponse({
+        '/media/delete-folder': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -224,6 +234,9 @@ export class MediaController {
         status: 1,
         message: 'Successfully deleted file',
       };
+      logApiResponse({
+        '/media/delete-file': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -295,6 +308,9 @@ export class MediaController {
         path: val.path,
       },
     };
+    logApiResponse({
+      '/media/upload-file': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -364,6 +380,13 @@ export class MediaController {
         });
       }
     } else {
+      logApiResponse({
+        '/media/upload-file': {
+          status: 0,
+          message: 'Only allow jpg/jpeg/png format image!',
+        },
+      });
+
       return response
         .status(400)
         .send({ status: 0, message: 'Only allow jpg/jpeg/png format image!' });
@@ -413,6 +436,9 @@ export class MediaController {
         message: 'Successfully got folder details',
         data: val,
       };
+      logApiResponse({
+        '/media/search-folder': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }

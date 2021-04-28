@@ -14,6 +14,7 @@ import {
   QueryParam,
   Param,
 } from 'routing-controllers';
+import { logApiResponse } from '../../lib/helpers';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import { OrderStatus } from '../models/orderStatus';
 import { OrderStatusService } from '../services/orderStatusService';
@@ -66,12 +67,18 @@ export class OrderStatusController {
         message: 'successfully created a new order status.',
         data: orderStatusSave,
       };
+      logApiResponse({
+        '/order-status/create-order-status': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to create OrderStatus',
       };
+      logApiResponse({
+        '/order-status/create-order-status': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -117,6 +124,9 @@ export class OrderStatusController {
         status: 0,
         message: 'Invalid orderStatusId',
       };
+      logApiResponse({
+        '/order-status/update-order-status/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     orderStatus.name = orderStatusParams.name;
@@ -130,12 +140,18 @@ export class OrderStatusController {
         message: 'Successfully updated the order status.',
         data: orderStatusSave,
       };
+      logApiResponse({
+        '/order-status/update-order-status/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 1,
         message: 'unable to update OrderStatus.',
       };
+      logApiResponse({
+        '/order-status/update-order-status/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -194,6 +210,11 @@ export class OrderStatusController {
         message: 'Successfully got the complete order status list.',
         data: orderStatusCount,
       };
+
+      logApiResponse({
+        '/order-status/order-status-list': successResponse,
+      });
+
       return response.status(200).send(successResponse);
     }
     const orderStatusList = await this.orderStatusService.list(options);
@@ -203,12 +224,18 @@ export class OrderStatusController {
         message: 'Successfully got the complete order status list.',
         data: orderStatusList,
       };
+      logApiResponse({
+        '/order-status/order-status-list': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 1,
         message: 'unable to get OrderStatus.',
       };
+      logApiResponse({
+        '/order-status/order-status-list': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -249,6 +276,9 @@ export class OrderStatusController {
         status: 0,
         message: 'Invalid orderStatusId.',
       };
+      logApiResponse({
+        '/order-status/delete-order-status/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -260,12 +290,18 @@ export class OrderStatusController {
         status: 1,
         message: 'Successfully deleted the order status.',
       };
+      logApiResponse({
+        '/order-status/delete-order-status/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete orderStatus.',
       };
+      logApiResponse({
+        '/order-status/delete-order-status/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }

@@ -30,6 +30,7 @@ import * as fs from 'fs';
 import { DeleteOrderRequest } from './requests/DeleteOrderRequest';
 import { OrderLog } from '../models/OrderLog';
 import moment from 'moment';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/order')
 export class OrderController {
@@ -117,6 +118,9 @@ export class OrderController {
         message: 'Successfully got count.',
         data: orderCount,
       };
+      logApiResponse({
+        '/order/order-list': res,
+      });
       return response.status(200).send(res);
     }
     const orderList = await this.orderService.list(options);
@@ -138,6 +142,9 @@ export class OrderController {
       message: 'Successfully got the complete order list.',
       data: results,
     };
+    logApiResponse({
+      '/order/order-list': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -319,6 +326,9 @@ export class OrderController {
       message: 'Successfully shown the order Detail. ',
       data: resultData,
     };
+    logApiResponse({
+      '/order/order-detail': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -370,6 +380,9 @@ export class OrderController {
       message: 'Successfully get sales count List',
       data: finalResult,
     };
+    logApiResponse({
+      '/order/saleslist': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -406,13 +419,18 @@ export class OrderController {
         message: 'Successfully get total order Amount',
         data: total,
       };
-
+      logApiResponse({
+        '/order/total-order-amount': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get total order amount',
       };
+      logApiResponse({
+        '/order/total-order-amount': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -456,13 +474,18 @@ export class OrderController {
         message: 'Successfully get today order Amount',
         data: orderTotal || 0,
       };
-
+      logApiResponse({
+        '/order/today-order-amount': successResponse,
+      });
       return response.status(200).send(successResponse);
     } catch (error) {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get today order amount',
       };
+      logApiResponse({
+        '/order/today-order-amount': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -503,6 +526,9 @@ export class OrderController {
       message: 'Successfully get Today order count',
       data: orderCount,
     };
+    logApiResponse({
+      '/order/today-order-count': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 
@@ -542,6 +568,9 @@ export class OrderController {
         status: 0,
         message: 'invalid order Id',
       };
+      logApiResponse({
+        '/order/order-change-status': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -558,12 +587,18 @@ export class OrderController {
         message: 'Successfully updated Order Status',
         data: orderSave,
       };
+      logApiResponse({
+        '/order/order-change-status': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to updated OrderStatus',
       };
+      logApiResponse({
+        '/order/order-change-status': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -603,6 +638,9 @@ export class OrderController {
           status: 0,
           message: 'Invalid orderId',
         };
+        logApiResponse({
+          '/order/order-excel-list': errorResponse,
+        });
         return response.status(400).send(errorResponse);
       }
     }
@@ -724,6 +762,9 @@ export class OrderController {
         status: 0,
         message: 'Invalid orderId',
       };
+      logApiResponse({
+        '/order/delete-order/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     const deleteOrder = await this.orderService.delete(orderid);
@@ -732,12 +773,18 @@ export class OrderController {
         status: 1,
         message: 'Order Deleted Successfully',
       };
+      logApiResponse({
+        '/order/delete-order/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete Order',
       };
+      logApiResponse({
+        '/order/delete-order/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -780,6 +827,9 @@ export class OrderController {
           status: 0,
           message: 'Please choose a order for delete',
         };
+        logApiResponse({
+          '/order/delete-order': errorResponse,
+        });
         return response.status(400).send(errorResponse);
       }
     }
@@ -792,6 +842,9 @@ export class OrderController {
       status: 1,
       message: 'Order Deleted Successfully',
     };
+    logApiResponse({
+      '/order/delete-order': successResponse,
+    });
     return response.status(200).send(successResponse);
   }
 }

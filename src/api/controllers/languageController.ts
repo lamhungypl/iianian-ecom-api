@@ -19,6 +19,7 @@ import { env } from '../../env';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
 import { FindManyOptions, Like } from 'typeorm';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/language')
 export class LanguageController {
@@ -91,12 +92,18 @@ export class LanguageController {
         message: 'Successfully added a new language.',
         data: languageSave,
       };
+      logApiResponse({
+        '/language/add-language': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to create language',
       };
+      logApiResponse({
+        '/language/add-language': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -183,6 +190,9 @@ export class LanguageController {
         message: 'successfully got the complete language list.',
         data: languageListCount,
       };
+      logApiResponse({
+        '/language/languagelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
     const languageList = await this.languageService.list(options);
@@ -192,12 +202,18 @@ export class LanguageController {
         message: 'successfully got the complete language list.',
         data: languageList,
       };
+      logApiResponse({
+        '/language/languagelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to list language',
       };
+      logApiResponse({
+        '/language/languagelist': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -246,6 +262,9 @@ export class LanguageController {
         status: 0,
         message: 'Invalid languageId',
       };
+      logApiResponse({
+        '/language/update-language/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     const image = languageParam.image;
@@ -277,12 +296,19 @@ export class LanguageController {
         message: 'Sucessfully updated the language.',
         data: languageSave,
       };
+      logApiResponse({
+        '/language/update-language/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update language',
       };
+      logApiResponse({
+        '/language/update-language/:id': errorResponse,
+      });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -323,6 +349,9 @@ export class LanguageController {
         status: 0,
         message: 'Invalid languageId',
       };
+      logApiResponse({
+        '/language/delete-language/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -335,12 +364,18 @@ export class LanguageController {
         status: 1,
         message: 'Successfully deleted the language. ',
       };
+      logApiResponse({
+        '/language/delete-language/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete language',
       };
+      logApiResponse({
+        '/language/delete-language/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
