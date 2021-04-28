@@ -22,6 +22,7 @@ import { DeleteCategoryRequest } from './requests/deleteCategoryRequest';
 import { CategoryPathService } from '../services/CategoryPathService';
 import { FindConditions, FindManyOptions, Like } from 'typeorm';
 import { pickBy, isNumber, parseInt as _parseInt } from 'lodash';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController()
 export class CategoryController {
@@ -108,12 +109,16 @@ export class CategoryController {
         message: 'Successfully created new category.',
         data: categorySave,
       };
+      logApiResponse({ '/category/add-category': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to create the category. ',
       };
+      logApiResponse({ '/category/add-category': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -216,12 +221,16 @@ export class CategoryController {
         message: 'Successfully updated category.',
         data: classToPlain(categorySave),
       };
+      logApiResponse({ '/category/update-category/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to update the category. ',
       };
+      logApiResponse({ '/category/update-category/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -275,6 +284,8 @@ export class CategoryController {
         status: 0,
         message: 'you cannot delete parent categoryId',
       };
+      logApiResponse({ '/category/delete-category/:id': errorresponse });
+
       return response.status(400).send(errorresponse);
     }
     const categoryPath: any = await this.categoryPathService.list({
@@ -292,12 +303,16 @@ export class CategoryController {
         status: 1,
         message: 'Successfully deleted category.',
       };
+      logApiResponse({ '/category/delete-category/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to delete the category. ',
       };
+      logApiResponse({ '/category/delete-category/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -370,6 +385,8 @@ export class CategoryController {
         message: 'successfully got the complete category list. ',
         data: categoryCount,
       };
+      logApiResponse({ '/category/categorylist': successResponse });
+
       return response.status(200).send(successResponse);
     }
     const category: Category[] = await this.categoryService.list(options);
@@ -407,6 +424,8 @@ export class CategoryController {
         message: 'successfully got the complete category list. ',
         data: value,
       };
+      logApiResponse({ '/category/categorylist': successResponse });
+
       return response.status(200).send(successResponse);
     }
   }
@@ -483,6 +502,8 @@ export class CategoryController {
         message: 'Successfully get category List count',
         data: categoryCount,
       };
+      logApiResponse({ '/category/category-list-intree': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const category: Category[] = await this.categoryService.list(options);
@@ -495,6 +516,8 @@ export class CategoryController {
         message: 'successfully got the complete category list.',
         data: categoryList,
       };
+      logApiResponse({ '/category/category-list-intree': successResponse });
+
       return response.status(200).send(successResponse);
     }
   }

@@ -18,6 +18,7 @@ import { CountryService } from '../services/countryService';
 import { UpdateCountry } from './requests/updateCountryRequest';
 import { FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/country')
 export class CountryController {
@@ -70,6 +71,8 @@ export class CountryController {
         status: 0,
         message: 'you already added this country.',
       };
+      logApiResponse({ '/country/add-country': errorResponse });
+
       return response.status(200).send(errorResponse);
     }
     const newCountry = new Country();
@@ -85,12 +88,16 @@ export class CountryController {
         message: 'Successfully added new country.',
         data: countrySave,
       };
+      logApiResponse({ '/country/add-country': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to add the country. ',
       };
+      logApiResponse({ '/country/add-country': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -142,6 +149,8 @@ export class CountryController {
         status: 0,
         message: 'Invalid countryId',
       };
+      logApiResponse({ '/country/update-country/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     country.name = countryParam.name;
@@ -156,12 +165,16 @@ export class CountryController {
         message: 'Successfully updated country',
         data: countrySave,
       };
+      logApiResponse({ '/country/update-country/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update country',
       };
+      logApiResponse({ '/country/update-country/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -232,6 +245,8 @@ export class CountryController {
         message: 'Successfully got country List count',
         data: countryListCount,
       };
+      logApiResponse({ '/country/countrylist': successResponse });
+
       return response.status(200).send(successResponse);
     }
 
@@ -242,12 +257,16 @@ export class CountryController {
         message: 'Successfully got country List',
         data: countryList,
       };
+      logApiResponse({ '/country/countrylist': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get countryList',
       };
+      logApiResponse({ '/country/countrylist': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -288,6 +307,8 @@ export class CountryController {
         status: 0,
         message: 'Invalid CountryId',
       };
+      logApiResponse({ '/country/delete-country/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     const deleteCountry = await this.countryService.delete(country.countryId);
@@ -296,12 +317,16 @@ export class CountryController {
         status: 1,
         message: 'Successfully deleted country.',
       };
+      logApiResponse({ '/country/delete-country/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete country',
       };
+      logApiResponse({ '/country/delete-country/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }

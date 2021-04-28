@@ -17,6 +17,7 @@ import { CreateCurrency } from './requests/createCurrencyRequest';
 import { CurrencyService } from '../services/currencyService';
 import { UpdateCurrency } from './requests/updateCurrenyRequest';
 import { FindManyOptions, Like } from 'typeorm';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/currency')
 export class CurrencyController {
@@ -72,12 +73,16 @@ export class CurrencyController {
         message: 'Successfully added new currency.',
         data: currencySave,
       };
+      logApiResponse({ '/currency/add-currency': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to create currency',
       };
+      logApiResponse({ '/currency/add-currency': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -159,6 +164,8 @@ export class CurrencyController {
         message: 'Successfully got the complete currency list.',
         data: currencyCount,
       };
+      logApiResponse({ '/currency/currencylist': successResponse });
+
       return response.status(200).send(successResponse);
     }
     const currencyList = await this.currencyService.list(options);
@@ -168,12 +175,16 @@ export class CurrencyController {
         message: 'Successfully got the complete currency list.',
         data: currencyList,
       };
+      logApiResponse({ '/currency/currencylist': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to list currency',
       };
+      logApiResponse({ '/currency/currencylist': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -226,6 +237,8 @@ export class CurrencyController {
         status: 0,
         message: 'Invalid currencyId',
       };
+      logApiResponse({ '/currency/update-currency/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     currency.title = currencyParam.title;
@@ -241,12 +254,16 @@ export class CurrencyController {
         message: 'Successfully updated the currency.',
         data: currencySave,
       };
+      logApiResponse({ '/currency/update-currency/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update currency',
       };
+      logApiResponse({ '/currency/update-currency/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -287,6 +304,8 @@ export class CurrencyController {
         status: 0,
         message: 'Invalid currencyId',
       };
+      logApiResponse({ '/currency/delete-currency/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
 
@@ -298,12 +317,16 @@ export class CurrencyController {
         status: 1,
         message: 'Successfullly deleted the currency.',
       };
+      logApiResponse({ '/currency/delete-currency/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete currency',
       };
+      logApiResponse({ '/currency/delete-currency/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }

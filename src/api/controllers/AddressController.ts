@@ -17,6 +17,7 @@ import { Address } from '../models/Address';
 import { CreateAddress } from './requests/CreateAddressRequest';
 import { CustomerService } from '../services/CustomerService';
 import { FindManyOptions } from 'typeorm';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/address')
 export class AddressController {
@@ -73,6 +74,7 @@ export class AddressController {
         status: 0,
         message: 'Invalid customerId',
       };
+      logApiResponse({ '/address/add-address': errorResponse });
       return response.status(400).send(errorResponse);
     }
     const newAddress = new Address();
@@ -93,12 +95,15 @@ export class AddressController {
         message: 'Successfully created address',
         data: addressSave,
       };
+      logApiResponse({ '/address/add-address': successResponse });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to create address. ',
       };
+      logApiResponse({ '/address/add-address': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -154,6 +159,8 @@ export class AddressController {
         status: 0,
         message: 'Invalid addressId',
       };
+      logApiResponse({ '/address/update-address/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     address.customerId = addressParam.customerId;
@@ -172,12 +179,16 @@ export class AddressController {
         message: 'Successfully updated address',
         data: addressSave,
       };
+      logApiResponse({ '/address/update-address/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 1,
         message: 'Unable to update the address. ',
       };
+      logApiResponse({ '/address/update-address/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -222,6 +233,8 @@ export class AddressController {
         message: 'Successfully got complete address list.',
         data: addressListCount,
       };
+      logApiResponse({ '/address/addresslist': successResponse });
+
       return response.status(200).send(successResponse);
     }
     const addressList = await this.addressService.list(options);
@@ -231,12 +244,16 @@ export class AddressController {
         message: 'Successfully got complete address list.',
         data: addressList,
       };
+      logApiResponse({ '/address/addresslist': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 1,
         message: 'Unable to get the address list. ',
       };
+      logApiResponse({ '/address/addresslist': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -277,6 +294,8 @@ export class AddressController {
         status: 0,
         message: 'Invalid addressId',
       };
+      logApiResponse({ '/address/delete-address/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
 
@@ -286,12 +305,16 @@ export class AddressController {
         status: 1,
         message: 'Successfully deleted address',
       };
+      logApiResponse({ '/address/delete-address/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to delete the  address. ',
       };
+      logApiResponse({ '/address/delete-address/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -337,6 +360,8 @@ export class AddressController {
         status: 0,
         message: ' invalid customer Id',
       };
+      logApiResponse({ '/address/get-address-list/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     const WhereConditions = [
@@ -359,6 +384,8 @@ export class AddressController {
         message: 'Successfully Get the customer Address',
         data: customerAddressCount,
       };
+      logApiResponse({ '/address/get-address-list/:id': successResponse });
+
       return response.status(200).send(successResponse);
     }
 
@@ -368,6 +395,8 @@ export class AddressController {
       message: 'Successfully Get the customer Address',
       data: customerAddress,
     };
+    logApiResponse({ '/address/get-address-list/:id': successResponse });
+
     return response.status(200).send(successResponse);
   }
 }

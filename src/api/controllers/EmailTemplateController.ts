@@ -17,6 +17,7 @@ import { CreateEmailTemplate } from './requests/createEmailTemplateRequest';
 import { EmailTemplateService } from '../services/emailTemplateService';
 import { FindManyOptions, Like } from 'typeorm';
 import { isNumber, pickBy, parseInt as _parseInt } from 'lodash';
+import { logApiResponse } from 'src/lib/helpers';
 
 @JsonController('/email-template')
 export class EmailTemplateController {
@@ -69,12 +70,18 @@ export class EmailTemplateController {
         message: 'Successfully created new email template.',
         data: emailTemplateSave,
       };
+      logApiResponse({
+        '/email-template/add-email-template': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to create emailTemplate',
       };
+      logApiResponse({
+        '/email-template/add-email-template': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -134,6 +141,9 @@ export class EmailTemplateController {
         message: 'Successfully got the email count',
         data: emailTemplateCount,
       };
+      logApiResponse({
+        '/email-template/email-templatelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
 
@@ -144,12 +154,18 @@ export class EmailTemplateController {
         message: 'Successfully got the complete email template list.',
         data: emailTemplateList,
       };
+      logApiResponse({
+        '/email-template/email-templatelist': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to list emailTemplate',
       };
+      logApiResponse({
+        '/email-template/email-templatelist': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -197,6 +213,9 @@ export class EmailTemplateController {
         status: 0,
         message: 'Invalid emailTemplate Id',
       };
+      logApiResponse({
+        '/email-template/update-email-template/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
     emailTemplate.title = emailTemplateParam.title;
@@ -210,12 +229,18 @@ export class EmailTemplateController {
         message: 'Successfully updated the email template.',
         data: templateSave,
       };
+      logApiResponse({
+        '/email-template/update-email-template/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to update emailTemplate',
       };
+      logApiResponse({
+        '/email-template/update-email-template/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }
@@ -256,6 +281,9 @@ export class EmailTemplateController {
         status: 0,
         message: 'Invalid emailTemplate',
       };
+      logApiResponse({
+        '/email-template/delete-email-template/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
 
@@ -267,12 +295,18 @@ export class EmailTemplateController {
         status: 1,
         message: 'Successfully deleted the email template.',
       };
+      logApiResponse({
+        '/email-template/delete-email-template/:id': successResponse,
+      });
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete emailTemplate',
       };
+      logApiResponse({
+        '/email-template/delete-email-template/:id': errorResponse,
+      });
       return response.status(400).send(errorResponse);
     }
   }

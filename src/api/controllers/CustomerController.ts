@@ -35,6 +35,8 @@ import { DeleteCustomerRequest } from './requests/DeleteCustomerRequest';
 import { isNumber } from 'lodash';
 import { NotNullObject } from '../Utils';
 
+import { logApiResponse } from '../../lib/helpers';
+
 @JsonController('/customer')
 export class CustomerController {
   constructor(
@@ -100,6 +102,8 @@ export class CustomerController {
         status: 1,
         message: 'Already registered with this emailId.',
       };
+      logApiResponse({ '/customer/add-customer': successResponse });
+
       return response.status(400).send(successResponse);
     }
     if (avatar) {
@@ -163,6 +167,8 @@ export class CustomerController {
               'Successfully created new Customer with user name and password and send an email. ',
             data: customerSave,
           };
+          logApiResponse({ '/customer/add-customer': successResponse });
+
           return response.status(200).send(successResponse);
         } else {
           const successResponse: any = {
@@ -170,6 +176,8 @@ export class CustomerController {
             message: 'Customer Created Successfully',
             data: customerSave,
           };
+          logApiResponse({ '/customer/add-customer': successResponse });
+
           return response.status(200).send(successResponse);
         }
       }
@@ -178,6 +186,8 @@ export class CustomerController {
         status: 0,
         message: 'Password does not match.',
       };
+      logApiResponse({ '/customer/add-customer': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -273,6 +283,8 @@ export class CustomerController {
         message: 'Successfully got Customer list count',
         data: customerCount,
       };
+      logApiResponse({ '/customer/customer-list': successResponse });
+
       return response.status(200).send(successResponse);
     }
     const customerList = await this.customerService.list(options);
@@ -282,6 +294,7 @@ export class CustomerController {
       message: 'Successfully got Customer list.',
       data: customerList,
     };
+    logApiResponse({ '/customer/customer-list': successResponse });
 
     return response.status(200).send(successResponse);
   }
@@ -322,6 +335,8 @@ export class CustomerController {
         status: 0,
         message: 'Invalid customerId',
       };
+      logApiResponse({ '/customer/delete-customer/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     customer.deleteFlag = 1;
@@ -331,12 +346,16 @@ export class CustomerController {
         status: 1,
         message: 'Customer Deleted Successfully',
       };
+      logApiResponse({ '/customer/delete-customer/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to change delete flag status',
       };
+      logApiResponse({ '/customer/delete-customer/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -397,6 +416,8 @@ export class CustomerController {
         status: 0,
         message: 'invalid customer id',
       };
+      logApiResponse({ '/customer/delete-customer/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     if (customerParam.password === customerParam.confirmPassword) {
@@ -449,6 +470,8 @@ export class CustomerController {
           message: 'Customer Updated Successfully',
           data: customerSave,
         };
+        logApiResponse({ '/customer/delete-customer/:id': successResponse });
+
         return response.status(200).send(successResponse);
       }
     } else {
@@ -456,6 +479,8 @@ export class CustomerController {
         status: 0,
         message: 'Password does not match.',
       };
+      logApiResponse({ '/customer/delete-customer/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -501,6 +526,8 @@ export class CustomerController {
         status: 0,
         message: 'invalid CustomerId',
       };
+      logApiResponse({ '/customer/customer-details/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
 
@@ -551,12 +578,16 @@ export class CustomerController {
         message: 'successfully got Customer details. ',
         data: { ...customer, productList: finalResult },
       };
+      logApiResponse({ '/customer/customer-details/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to get customer Details',
       };
+      logApiResponse({ '/customer/customer-details/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -598,6 +629,7 @@ export class CustomerController {
       message: 'Successfully got Customer list.',
       data: classToPlain(customerList),
     };
+    logApiResponse({ '/customer/recent-customerlist': successResponse });
 
     return response.status(200).send(successResponse);
   }
@@ -637,6 +669,8 @@ export class CustomerController {
       message: 'Successfully get customerCount',
       data: customerCount,
     };
+    logApiResponse({ '/customer/today-customercount': successResponse });
+
     return response.status(200).send(successResponse);
   }
   // Delete Multiple Customer API
@@ -676,9 +710,17 @@ export class CustomerController {
           status: 0,
           message: 'Please choose customer for delete',
         };
+        logApiResponse({ '/customer/delete-customer': errorResponse });
+
         return response.status(400).send(errorResponse);
       } else {
         dataId.deleteFlag = 1;
+        logApiResponse({
+          '/customer/delete-customer': await this.customerService.create(
+            dataId
+          ),
+        });
+
         return await this.customerService.create(dataId);
       }
     });
@@ -688,6 +730,9 @@ export class CustomerController {
         status: 1,
         message: 'Successfully deleted customer',
       };
+      logApiResponse({
+        '/customer/delete-customer': successResponse,
+      });
       return response.status(200).send(successResponse);
     }
   }
@@ -728,6 +773,9 @@ export class CustomerController {
           status: 0,
           message: 'Invalid customerId',
         };
+        logApiResponse({
+          '/customer/customer-excel-list': errorResponse,
+        });
         return response.status(400).send(errorResponse);
       }
     }

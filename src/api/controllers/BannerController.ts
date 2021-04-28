@@ -20,6 +20,7 @@ import { UpdateBanner } from './requests/updateBannerRequest';
 import { S3Service } from '../services/S3Service';
 import { ImageService } from '../services/ImageService';
 import { FindManyOptions, Like } from 'typeorm';
+import { logApiResponse } from '../../lib/helpers';
 
 @JsonController('/banner')
 export class BannerController {
@@ -93,12 +94,16 @@ export class BannerController {
           message: 'Successfully created new banner.',
           data: bannerSave,
         };
+        logApiResponse({ '/banner/add-banner': successResponse });
+
         return response.status(200).send(successResponse);
       } else {
         const errorResponse: any = {
           status: 0,
           message: 'Unable to create new banner. ',
         };
+        logApiResponse({ '/banner/add-banner': errorResponse });
+
         return response.status(400).send(errorResponse);
       }
     }
@@ -165,6 +170,8 @@ export class BannerController {
         message: 'Successfully got banner list count',
         data: bannerListCount,
       };
+      logApiResponse({ '/banner/bannerlist': successResponse });
+
       return response.status(200).send(successResponse);
     }
     const bannerList: any = await this.bannerService.list(options);
@@ -173,6 +180,8 @@ export class BannerController {
       message: 'Successfully got banner list',
       data: bannerList,
     };
+    logApiResponse({ '/banner/bannerlist': successResponse });
+
     return response.status(200).send(successResponse);
   }
 
@@ -212,6 +221,8 @@ export class BannerController {
         status: 0,
         message: 'Invalid BannerId',
       };
+      logApiResponse({ '/banner/delete-banner/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
 
@@ -221,12 +232,16 @@ export class BannerController {
         status: 1,
         message: 'Successfully deleted banner',
       };
+      logApiResponse({ '/banner/delete-banner/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'unable to delete banner',
       };
+      logApiResponse({ '/banner/delete-banner/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
@@ -278,6 +293,8 @@ export class BannerController {
         status: 0,
         message: 'Invalid BannerId',
       };
+      logApiResponse({ '/banner/update-banner/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
     const image = bannerParam.image;
@@ -310,12 +327,16 @@ export class BannerController {
         message: 'Successfully updated banner.',
         data: bannerSave,
       };
+      logApiResponse({ '/banner/update-banner/:id': successResponse });
+
       return response.status(200).send(successResponse);
     } else {
       const errorResponse: any = {
         status: 0,
         message: 'Unable to update the banner list. ',
       };
+      logApiResponse({ '/banner/update-banner/:id': errorResponse });
+
       return response.status(400).send(errorResponse);
     }
   }
